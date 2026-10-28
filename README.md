@@ -1,0 +1,246 @@
+# Reusable AI Development Skills Library for Antigravity
+
+A comprehensive, modular, technology-agnostic **38-skill software engineering lifecycle library** designed for **Google Antigravity** (App, CLI, and IDE) and compatible **Agent Skills (`agentskills.io`)** environments.
+
+---
+
+## 1. Purpose of the Library
+
+Modern AI coding agents frequently fail in predictable ways when working across diverse repositories: assuming a preferred framework, generating generic "AI slop" UI and code comments, skipping edge-case analysis, introducing subtle OWASP vulnerabilities, claiming tests passed without running them, or equating a passing build with production deployment readiness.
+
+This library solves those problems by providing **38 focused, self-contained, and interoperable engineering skills** that guide an AI agent from initial repository discovery and requirements analysis through architecture, implementation, security hardening, automated and browser QA, accessibility, database/API/AI integration, performance profiling, CI/CD, and a binding **15-point Final Quality Gate**.
+
+### Key Design Principles
+- **Technology-Agnostic by Default**: Never forces Laravel Pint, PHPStan, Pest, `shadcn/ui`, Playwright, or GitHub Actions onto projects where they do not belong. Every skill inspects the actual repository first.
+- **Progressive Disclosure**: Every `SKILL.md` is concise (`< 500` lines) with clear trigger descriptions, offloading deep reference matrices and scripts to `references/` and `scripts/` so token context stays lean.
+- **Evidence Over Claims**: Enforces strict separation between verified facts and assumptions, and classifies all test and release checks into `PASS`, `FAIL`, `BLOCKED`, or `NOT TESTED`.
+- **Zero Unauthorized Deployment**: Evaluates deployment readiness thoroughly while prohibiting unauthorized production deployments or destructive actions.
+
+---
+
+## 2. Directory Structure
+
+```text
+reusable-ai-development-skills/
+├── README.md                                  # Master library documentation & installation guide
+├── plugin.json                                # Native Antigravity plugin manifest for bundle installation
+├── SKILL_CATALOG.md                           # Complete catalog of all 38 skills & activation criteria
+├── SKILL_ROUTING.md                           # Lifecycle workflow, routing matrix, & interoperability guide
+├── SOURCES.md                                 # Primary research manifest, licenses, & maintenance guide
+├── COMPLETENESS_AUDIT.md                      # 38-skill coverage verification & validation audit report
+├── scripts/
+│   └── validate-skills.py                     # Zero-dependency Python 3 validator for all 38 skills
+├── references/                                # Shared cross-skill technical reference manuals
+│   ├── anti-slop-engineering-reference.md
+│   ├── core-web-vitals-performance-reference.md
+│   ├── deployment-readiness-quality-gate-matrix.md
+│   ├── owasp-asvs-top10-reference.md
+│   ├── playwright-mcp-reference.md
+│   ├── shadcn-ui-design-system-reference.md
+│   ├── technology-stack-detection-matrix.md
+│   └── wcag22-accessibility-reference.md
+├── sources/                                   # Isolated primary upstream research repositories & snapshots
+│   ├── README.md                              # Inventory and untrusted-input handling rules for sources/
+│   ├── agentskills/                           # Cloned agentskills.io specification & skills-ref validator
+│   ├── anti-slop/                             # Cloned miqdadbadjuber/anti-slop repository (MIT)
+│   ├── playwright-mcp/                        # Cloned microsoft/playwright-mcp repository (Apache-2.0)
+│   └── web-docs/                              # HTML snapshots of OWASP, WCAG 2.2, shadcn/ui, Web Vitals, etc.
+└── skills/                                    # The 38 reusable Agent Skills (SKILL-01 through SKILL-38)
+    ├── project-discovery/SKILL.md
+    ├── requirements-analysis/SKILL.md
+    ├── adaptive-architecture/SKILL.md
+    ├── technical-decision-records/SKILL.md
+    ├── ai-anti-slop/
+    │   ├── SKILL.md
+    │   └── references/anti-slop-rules.md
+    ├── adaptive-engineering/SKILL.md
+    ├── code-quality-static-analysis/SKILL.md
+    ├── refactoring-legacy-safety/SKILL.md
+    ├── dependency-supply-chain-security/SKILL.md
+    ├── application-security-owasp/
+    │   ├── SKILL.md
+    │   └── references/owasp-asvs-checklist.md
+    ├── api-security-webhook-reliability/SKILL.md
+    ├── privacy-data-protection/SKILL.md
+    ├── threat-modeling-risk-assessment/SKILL.md
+    ├── ai-security-prompt-injection/SKILL.md
+    ├── testing-strategy-design/SKILL.md
+    ├── backend-testing-tdd/SKILL.md
+    ├── playwright-mcp-browser-qa/
+    │   ├── SKILL.md
+    │   └── references/playwright-mcp-tools.md
+    ├── test-data-environment-isolation/SKILL.md
+    ├── test-reporting-failure-diagnosis/SKILL.md
+    ├── ui-ux-design-systems/
+    │   ├── SKILL.md
+    │   └── references/shadcn-ui-patterns.md
+    ├── accessibility-engineering/
+    │   ├── SKILL.md
+    │   ├── references/wcag22-checklist.md
+    │   └── scripts/contrast-check.py
+    ├── frontend-performance/SKILL.md
+    ├── cross-browser-responsive-qa/SKILL.md
+    ├── database-architecture-integrity/SKILL.md
+    ├── query-optimization-performance/SKILL.md
+    ├── import-export-data-processing/SKILL.md
+    ├── api-external-service-integration/SKILL.md
+    ├── ai-provider-integration/SKILL.md
+    ├── performance-profiling-optimization/
+    │   ├── SKILL.md
+    │   └── references/core-web-vitals.md
+    ├── caching-background-jobs/SKILL.md
+    ├── ci-cd-release-engineering/
+    │   ├── SKILL.md
+    │   └── references/ci-cd-security-hardening.md
+    ├── environment-configuration-management/SKILL.md
+    ├── deployment-readiness/SKILL.md
+    ├── observability-incident-diagnosis/SKILL.md
+    ├── backup-recovery-disaster-preparedness/SKILL.md
+    ├── seo-web-discoverability/SKILL.md
+    ├── documentation-developer-handoff/SKILL.md
+    └── final-quality-gate/
+        ├── SKILL.md
+        └── references/gate-checklist.md
+```
+
+---
+
+## 3. Role of Every Skill (01–38)
+
+### A. Core Discovery and Planning
+1. **`project-discovery` (`SKILL-01`)**: Inspects repository structure, languages, frameworks, runtimes, package managers, entry points, databases, test tools, and security-sensitive modules—separating verified facts from assumptions.
+2. **`requirements-analysis` (`SKILL-02`)**: Translates ambiguous prompts into explicit functional/non-functional requirements, user workflows, edge cases, failure states, and Given/When/Then acceptance criteria.
+3. **`adaptive-architecture` (`SKILL-03`)**: Evaluates existing architecture, dependency boundaries, and trade-offs to plan incremental changes without unnecessary rewrites.
+4. **`technical-decision-records` (`SKILL-04`)**: Authors and maintains Architecture Decision Records (ADRs), API contracts, setup guides, and dependency documentation aligned with actual code.
+
+### B. Core Development Quality
+5. **`ai-anti-slop` (`SKILL-05`)**: Enforces the Craftsmanship Standard (`C-1`..`C-5`), the 40 Anti-Slop rules (`R-01`..`R-40`), Liveliness Toolkit dials, code comment hygiene, copywriting discipline, and the 4-block Delivery Gate.
+6. **`adaptive-engineering` (`SKILL-06`)**: Adapts implementation code to the project's actual language, framework version, idioms, and conventions.
+7. **`code-quality-static-analysis` (`SKILL-07`)**: Runs and interprets stack-appropriate linters, formatters, type checkers, and static analyzers while checking complexity, duplication, and error handling.
+8. **`refactoring-legacy-safety` (`SKILL-08`)**: Guides behavior-preserving incremental refactoring, characterization testing, dead-code verification, and backward compatibility.
+9. **`dependency-supply-chain-security` (`SKILL-09`)**: Audits direct and transitive dependencies, lockfiles, CVEs, package provenance, and post-install script risks.
+
+### C. Security Engineering
+10. **`application-security-owasp` (`SKILL-10`)**: Enforces OWASP ASVS (L1/L2/L3) and OWASP Top 10 controls across authn/authz, SQLi, XSS, CSRF, IDOR, sessions, file uploads, rate limiting, and secrets.
+11. **`api-security-webhook-reliability` (`SKILL-11`)**: Secures API endpoints and webhook consumers/producers with HMAC signature verification, replay protection, timeouts, retries, and idempotency keys.
+12. **`privacy-data-protection` (`SKILL-12`)**: Enforces data minimization, PII encryption/masking, log redaction, right-to-erasure deletion, AI prompt PII filtering, and regulatory compliance.
+13. **`threat-modeling-risk-assessment` (`SKILL-13`)**: Maps assets, trust boundaries, attack surfaces, and STRIDE threats to prioritize mitigations and document residual risks.
+14. **`ai-security-prompt-injection` (`SKILL-14`)**: Defends AI/LLM workflows against direct/indirect prompt injection, unsafe tool execution, RAG poisoning, and unvalidated output rendering.
+
+### D. Testing and Quality Assurance
+15. **`testing-strategy-design` (`SKILL-15`)**: Selects the right mix of unit, integration, API, E2E, regression, performance, and security tests based on risk rather than raw test count.
+16. **`backend-testing-tdd` (`SKILL-16`)**: Guides Red-Green-Refactor TDD and backend testing across domain logic, validation, auth matrix, database transactions, and external service mocks.
+17. **`playwright-mcp-browser-qa` (`SKILL-17`)**: Conducts evidence-based browser QA using Playwright MCP accessibility snapshots (`browser_snapshot`, `browser_find`), console logs, and network inspection.
+18. **`test-data-environment-isolation` (`SKILL-18`)**: Protects production data and prevents real payments/messages during tests using isolated test databases, deterministic fixtures, and mocks.
+19. **`test-reporting-failure-diagnosis` (`SKILL-19`)**: Classifies every test result strictly as `PASS`, `FAIL`, `BLOCKED`, or `NOT TESTED` with reproduction steps, logs, and root-cause analysis.
+
+### E. Frontend and User Experience
+20. **`ui-ux-design-systems` (`SKILL-20`)**: Builds accessible, token-driven UI components, forms, tables, dialogs, and empty/loading/error/success states—integrating `shadcn/ui` when compatible with the project.
+21. **`accessibility-engineering` (`SKILL-21`)**: Implements and audits WCAG 2.2 Level AA compliance, including semantic HTML, keyboard focus order, ARIA patterns, and deterministic contrast checking (`scripts/contrast-check.py`).
+22. **`frontend-performance` (`SKILL-22`)**: Optimizes asset sizing, hero image `fetchpriority="high"`, JS/CSS bundles, rendering efficiency, caching, and Core Web Vitals mechanisms.
+23. **`cross-browser-responsive-qa` (`SKILL-23`)**: Verifies multi-breakpoint layout reflow (`320px`–`1440px+`), `44x44px` touch targets, sticky nav clearance, and cross-browser compatibility.
+
+### F. Data and Integrations
+24. **`database-architecture-integrity` (`SKILL-24`)**: Designs normalized schemas, foreign key constraints, indexes, ACID transactions, concurrency locks, and zero-downtime expand-and-contract migrations.
+25. **`query-optimization-performance` (`SKILL-25`)**: Eliminates N+1 queries, tunes composite/covering indexes, replaces deep `OFFSET` with keyset pagination, and verifies gains via `EXPLAIN ANALYZE`.
+26. **`import-export-data-processing` (`SKILL-26`)**: Builds streaming, chunked, transactional CSV/spreadsheet imports and exports with header/type validation, formula-injection defense, and per-row error reporting.
+27. **`api-external-service-integration` (`SKILL-27`)**: Engineers resilient outbound API clients with strict contracts, timeouts, exponential backoff + jitter, rate-limit handling, and circuit breakers.
+28. **`ai-provider-integration` (`SKILL-28`)**: Integrates LLM/AI APIs with server-side key protection, structured schema outputs, token/cost caps, model fallbacks, and telemetry.
+
+### G. Performance, Operations, and Deployment
+29. **`performance-profiling-optimization` (`SKILL-29`)**: Establishes baseline metrics, profiles CPU/memory/DB/network and Core Web Vitals (`LCP`, `INP`, `CLS`), and verifies measurable improvements.
+30. **`caching-background-jobs` (`SKILL-30`)**: Designs cache invalidation, stampede protection, idempotent queue workers, overlap-safe scheduled jobs, and dead-letter recovery.
+31. **`ci-cd-release-engineering` (`SKILL-31`)**: Configures and hardens automated CI/CD pipelines, build/test gates, environment approvals, concurrency controls, and rollback workflows.
+32. **`environment-configuration-management` (`SKILL-32`)**: Separates dev/staging/prod configurations, validates environment variables at startup, secures secrets, and prevents client-bundle secret leaks.
+33. **`deployment-readiness` (`SKILL-33`)**: Audits build artifacts, config parity, migration safety, backups, HTTPS/permissions, queues, health checks, and rollback procedures prior to release.
+34. **`observability-incident-diagnosis` (`SKILL-34`)**: Implements structured redacted logging, correlation IDs, metrics, tracing, health probes, and incident root-cause analysis.
+35. **`backup-recovery-disaster-preparedness` (`SKILL-35`)**: Establishes 3-2-1 backup strategies, retention schedules, encrypted immutable backups, RPO/RTO alignment, and verified restore testing.
+36. **`seo-web-discoverability` (`SKILL-36`)**: Optimizes public pages for metadata, canonicals, sitemaps, `robots.txt`, structured data, and crawlability while keeping private dashboards `noindex`.
+
+### H. Final Quality and Maintenance
+37. **`documentation-developer-handoff` (`SKILL-37`)**: Verifies that setup instructions, `.env.example`, test commands, architecture docs, and operational runbooks match the actual system.
+38. **`final-quality-gate` (`SKILL-38`)**: Consolidates evidence across all 15 release domains and issues a binding release verdict: **`READY`**, **`READY WITH ACCEPTED RISKS`**, **`BLOCKED`**, or **`INCOMPLETE`**.
+
+---
+
+## 4. Recommended Usage Workflow & Skill Routing
+
+See [`SKILL_ROUTING.md`](./SKILL_ROUTING.md) and [`SKILL_CATALOG.md`](./SKILL_CATALOG.md) for the complete routing decision matrix. In every project:
+1. Run **`project-discovery`** first to establish the verified technology stack.
+2. Run **`requirements-analysis`** to clarify scope, edge cases, and acceptance criteria.
+3. Activate only the **relevant domain skills** for the task (e.g., UI skills for frontend tasks, database skills for schema changes).
+4. Apply **`ai-anti-slop`** and **`application-security-owasp`** during implementation and review.
+5. Verify changes with **`code-quality-static-analysis`**, **`backend-testing-tdd`**, and/or **`playwright-mcp-browser-qa`**, recording truthful results via **`test-reporting-failure-diagnosis`**.
+6. Before declaring a release ready, evaluate **`deployment-readiness`** and execute **`final-quality-gate`**.
+
+---
+
+## 5. Verified Global & Workspace Installation in Antigravity
+
+> **Important Status Note**: By default, this library resides inside the workspace at `/home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills/` (with a workspace `.agents/skills.json` pointer for the current workspace). It has **not** modified or overwritten your global `~/.gemini/config/` files.
+
+To make these 38 skills available across **all future projects** in Google Antigravity, choose one of the three verified mechanisms supported by Antigravity:
+
+### Option A — Global Declarative `skills.json` (Recommended, Zero Duplication)
+Keep the library in a single canonical folder and register its `skills/` path in `~/.gemini/config/skills.json`. Antigravity scans each `entries` path one level deep for `<skill-name>/SKILL.md`:
+
+```json
+{
+  "entries": [
+    {
+      "path": "/home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills/skills"
+    }
+  ]
+}
+```
+*(If `~/.gemini/config/skills.json` already exists, append the object to its `"entries"` array rather than overwriting existing entries.)*
+
+### Option B — Install as a Global Antigravity Plugin Bundle
+Because `reusable-ai-development-skills/` includes a valid `plugin.json` manifest and `skills/<skill-name>/SKILL.md` layout, you can install or symlink it as a single toggleable plugin:
+
+```bash
+# Via Antigravity CLI:
+agy plugin install /home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills
+
+# Or copy/symlink into the global plugins directory and restart Antigravity:
+ln -s /home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills ~/.gemini/config/plugins/reusable-ai-development-skills
+```
+
+### Option C — Copy Individual or All Skills to Global or Workspace `.agents/skills/`
+- **Global (All Workspaces — Antigravity App & IDE)**:
+  ```bash
+  mkdir -p ~/.gemini/config/skills
+  cp -r /home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills/skills/* ~/.gemini/config/skills/
+  ```
+- **Project-Specific (Team Sharing via Git)**:
+  Add `.agents/skills.json` to your project repository pointing to the shared skills path, or copy selected skill folders into `<project-root>/.agents/skills/`.
+
+---
+
+## 6. Validation Procedures
+
+Run the bundled validation script at any time to verify directory structure, `agentskills.io` frontmatter rules, required sections, line-count limits, and relative file links:
+
+```bash
+python3 reusable-ai-development-skills/scripts/validate-skills.py
+```
+
+For contrast checking during UI/Accessibility work (`SKILL-21`):
+```bash
+python3 reusable-ai-development-skills/skills/accessibility-engineering/scripts/contrast-check.py "#FFFFFF" "#777777"
+```
+
+---
+
+## 7. Source Attribution, Licensing, and Maintenance
+
+- All primary sources, upstream commit SHAs, licenses (`MIT`, `Apache-2.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `W3C`), adaptations, and maintenance workflows are documented in [`SOURCES.md`](./SOURCES.md) and [`sources/README.md`](./sources/README.md).
+- Original upstream repositories (`anti-slop`, `playwright-mcp`, `agentskills`) and HTML documentation snapshots are preserved separately in `sources/` and are never mixed into individual skill directories.
+
+---
+
+## 8. Known Limitations
+
+1. **Session Restart on Initial Global Registration**: When adding a new plugin directory or global `skills.json` entry in Antigravity, start a new session or restart the Antigravity window so the skill index refreshes at startup.
+2. **Runtime Tool Dependencies**: Skills such as `playwright-mcp-browser-qa` (`SKILL-17`) require the Playwright MCP server (`@playwright/mcp`) to be configured in the host agent's `mcp_config.json` when executing live browser tests; when unavailable, checks must be reported as `BLOCKED` or `NOT TESTED`.
+3. **Human Sign-Off for Risk Acceptance**: The `final-quality-gate` (`SKILL-38`) status `READY WITH ACCEPTED RISKS` requires explicit human authorization and cannot be self-approved by an autonomous agent.

@@ -1,0 +1,18 @@
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Raw documentation snapshots (optional offline research cache, 1.9MB)
+sources/web-docs/
