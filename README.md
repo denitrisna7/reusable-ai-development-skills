@@ -18,7 +18,67 @@ This library solves those problems by providing **38 focused, self-contained, an
 
 ---
 
-## 2. Directory Structure
+## 2. Quick Start: How to Use in Any Project (Tata Cara Penggunaan)
+
+You can use this skill library in any project immediately so that Google Antigravity automatically detects all 38 skills and guides your workflow from requirements to pre-deployment release checks.
+
+### Option 1 — Project-Specific via Git Clone (Rekomendasi per Proyek)
+In the root directory of any new project (Laravel, React, Vue, Next.js, Django, Flutter, etc.):
+```bash
+# Clone directly into Antigravity's native workspace skills directory:
+git clone https://github.com/denitrisna7/reusable-ai-development-skills.git .agents/skills/ai-skills
+```
+*Antigravity automatically scans `.agents/skills/` on launch. No additional configuration is required.*
+
+### Option 2 — Global Install Across All Projects (Pasang 1 Kali untuk Selamanya)
+Install once to your machine's Antigravity global plugin directory to make all 38 skills available across all current and future projects on your computer:
+```bash
+git clone https://github.com/denitrisna7/reusable-ai-development-skills.git ~/.gemini/config/plugins/reusable-ai-development-skills
+```
+*(Or create a symlink if you already have the repository cloned locally):*
+```bash
+ln -s /home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills ~/.gemini/config/plugins/reusable-ai-development-skills
+```
+
+---
+
+### How to Prompt Antigravity in Chat (Contoh Perintah Chat)
+
+Once installed, talk to Antigravity naturally in English or Indonesian. The library routes your requests to the appropriate skills automatically:
+
+#### A. Sebelum Deployment ke Server / Hosting (Pre-Deployment Release Gate)
+> **Prompt**: *"Tolong jalankan audit kesiapan rilis (pre-deployment check) sebelum saya deploy proyek ini ke server/hosting."*  
+> *(English: "Run a pre-deployment readiness check and final quality gate audit before deploying to production.")*
+
+**What Antigravity executes:**
+- **Credentials & Secret Audit** (`SKILL-32` & `SKILL-10`): Scans `.env`, verifies production configuration schemas, ensures zero API keys or secrets leak into client bundles, and verifies debug mode is disabled.
+- **Responsive Layout & Mobile Audit** (`SKILL-23`): Tests viewports (`320px` to `1440px`), ensures minimum `44x44px` touch targets, eliminates horizontal scroll leaks, and checks mobile viewport behavior.
+- **Database & Migration Safety** (`SKILL-24`): Checks that all migrations are reversible, foreign keys are guarded, and transactions are ACID-safe.
+- **Binding Release Verdict** (`SKILL-38` & `SKILL-33`): Issues a formal verdict:
+  - **`READY`**: Safe to proceed with production deployment.
+  - **`BLOCKED`**: Critical security or architectural defect identified; deployment blocked until resolved.
+
+#### B. Pengujian Siklus CRUD & Verifikasi Browser
+> **Prompt**: *"Buatkan fitur manajemen user lengkap dengan pengujian siklus CRUD-nya sampai ke tampilan browser."*  
+> *(English: "Implement the user management feature with complete CRUD testing and browser verification.")*
+
+**What Antigravity executes:**
+- Anti-slop clean architecture without boilerplate or placeholders (`SKILL-05` & `SKILL-06`).
+- Full lifecycle automated backend tests: *Create -> Read -> Update -> Delete -> Post-delete 404* (`SKILL-16`).
+- Real browser flow and form verification with Playwright MCP snapshots (`SKILL-17`).
+
+#### C. Audit Frontend, UI/UX, & Aksesibilitas Mobile
+> **Prompt**: *"Audit tampilan halaman ini, pastikan responsif di mobile dan aksesibilitasnya memenuhi standar WCAG AA."*  
+> *(English: "Audit this page for responsive mobile layout, WCAG 2.2 AA contrast, and semantic landmarks.")*
+
+**What Antigravity executes:**
+- Semantic HTML, focus trap in modals, and keyboard navigation (`SKILL-21`).
+- Exact color contrast calculation via `contrast-check.py` (`SKILL-21`).
+- Core Web Vitals profiling (`LCP <= 2.5s`, `INP <= 200ms`, `CLS <= 0.1`) (`SKILL-22` & `SKILL-29`).
+
+---
+
+## 3. Directory Structure
 
 ```text
 reusable-ai-development-skills/
@@ -105,7 +165,7 @@ reusable-ai-development-skills/
 
 ---
 
-## 3. Role of Every Skill (01–38)
+## 4. Role of Every Skill (01–38)
 
 ### A. Core Discovery and Planning
 1. **`project-discovery` (`SKILL-01`)**: Inspects repository structure, languages, frameworks, runtimes, package managers, entry points, databases, test tools, and security-sensitive modules—separating verified facts from assumptions.
@@ -163,7 +223,7 @@ reusable-ai-development-skills/
 
 ---
 
-## 4. Recommended Usage Workflow & Skill Routing
+## 5. Recommended Usage Workflow & Skill Routing
 
 See [`SKILL_ROUTING.md`](./SKILL_ROUTING.md) and [`SKILL_CATALOG.md`](./SKILL_CATALOG.md) for the complete routing decision matrix. In every project:
 1. Run **`project-discovery`** first to establish the verified technology stack.
@@ -175,7 +235,7 @@ See [`SKILL_ROUTING.md`](./SKILL_ROUTING.md) and [`SKILL_CATALOG.md`](./SKILL_CA
 
 ---
 
-## 5. Verified Global & Workspace Installation in Antigravity
+## 6. Advanced Global & Workspace Installation Options
 
 > **Important Status Note**: By default, this library resides inside the workspace at `/home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills/` (with a workspace `.agents/skills.json` pointer for the current workspace). It has **not** modified or overwritten your global `~/.gemini/config/` files.
 
@@ -217,7 +277,7 @@ ln -s /home/denitrisna7/Documents/Apps/Deni/Skill/reusable-ai-development-skills
 
 ---
 
-## 6. Validation Procedures
+## 7. Validation Procedures
 
 Run the bundled validation script at any time to verify directory structure, `agentskills.io` frontmatter rules, required sections, line-count limits, and relative file links:
 
@@ -232,14 +292,14 @@ python3 reusable-ai-development-skills/skills/accessibility-engineering/scripts/
 
 ---
 
-## 7. Source Attribution, Licensing, and Maintenance
+## 8. Source Attribution, Licensing, and Maintenance
 
 - All primary sources, upstream commit SHAs, licenses (`MIT`, `Apache-2.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `W3C`), adaptations, and maintenance workflows are documented in [`SOURCES.md`](./SOURCES.md) and [`sources/README.md`](./sources/README.md).
 - Original upstream repositories (`anti-slop`, `playwright-mcp`, `agentskills`) and HTML documentation snapshots are preserved separately in `sources/` and are never mixed into individual skill directories.
 
 ---
 
-## 8. Known Limitations
+## 9. Known Limitations
 
 1. **Session Restart on Initial Global Registration**: When adding a new plugin directory or global `skills.json` entry in Antigravity, start a new session or restart the Antigravity window so the skill index refreshes at startup.
 2. **Runtime Tool Dependencies**: Skills such as `playwright-mcp-browser-qa` (`SKILL-17`) require the Playwright MCP server (`@playwright/mcp`) to be configured in the host agent's `mcp_config.json` when executing live browser tests; when unavailable, checks must be reported as `BLOCKED` or `NOT TESTED`.
