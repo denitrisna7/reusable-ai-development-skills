@@ -5,11 +5,13 @@
 > **"git clone kan skill ini kemudian kerjakan sesuai skill tersebut"**  
 > *(or any variation such as "audit aplikasi kita dengan skill ini", "kerjakan sesuai skill", or "jalankan testing dan audit menyeluruh")*  
 > 
-> **THE "NO SHORTCUTS, NO 1-LINE JSON, & NO FAKE BLOCKED" RULES**:  
-> 1. **Never Collapse Unit Tests into 1-Line JSON**: In Laravel 12+, `php artisan test` outputs a 1-line JSON summary (`{"tool":"phpunit","result":"passed"...}`) when it detects an AI environment. You MUST run `./vendor/bin/phpunit --testdox` (or `pytest -v` / `npm test`) so every single test case (`✔ ...`) is printed visibly in the chat!  
-> 2. **Never Skip Playwright with `BROWSER TESTING BLOCKED`**: Even if the IDE session does not declare `@playwright/mcp` tools, this repository includes a real Headless Chromium Playwright runner (`scripts/run-browser-audit.mjs`). You MUST start the local dev server and execute `node <skills-path>/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` to run real Chromium browser QA across Desktop (`1440x900`) and Mobile (`375x812`) viewports!  
-> 3. **Never Output a Partial 5-Row Final Table**: Phase 4 MUST output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering all 38 skills `SKILL-01` through `SKILL-38`)**.  
-> 4. **Never Deploy When Any Gate is `FAIL` or `BLOCKED`**: Production deployment is strictly prohibited unless all applicable gates are `PASS` and the user explicitly requested deployment.
+> **THE "NO SHORTCUTS, NO 1-LINE JSON, NO IDE RELOAD STOPS, & NO FAKE BLOCKED" RULES**:  
+> 1. **Always Pull Latest Skill Repo First**: If `.agents/skills/ai-skills` or `reusable-ai-development-skills` already exists in the project, run `git -C <skills-dir> pull origin main` first so you always execute the latest scripts.  
+> 2. **Never Stop to Ask the User to Reload MCP or Restart the IDE Window**: Do NOT waste turns editing `mcp_config.json`, searching the plugin marketplace, or telling the user to reload MCP servers! `scripts/run-audit.py` automatically heals `PATH` (`~/.local/bin`, `~/development/flutter/bin`, `~/.gemini/antigravity/bin`), auto-starts a temporary local server if none is running, and runs `scripts/run-browser-audit.mjs` in real Headless Chromium directly via `run_command` in the current session!  
+> 3. **Never Collapse Unit Tests into 1-Line JSON**: In Laravel 12+, `php artisan test` outputs a 1-line JSON summary (`{"tool":"phpunit","result":"passed"...}`) when it detects an AI environment. You MUST run `./vendor/bin/phpunit --testdox --colors=never` (or `pytest -v` / `npm test`) so every single test case (`✔ ...`) is printed visibly in the chat!  
+> 4. **Never Skip Playwright with `BROWSER TESTING BLOCKED`**: Execute `node <skills-path>/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` (or let `run-audit.py` run it automatically) to run real Headless Chromium browser QA across Desktop (`1440x900`) and Mobile (`375x812`) viewports, including interactive login (`--login-url=/login --user=... --pass=...`)!  
+> 5. **Never Output a Partial 5-Row Final Table**: Phase 4 MUST output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering all 38 skills `SKILL-01` through `SKILL-38`)**.  
+> 6. **Never Deploy When Any Gate is `FAIL` or `BLOCKED`**: Production deployment is strictly prohibited unless all applicable gates are `PASS` and the user explicitly requested deployment.
 
 ---
 
