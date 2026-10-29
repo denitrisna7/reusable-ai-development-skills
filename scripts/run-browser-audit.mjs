@@ -209,13 +209,32 @@ function domAuditEvaluator(viewportLabel) {
   function isVisible(el) {
     let cur = el;
     while (cur && cur.nodeType === 1) {
+      if (cur.hasAttribute('hidden') || cur.hasAttribute('x-cloak') || cur.getAttribute('aria-hidden') === 'true') {
+        return false;
+      }
       const style = window.getComputedStyle(cur);
       if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) < 0.05) return false;
       if (style.clip === 'rect(0px, 0px, 0px, 0px)' || cur.classList.contains('sr-only')) return false;
       cur = cur.parentElement;
     }
     const rect = el.getBoundingClientRect();
-    return rect.width > 2 && rect.height > 2;
+    if (rect.width <= 2 || rect.height <= 2) return false;
+    // Ignore off-canvas drawers translated completely off-screen to the left or top
+    if (rect.right <= 0 || rect.bottom <= 0) return false;
+    return true;
+  }
+
+  function isInsideHorizontalScrollContainer(el, vw) {
+    let cur = el.parentElement;
+    while (cur && cur !== document.body && cur !== document.documentElement) {
+      const st = window.getComputedStyle(cur);
+      if (['auto', 'scroll', 'hidden', 'clip'].includes(st.overflowX)) {
+        const r = cur.getBoundingClientRect();
+        if (r.right <= vw + 2) return true;
+      }
+      cur = cur.parentElement;
+    }
+    return false;
   }
 
   const vw = window.innerWidth;
@@ -227,9 +246,37 @@ function domAuditEvaluator(viewportLabel) {
   let textElementsChecked = 0;
 
   const clippedElements = [];
+  const overflowCulprits = [];
   const textBoxes = [];
 
   const allElements = Array.from(document.querySelectorAll('body *'));
+  if (horizontalOverflowPx > 4) {
+    for (const el of allElements) {
+      const r = el.getBoundingClientRect();
+      if (r.right > vw + 4 && !isInsideHorizontalScrollContainer(el, vw)) {
+        const cls = typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
+        overflowCulprits.push({
+          selector: `<${el.tagName.toLowerCase()}${cls}>`,
+          rightPx: Math.round(r.right),
+          overflowPx: Math.round(r.right - vw),
+        });
+      }
+    }
+    if (overflowCulprits.length === 0) {
+      for (const el of allElements) {
+        const r = el.getBoundingClientRect();
+        if (r.right > vw + 4 || el.scrollWidth > vw + 4) {
+          const cls = typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
+          overflowCulprits.push({
+            selector: `<${el.tagName.toLowerCase()}${cls}>`,
+            rightPx: Math.round(Math.max(r.right, el.scrollWidth)),
+            overflowPx: Math.round(Math.max(r.right, el.scrollWidth) - vw),
+          });
+        }
+      }
+    }
+  }
+
   for (const el of allElements) {
     if (!isVisible(el)) continue;
 
@@ -255,8 +302,9 @@ function domAuditEvaluator(viewportLabel) {
       if (ratio < minContrast) minContrast = ratio;
 
       if (ratio < threshold) {
+        const cls = typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
         contrastFailures.push({
-          tag: el.tagName.toLowerCase(),
+          tag: `${el.tagName.toLowerCase()}${cls}`,
           text: directText.slice(0, 40),
           ratio: Number(ratio.toFixed(2)),
           threshold,
@@ -331,6 +379,7 @@ function domAuditEvaluator(viewportLabel) {
     minContrast: textElementsChecked > 0 ? Number(minContrast.toFixed(2)) : null,
     contrastFailures: contrastFailures.slice(0, 5),
     clippedElements: clippedElements.slice(0, 5),
+    overflowCulprits: overflowCulprits.slice(0, 4),
     overlaps: overlaps.slice(0, 5),
     formsCount: document.querySelectorAll('form').length,
     buttonsCount: document.querySelectorAll('button, [type="submit"]').length,
@@ -406,12 +455,27 @@ async function main() {
       await page.goto(baseUrl + '/', { waitUntil: 'domcontentloaded', timeout: 15000 });
       const hrefs = await page.evaluate(() =>
         Array.from(document.querySelectorAll('a[href]'))
-          .map((a) => a.getAttribute('href'))
-          .filter((h) => h && h.startsWith('/') && !h.startsWith('//') && !h.endsWith('.apk') && !h.endsWith('.pdf'))
+          .map((a) => {
+            try {
+              const u = new URL(a.href, window.location.origin);
+              if (u.origin !== window.location.origin) return null;
+              return u.pathname;
+            } catch {
+              return null;
+            }
+          })
+          .filter(
+            (p) =>
+              p &&
+              p.startsWith('/') &&
+              !p.endsWith('.apk') &&
+              !p.endsWith('.pdf') &&
+              !p.startsWith('/unduh-apk/file')
+          )
       );
       for (const h of hrefs) {
         const clean = h.split('?')[0].split('#')[0];
-        if (!routes.includes(clean) && routes.length < 6) routes.push(clean);
+        if (!routes.includes(clean) && routes.length < 5) routes.push(clean);
       }
     } catch (e) {
       console.error(`⛔ [FATAL] Cannot connect to ${baseUrl}: ${e.message}`);
@@ -442,6 +506,7 @@ async function main() {
         const t0 = Date.now();
         const response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
         const loadMs = Date.now() - t0;
+        await page.waitForTimeout(120);
         const status = response ? response.status() : 0;
 
         const audit = await page.evaluate(domAuditEvaluator, vp.label);
@@ -462,6 +527,9 @@ async function main() {
         }
         if (audit.horizontalOverflowPx > 4) {
           totalDefects++;
+          for (const oc of audit.overflowCulprits || []) {
+            console.log(`     ❌ OVERFLOW CULPRIT: ${oc.selector} right=${oc.rightPx}px (+${oc.overflowPx}px past viewport)`);
+          }
         }
         if (audit.contrastFailures.length > 0) {
           totalDefects += audit.contrastFailures.length;

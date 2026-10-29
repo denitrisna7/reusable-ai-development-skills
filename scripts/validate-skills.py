@@ -97,12 +97,22 @@ REQUIRED_SECTION_PATTERNS = [
 
 REQUIRED_ROOT_FILES = [
     "README.md",
+    "CHANGELOG.md",
+    "BEFORE_ACTION.md",
+    "AGENTS.md",
+    "rules/AGENTS.md",
     "SKILL_CATALOG.md",
     "SKILL_ROUTING.md",
     "SOURCES.md",
     "COMPLETENESS_AUDIT.md",
     "plugin.json",
     "sources/README.md",
+    "scripts/run-audit.py",
+    "scripts/run-browser-audit.mjs",
+    "scripts/contrast-check.py",
+    "scripts/contrast_check.py",
+    "scripts/slopcheck.py",
+    "scripts/slopcheck.sh",
 ]
 
 

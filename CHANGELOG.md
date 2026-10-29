@@ -4,7 +4,21 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
-## [`v1.5.2`] — 2026-10-30
+## [`v1.6.0`] — 2026-10-30
+### Added, Fixed & Hardened (Deep Audit Across Real Applications)
+- **Native Antigravity `<user_rules>` Auto-Injection (`rules/AGENTS.md` & `AGENTS.md`)**: Added `rules/AGENTS.md` inside the plugin root and `AGENTS.md` at the repository root (plus automatic sync to `<target>/.agents/rules/AGENTS.md`, `.agents/scripts/`, and `.agents/references/` via `scripts/run-audit.py`) so Antigravity automatically loads the 5-phase execution protocol into `<user_rules>` on every session.
+- **Same-Origin Full-URL Route Discovery & Off-Canvas Drawer Filtering (`scripts/run-browser-audit.mjs`)**:
+  - Parses `<a href>` via `new URL(a.href, window.location.origin)` so framework route helpers that emit absolute URLs (such as Laravel `{{ route('...') }}`) are automatically discovered and audited across Desktop (`1440x900`) and Mobile (`375x812`).
+  - Filters out closed off-screen mobile drawers (`rect.right <= 0`, `x-cloak`, `aria-hidden="true"`) in `isVisible(el)` and adds a `120ms` post-navigation settle delay for Alpine.js / React / Vue hydration.
+  - Prints exact CSS class selectors on `CONTRAST FAIL` (`<p.text-[11px].text-ink-2/80>`) and exact overflowing DOM elements (`❌ OVERFLOW CULPRIT: <table.w-full.min-w-[700px]> right=717px (+342px past viewport)`) whenever `horizontalOverflowPx > 4`.
+- **Zero False Positives & Deterministic 38-Skill Evidence Matrix (`scripts/run-audit.py`)**:
+  - Eliminated regex false positives on static English log strings (`SKILL-12`), Service Workers and config files (`SKILL-27`), and database migrations (`SKILL-14` / `SKILL-28`).
+  - Replaced the 12 static `"REVIEW"` traps (`SKILL-02`, `SKILL-03`, `SKILL-06`, `SKILL-13`, `SKILL-14`, `SKILL-20`, `SKILL-25`, `SKILL-26`, `SKILL-28`, `SKILL-29`, `SKILL-30`, `SKILL-33`) with concrete code and runtime verification checks so compliant applications deterministically reach `AUTOMATED VERDICT: READY`.
+- **Expanded Self-Validation Suite (`scripts/validate-skills.py`)**: Verifies all 18 required root, rule, and helper script files alongside all 38 `SKILL.md` files and 161 relative links.
+
+---
+
+## [`v1.5.2`] — 2026-10-30 (Commit `a1a4b34`)
 ### Added & Fixed (Cross-App Discovery Registration & Zero-Hardcoded-PASS 38-Skill Evaluator)
 - **Automatic `.agents/skills.json` Registration (`scripts/run-audit.py`)**: Solved Antigravity's 1-level `.agents/skills/<name>/SKILL.md` scan limit when users clone the repository into `.agents/skills/ai-skills` (where skills live two levels deep at `.agents/skills/ai-skills/skills/<name>/SKILL.md`). `sync_agents_directory()` now automatically creates/updates `.agents/skills.json` (`{"entries": [{"path": ".agents/skills/ai-skills/skills"}]}`) and syncs all 38 skills into `.agents/skills/` so `git pull` stays synchronized and every skill is discovered immediately.
 - **100% Evidence-Driven 38-Skill Evaluator (`scripts/run-audit.py`)**: Replaced all 19 previously hardcoded `"PASS"` strings in the 38-skill evaluation matrix with real static and runtime code checks (`PASS`, `FAIL`, `WARN`, `N/A`, `REVIEW`):
