@@ -30,6 +30,16 @@ git clone https://github.com/denitrisna7/reusable-ai-development-skills.git .age
 ```
 *Antigravity automatically scans `.agents/skills/` on launch. No additional configuration is required.*
 
+### Master Single-Command Trigger (Perintah 1 Kalimat Langsung Beres)
+You can simply give this exact prompt to Antigravity:
+> **Prompt**: *"git clone kan skill ini kemudian kerjakan sesuai skill tersebut: https://github.com/denitrisna7/reusable-ai-development-skills.git"*
+
+Whenever Antigravity sees this command, it is bound by **[`BEFORE_ACTION.md`](./BEFORE_ACTION.md)** to execute the 4-phase protocol strictly in order without skipping or hallucinating:
+1. **Phase 0 (Before Action)**: Executes `python3 .agents/skills/ai-skills/scripts/run-audit.py` to collect empirical baseline evidence (stack, `.env`, server, and test runners).
+2. **Phase 1 (Error & CRUD Fixes)**: Resolves all 500, 404, and 403 errors, and executes real automated test commands.
+3. **Phase 2 (Browser & UI Verification)**: Inspects live pages via Playwright MCP or reports `BLOCKED` honestly if tools/server are inactive.
+4. **Phase 3 (Final Quality Gate)**: Outputs the verified audit table and binding release verdict (`READY` or `BLOCKED`).
+
 ### Option 2 — Global Install Across All Projects (Pasang 1 Kali untuk Selamanya)
 Install once to your machine's Antigravity global plugin directory to make all 38 skills available across all current and future projects on your computer:
 ```bash
