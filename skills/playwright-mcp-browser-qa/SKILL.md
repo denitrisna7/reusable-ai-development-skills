@@ -49,7 +49,7 @@ Every browser QA session conducted with this skill must uphold the following eng
 
 Before starting a Playwright MCP browser session, verify:
 1. **Target Application Server & Safe Environment**: Confirm the local or staging web server is running (or start it in a background task if authorized) and verify the target URL is a safe test/local host (`localhost`, `127.0.0.1`, `.test`, or isolated staging), **never** a live production system with real customer transactions (`SKILL-18`).
-2. **Playwright MCP Availability**: Check whether Playwright MCP tools (`browser_navigate`, `browser_snapshot`, `browser_click`, etc.) are registered in the current agent environment. If Playwright MCP is not running or browser binaries are unavailable, report the exact blocker and mark browser QA checks as `BLOCKED` (`SKILL-19`).
+2. **Playwright MCP Availability & Strict Anti-Hallucination Lock**: Check whether Playwright MCP tools (`browser_navigate`, `browser_snapshot`, `browser_click`, etc.) are registered in the current agent environment. If Playwright MCP tools are NOT available or the local web server is NOT running, the agent MUST immediately report: `[BROWSER QA BLOCKED: Playwright MCP tools not registered or local server not running]`. The agent is STRICTLY FORBIDDEN from simulating, assuming, or claiming `PASS` for any browser test without calling real browser MCP tools.
 3. **Test Accounts & Seeded Data**: Identify valid test credentials or storage states for each required user role (guest, standard user, admin, second tenant user).
 
 ## 5. Step-by-Step Workflow

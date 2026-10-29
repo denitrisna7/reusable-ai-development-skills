@@ -63,7 +63,9 @@ Before issuing a Final Quality Gate verdict, review:
 - [ ] For any conditionally excludable domain (Gates 06, 07, 08, 09, 12, 13, 15), record an explicit technical justification if marked `EXCLUDED (Justified N/A)`.
 
 ### Step 2: Execute Verification Commands and Gather Real Evidence
-- [ ] Run the project's actual verification suite (linter, typechecker, static analyzer, unit/integration test runner, dependency audit, migration check, and production build) whenever the environment permits.
+- [ ] **MANDATORY TOOL CALL EXECUTION (Anti-Hallucination Lock)**: The agent must execute the actual CLI commands (via `run_command` or project test runners) and/or Playwright MCP tools (`browser_navigate`, `browser_snapshot`).
+- [ ] **STRICT FORBIDDEN CLAIM**: It is strictly forbidden to output `PASS` for Gate 03 (Code Quality), Gate 04 (Automated Tests), or Gate 09 (Browser QA) based on mental review or code inspection alone. Every `PASS` in these domains MUST quote actual terminal command exit codes or raw tool outputs.
+- [ ] **ENVIRONMENT BLOCKED FALLBACK**: If a verification command or tool is not configured, not installed, or fails to execute (e.g., dev server not running, Playwright MCP tool unavailable), the agent MUST mark that gate as `BLOCKED` or `NOT EXECUTED`, and the final verdict CANNOT be `READY`.
 - [ ] Never stop after `npm run build` or `cargo build` succeeds: **a passing build is only one check inside Gate 03/15 and never proves functional, security, test, or operational readiness.**
 - [ ] Inspect code, configurations, migrations, and templates directly for checks that require structural review (OWASP access control, N+1 queries, secret redaction, UI states, rollback docs).
 

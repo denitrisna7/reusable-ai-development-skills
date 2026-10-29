@@ -76,6 +76,13 @@ Once installed, talk to Antigravity naturally in English or Indonesian. The libr
 - Exact color contrast calculation via `contrast-check.py` (`SKILL-21`).
 - Core Web Vitals profiling (`LCP <= 2.5s`, `INP <= 200ms`, `CLS <= 0.1`) (`SKILL-22` & `SKILL-29`).
 
+#### D. Tips Penting: Mencegah AI Memotong Kompas / Mengarang Status PASS
+Jika Anda mendapati AI "loncat" langsung ke kesimpulan PASS tanpa mengeksekusi terminal atau Playwright:
+1. **Periksa Ketersediaan Playwright MCP**: Pastikan plugin atau server `@playwright/mcp` sudah terkonfigurasi di sesi Antigravity Anda. Tanpa MCP browser, AI tidak memiliki alat untuk membuka browser dan wajib melaporkan status `BLOCKED`.
+2. **Pastikan Server Lokal / Dev Server Menyala**: AI tidak bisa menguji web jika `npm run dev`, `php artisan serve`, atau server lokal belum berjalan.
+3. **Gunakan Perintah Berbasis Bukti Nyata (Evidence-Based Prompt)**:
+   > *"Jalankan perintah unit test di terminal sekarang dan tampilkan log output aslinya. Buka web di browser via Playwright MCP dan periksa console error. Jika tool Playwright MCP tidak tersedia atau server belum menyala, laporkan statusnya BLOCKED secara jujur dan jangan mengarang status PASS."*
+
 ---
 
 ## 3. Directory Structure
