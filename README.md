@@ -1,4 +1,4 @@
-# Reusable AI Development Skills Library for Antigravity (`v1.5.1`)
+# Reusable AI Development Skills Library for Antigravity (`v1.5.2`)
 
 A comprehensive, modular, technology-agnostic **38-skill software engineering lifecycle library** designed for **Google Antigravity** (App, CLI, and IDE) and compatible **Agent Skills (`agentskills.io`)** environments.
 
@@ -10,7 +10,8 @@ Seluruh rincian perubahan juga tercatat lengkap di [`CHANGELOG.md`](./CHANGELOG.
 
 | Versi | Commit SHA | Tanggal | Ringkasan Perubahan yang Di-Push ke GitHub |
 | :--- | :---: | :---: | :--- |
-| **`v1.5.1` (Terbaru)** | `HEAD` | 2026-10-30 | **Universal Multi-Stack Audit & Server Auto-Boot**: Menambahkan auto-boot ephemeral server untuk Next.js (`npx next dev -p 18124`), Vite (`npx vite --port 18124`), Django (`manage.py runserver`), FastAPI/Flask, native PHP (`php -S`), dan Static HTML (`python3 -m http.server`); memperluas deteksi arsitektur/komponen lintas framework (Node/React/Vue/Python/Go/Flutter); menstandarkan `CI=true npm test` agar kompatibel dengan Node test runner, Jest, Vitest, dan Mocha. |
+| **`v1.5.2` (Terbaru)** | `HEAD` | 2026-10-30 | **Registrasi Otomatis `.agents/skills.json` & Evaluasi 38 Skill Berbasis Bukti Nyata (0 Hardcoded `PASS`)**: Mengatasi batas *scan* 1 level direktori `.agents/skills/` di Antigravity dengan mendaftarkan `.agents/skills.json` (`{"entries":[{"path":".agents/skills/ai-skills/skills"}]}`) secara otomatis; mengganti 19 status `PASS` statis di `scripts/run-audit.py` menjadi pemindaian kode/runtime nyata (`PASS` / `FAIL` / `WARN` / `N/A` / `REVIEW`) di seluruh 38 skill (`SKILL-01` s/d `SKILL-38`); serta membersihkan variabel `ANTIGRAVITY_AGENT` agar `php artisan test` tidak terpotong menjadi 1 baris JSON. |
+| **`v1.5.1`** | `01fb565` | 2026-10-30 | **Universal Multi-Stack Audit & Server Auto-Boot**: Menambahkan auto-boot ephemeral server untuk Next.js (`npx next dev -p 18124`), Vite (`npx vite --port 18124`), Django (`manage.py runserver`), FastAPI/Flask, native PHP (`php -S`), dan Static HTML (`python3 -m http.server`); memperluas deteksi arsitektur/komponen lintas framework (Node/React/Vue/Python/Go/Flutter); menstandarkan `CI=true npm test` agar kompatibel dengan Node test runner, Jest, Vitest, dan Mocha. |
 | **`v1.5.0`** | `86cff59` | 2026-10-30 | **Full 38-Skill Code Audit & Context-Budget Optimization**: Memadatkan `description` frontmatter di 38 `SKILL.md` (`-53.3%` ukuran karakter) & menghapus duplikat `sources/anti-slop/skills/*/SKILL.md` agar tidak ada skill yang terpotong oleh *context budget* Antigravity; `run-audit.py` kini otomatis menginstal `.agents/` dan mencetak **Matriks Verifikasi 38 Skill (`SKILL-01` s/d `SKILL-38`)** + **15-Domain Final Quality Gate**; menambahkan `slopcheck.py`/`slopcheck.sh`, scan repo penuh di `contrast-check.py`, serta dukungan warna `oklab()`/`oklch()` Tailwind v4 di `run-browser-audit.mjs`. |
 | **`v1.4.0`** | `2668aea` / `16c6450` | 2026-10-30 | **Auto-Heal `PATH` & Zero-Reload Playwright**: `run-audit.py` otomatis menyambungkan binary `node`, `npm`, `npx`, `composer`, `flutter`, `dart` (mencegah `Exit Code 127`), otomatis menyalakan server lokal sementara jika belum aktif, auto-login dashboard, dan melarang AI berhenti meminta *Reload MCP / Sesi Baru*. |
 | **`v1.3.0`** | `bf56a63` | 2026-10-30 | **Real Headless Chromium Runner (`run-browser-audit.mjs`) & 15-Domain Gate**: Menambahkan eksekutor Playwright Chromium langsung via CLI (audit Desktop `1440x900` & Mobile `375x812`, kontras DOM asli `>= 4.5:1`, deteksi teks bertindih, console/network error), bypass ringkasan 1-baris JSON Laravel 12 dengan `--testdox`, serta mewajibkan tabel penuh **15 Domain Quality Gate**. |
@@ -43,10 +44,11 @@ You can use this skill library in any project immediately so that Google Antigra
 ### Option 1 — Project-Specific via Git Clone (Rekomendasi per Proyek)
 In the root directory of any new project (Laravel, React, Vue, Next.js, Django, Flutter, etc.):
 ```bash
-# Clone directly into Antigravity's native workspace skills directory:
-git clone https://github.com/denitrisna7/reusable-ai-development-skills.git .agents/skills/ai-skills
+# Clone into .agents/skills/ai-skills and register .agents/skills.json for 1-level Antigravity discovery:
+git clone https://github.com/denitrisna7/reusable-ai-development-skills.git .agents/skills/ai-skills && \
+python3 .agents/skills/ai-skills/scripts/run-audit.py .
 ```
-*Antigravity automatically scans `.agents/skills/` on launch. No additional configuration is required.*
+*Running `run-audit.py` (or `echo '{"entries":[{"path":".agents/skills/ai-skills/skills"}]}' > .agents/skills.json`) automatically registers `.agents/skills.json` and syncs all 38 skills (`SKILL-01` to `SKILL-38`), `references/`, and `scripts/` into `.agents/` so Antigravity discovers all 38 skills immediately.*
 
 ### Master Single-Command Trigger (Perintah 1 Kalimat Langsung Beres)
 You can simply give this exact prompt to Antigravity:

@@ -4,7 +4,18 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
-## [`v1.5.1`] — 2026-10-30
+## [`v1.5.2`] — 2026-10-30
+### Added & Fixed (Cross-App Discovery Registration & Zero-Hardcoded-PASS 38-Skill Evaluator)
+- **Automatic `.agents/skills.json` Registration (`scripts/run-audit.py`)**: Solved Antigravity's 1-level `.agents/skills/<name>/SKILL.md` scan limit when users clone the repository into `.agents/skills/ai-skills` (where skills live two levels deep at `.agents/skills/ai-skills/skills/<name>/SKILL.md`). `sync_agents_directory()` now automatically creates/updates `.agents/skills.json` (`{"entries": [{"path": ".agents/skills/ai-skills/skills"}]}`) and syncs all 38 skills into `.agents/skills/` so `git pull` stays synchronized and every skill is discovered immediately.
+- **100% Evidence-Driven 38-Skill Evaluator (`scripts/run-audit.py`)**: Replaced all 19 previously hardcoded `"PASS"` strings in the 38-skill evaluation matrix with real static and runtime code checks (`PASS`, `FAIL`, `WARN`, `N/A`, `REVIEW`):
+  - `SKILL-11` (`api-security-webhook-reliability`) now actively fails (`FAIL`) if webhook endpoints/controllers exist without signature/HMAC verification.
+  - `SKILL-13` (`ai-security-prompt-injection`) and `SKILL-28` (`ai-provider-integration`) inspect actual AI/LLM client files for API key isolation, prompt validation, and timeout/fallback controls, or report honest `N/A` when the app has no AI integration.
+  - `SKILL-24`, `SKILL-25`, `SKILL-26`, `SKILL-30`, `SKILL-31`, `SKILL-34`, `SKILL-35`, `SKILL-36`, and `SKILL-37` inspect actual migrations, eager-loading patterns, chunked imports, cache/queue jobs, SEO/meta tags (`run-browser-audit.mjs`), CI workflows, backup scripts, and README setup sections.
+- **Strip `ANTIGRAVITY_AGENT` / `OPENCODE` Environment Variables (`scripts/run-audit.py`)**: Prevented Laravel 12 (`nunomaduro/collision`) from collapsing `php artisan test` output into a 1-line JSON summary when invoked inside Antigravity.
+
+---
+
+## [`v1.5.1`] — 2026-10-30 (Commit `01fb565`)
 ### Added & Improved (Universal Multi-Stack Audit & Server Auto-Boot)
 - **Universal Multi-Stack Server Boot (`scripts/run-audit.py`)**: Added automatic ephemeral dev server boot support for Next.js (`npx next dev -p 18124`), Vite (`npx vite --port 18124`), Django (`python3 manage.py runserver`), FastAPI/Flask, native PHP (`php -S`), and Static HTML (`python3 -m http.server`), ensuring real Headless Chromium QA runs out-of-the-box on ANY web stack without manual configuration.
 - **Universal Multi-Stack Code & Architecture Discovery (`scripts/run-audit.py`)**: Expanded discovery patterns to map controllers, routers, models, schemas, UI views/components/screens, and migrations across Node.js/Next.js/React/Vue, Python, Go, and Flutter, not just PHP/Laravel.

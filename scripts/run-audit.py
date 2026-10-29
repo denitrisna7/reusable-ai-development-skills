@@ -61,42 +61,43 @@ def find_helper_script(filename: str, target_dir: Path) -> Path | None:
 
 
 def sync_agents_directory(target_dir: Path) -> str | None:
-    """Ensure target_dir/.agents has up-to-date skills/, references/, scripts/, and BEFORE_ACTION.md."""
+    """Register this library's skills/ folder in <target>/.agents/skills.json.
+
+    Antigravity scans skill roots only ONE level deep (.agents/skills/<name>/SKILL.md).
+    When the library is cloned to .agents/skills/ai-skills/, the 38 skills live at
+    .agents/skills/ai-skills/skills/<name>/SKILL.md and are invisible unless declared
+    in .agents/skills.json. A pointer (not a copy) keeps skills current after git pull.
+    """
     if target_dir.resolve() == LIBRARY_ROOT.resolve():
         return None
-    # Locate the canonical library root containing skills/ and references/
-    lib_candidates = [
-        LIBRARY_ROOT,
-        Path("/tmp/reusable-ai-development-skills"),
-        Path.home() / ".gemini" / "config" / "plugins" / "reusable-ai-development-skills",
-    ]
-    src_root = None
-    for cand in lib_candidates:
-        if (cand / "skills").is_dir() and (cand / "references").is_dir():
-            src_root = cand
-            break
-    if not src_root:
+    skills_dir = LIBRARY_ROOT / "skills"
+    if not skills_dir.is_dir():
         return None
-
     agents_dir = target_dir / ".agents"
-    if not agents_dir.exists() and not (target_dir / ".git").exists():
-        return None
-
     try:
         agents_dir.mkdir(parents=True, exist_ok=True)
-        for folder in ("skills", "references", "scripts"):
-            src_f = src_root / folder
-            dst_f = agents_dir / folder
-            if src_f.is_dir() and src_f.resolve() != dst_f.resolve():
-                shutil.copytree(src_f, dst_f, dirs_exist_ok=True)
-        for doc in ("BEFORE_ACTION.md", "SKILL_CATALOG.md", "SKILL_ROUTING.md"):
-            src_d = src_root / doc
-            dst_d = agents_dir / doc
-            if src_d.is_file() and src_d.resolve() != dst_d.resolve():
-                shutil.copy2(src_d, dst_d)
-        return f"Synced 38 skills, 8 references, and audit scripts into {agents_dir}"
+        try:
+            entry_path = str(skills_dir.resolve().relative_to(target_dir.resolve()))
+        except ValueError:
+            entry_path = str(skills_dir.resolve())
+        cfg_path = agents_dir / "skills.json"
+        cfg = {}
+        if cfg_path.is_file():
+            try:
+                cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+            except Exception:
+                cfg = {}
+        entries = cfg.setdefault("entries", [])
+        if any(e.get("path") == entry_path for e in entries if isinstance(e, dict)):
+            status = "already registered"
+        else:
+            entries.append({"path": entry_path})
+            cfg_path.write_text(json.dumps(cfg, indent=2) + "\n", encoding="utf-8")
+            status = "registered"
+        count = sum(1 for d in skills_dir.iterdir() if (d / "SKILL.md").is_file())
+        return f"{count} skills {status} in .agents/skills.json -> {entry_path} (visible in new Antigravity sessions)"
     except Exception as exc:
-        return f"Notice: .agents sync skipped ({exc})"
+        return f"Notice: could not write .agents/skills.json ({exc})"
 
 
 def ensure_environment_binaries() -> list[str]:
@@ -548,71 +549,174 @@ def audit_project(target_dir: Path) -> dict:
             except subprocess.TimeoutExpired:
                 temp_server_proc.kill()
 
-    # 8. Build Complete 38-Skill Verification Matrix (SKILL-01 to SKILL-38)
-    f_pass = results["flutter_run"]["status"] in ("PASS", "NOT APPLICABLE")
-    t_pass = results["test_run"]["status"].startswith("PASS") and f_pass
-    b_pass = results["browser_run"]["status"].startswith("PASS")
-    c_pass = results["contrast_check"]["status"] == "PASS"
-    s_pass = results["security_scan"]["status"] == "PASS"
-    e_pass = results["env_check"]["status"] == "PASS"
+    # 8. Build the 38-Skill Verification Matrix from REAL evidence only.
+    #    Status vocabulary (never upgrade without evidence):
+    #      PASS   - an automated check ran and succeeded
+    #      FAIL   - an automated check ran and found defects
+    #      WARN   - check ran; non-blocking gap found
+    #      N/A    - the feature does not exist in this repository (evidence: 0 matching files)
+    #      REVIEW - cannot be proven by a script; the agent MUST open the SKILL.md,
+    #               inspect the code, and cite file:line evidence before reporting PASS
+    texts = {}
 
-    results["skills_matrix"] = [
-        ("SKILL-01", "project-discovery", "PASS", f"Stack: {', '.join(results['stack'])}"),
-        ("SKILL-02", "requirements-analysis", "PASS", f"{len(controller_files)} controllers, {len(test_files)} test files mapped"),
-        ("SKILL-03", "adaptive-architecture", "PASS", f"Models: {len(model_files)}, Views: {len(blade_files)} layered cleanly"),
-        ("SKILL-04", "technical-decision-records", "PASS", "Architecture & README/CHANGELOG conventions verified"),
-        ("SKILL-05", "ai-anti-slop", results["slop_check"]["status"], results["slop_check"]["output"].splitlines()[0] if results["slop_check"]["output"] else "Clean"),
-        ("SKILL-06", "adaptive-engineering", "PASS", "Framework-native idioms and runtime conventions verified"),
-        ("SKILL-07", "code-quality-static-analysis", results["static_analysis"]["status"], "; ".join(results["static_analysis"]["details"])),
-        ("SKILL-08", "refactoring-legacy-safety", "PASS", "Zero orphaned backup files or destructive regressions"),
-        ("SKILL-09", "dependency-supply-chain-security", "PASS", f"Lockfiles verified: {lockfiles or ['library-mode']}"),
-        ("SKILL-10", "application-security-owasp", results["security_scan"]["status"], "; ".join(results["security_scan"]["details"])),
-        ("SKILL-11", "api-security-webhook-reliability", "PASS", "API auth guards & request validation verified"),
-        ("SKILL-12", "privacy-data-protection", "PASS", "Sensitive credential & token redaction verified"),
-        ("SKILL-13", "threat-modeling-risk-assessment", "PASS", "Public, authenticated, and RBAC trust boundaries mapped"),
-        ("SKILL-14", "ai-security-prompt-injection", "PASS", "AI prompt input isolation & output parsing verified"),
-        ("SKILL-15", "testing-strategy-design", "PASS", f"{len(test_files)} test suites across unit/feature/E2E layers"),
-        ("SKILL-16", "backend-testing-tdd", "PASS" if t_pass else "FAIL", f"Command: {results['test_run']['command'] or 'N/A'} -> {results['test_run']['status']}"),
-        ("SKILL-17", "playwright-mcp-browser-qa", "PASS" if b_pass else "FAIL", results["browser_run"]["status"]),
-        ("SKILL-18", "test-data-environment-isolation", "PASS", f"Isolated test config & {len(seeder_files)} seeders verified"),
-        ("SKILL-19", "test-reporting-failure-diagnosis", "PASS", "Deterministic exit codes and verbose TestDox evidence captured"),
-        ("SKILL-20", "ui-ux-design-systems", "PASS", f"{len(blade_files)} UI templates & component tokens verified"),
-        ("SKILL-21", "accessibility-engineering", "PASS" if (c_pass and b_pass) else "FAIL", results["contrast_check"]["output"].splitlines()[0] if results["contrast_check"]["output"] else "WCAG 2.2 AA verified"),
-        ("SKILL-22", "frontend-performance", "PASS", "Asset bundles & Chromium route load latency verified"),
-        ("SKILL-23", "cross-browser-responsive-qa", "PASS" if b_pass else "FAIL", "Desktop (1440x900) & Mobile (375x812) 0px overflow & 0 overlaps"),
-        ("SKILL-24", "database-architecture-integrity", "PASS", f"{len(migration_files)} migrations, {fk_count} foreign key constraints"),
-        ("SKILL-25", "query-optimization-performance", "PASS", f"{eager_count} eager-load calls, {paginate_count} paginated queries"),
-        ("SKILL-26", "import-export-data-processing", "PASS", "Upload MIME/size validation & streaming download headers verified"),
-        ("SKILL-27", "api-external-service-integration", "PASS", "External HTTP client timeouts & error handling verified"),
-        ("SKILL-28", "ai-provider-integration", "PASS", "Env-driven AI credentials & fallback resilience verified"),
-        ("SKILL-29", "performance-profiling-optimization", "PASS", "Sub-second local route response times verified"),
-        ("SKILL-30", "caching-background-jobs", "PASS", "Cache & queue worker configuration verified"),
-        ("SKILL-31", "ci-cd-release-engineering", "PASS", "Build & test automation scripts verified"),
-        ("SKILL-32", "environment-configuration-management", results["env_check"]["status"], "; ".join(results["env_check"]["details"])),
-        ("SKILL-33", "deployment-readiness", "PASS" if (t_pass and b_pass) else "BLOCKED", "Pre-release build, migrations, & tests verified"),
-        ("SKILL-34", "observability-incident-diagnosis", "PASS", "Health endpoints & structured error logging verified"),
-        ("SKILL-35", "backup-recovery-disaster-preparedness", "PASS", "Reversible migrations & idempotent seeders verified"),
-        ("SKILL-36", "seo-web-discoverability", "PASS", "Title, viewport meta, & lang attributes verified"),
-        ("SKILL-37", "documentation-developer-handoff", "PASS", "README.md & BEFORE_ACTION.md documentation verified"),
-        ("SKILL-38", "final-quality-gate", "PASS" if (t_pass and b_pass and c_pass and s_pass and e_pass) else "BLOCKED", "All 15 Final Quality Gates consolidated"),
-    ]
+    def read(p: Path) -> str:
+        if p not in texts:
+            try:
+                texts[p] = p.read_text(encoding="utf-8", errors="ignore")
+            except Exception:
+                texts[p] = ""
+        return texts[p]
+
+    def files_matching(pattern: str, files=None) -> list[Path]:
+        rx = re.compile(pattern, re.I)
+        pool = all_code_files if files is None else files
+        return [p for p in pool if p not in test_files and rx.search(read(p))]
+
+    def rel(paths: list[Path], n: int = 3) -> str:
+        out = [str(p.relative_to(target_dir)) for p in paths[:n]]
+        return ", ".join(out) + (f" (+{len(paths) - n} more)" if len(paths) > n else "")
+
+    browser_out = results["browser_run"].get("output") or ""
+    b_ran = results["browser_run"]["command"] is not None
+    b_pass = results["browser_run"]["status"].startswith("PASS")
+    f_status = results["flutter_run"]["status"]
+    t_status = results["test_run"]["status"]
+    t_ran = results["test_run"]["command"] is not None
+    has_ui = bool(blade_files)
+
+    def browser_status() -> str:
+        if is_skill_repo or not has_ui and not b_ran:
+            return "N/A"
+        if not b_ran:
+            return "FAIL"  # UI exists but browser QA could not run -> never silently pass
+        return "PASS" if b_pass else "FAIL"
+
+    # Feature detection (real grep evidence)
+    api_files = files_matching(r"Route::(?:apiResource|prefix\(['\"]api)|routes/api|@app\.(?:get|post)\(|router\.(?:get|post)\(|export\s+async\s+function\s+(?:GET|POST)")
+    webhook_files = files_matching(r"webhook")
+    sig_files = files_matching(r"hash_hmac|hmac\.(?:new|compare_digest)|createHmac|timingSafeEqual|hash_equals|X-Hub-Signature|Stripe-Signature")
+    ai_files = files_matching(r"openai|anthropic|generativelanguage|gemini|groq|@google/genai|langchain")
+    http_files = files_matching(r"Http::|Guzzle|axios|fetch\(|requests\.(?:get|post)|httpx\.|http\.Client|package:http|Dio\(")
+    http_timeout_files = [p for p in http_files if re.search(r"timeout", read(p), re.I)]
+    upload_files = files_matching(r"UploadedFile|->file\(|multer|FormData|UploadFile|csv|xlsx|Maatwebsite|fputcsv|StreamedResponse")
+    queue_files = files_matching(r"ShouldQueue|dispatch\(|Queue::|Cache::|Redis|bullmq|celery|@cache|cache\.(?:get|set)")
+    health_files = files_matching(r"['\"]/?(?:up|health|healthz|ready|readyz)['\"]")
+    pii_log_files = files_matching(r"(?:Log::\w+|console\.log|logger\.\w+|print)\s*\([^)]*(?:password|token|secret|nik)\b")
+    backup_files = [p for p in target_dir.rglob("*") if p.is_file() and not any(x in p.parts for x in EXCLUDED_SCAN_DIRS) and re.search(r"backup|restore", p.name, re.I)]
+    stale_files = [p for p in target_dir.rglob("*") if p.is_file() and not any(x in p.parts for x in EXCLUDED_SCAN_DIRS) and re.search(r"\.(bak|orig|old|swp)$|~$", p.name)]
+    ci_files = [p for p in [target_dir / ".github" / "workflows", target_dir / ".gitlab-ci.yml", target_dir / "Jenkinsfile", target_dir / "bitbucket-pipelines.yml", target_dir / ".circleci"] if p.exists()]
+    readme = next((p for p in [target_dir / "README.md", target_dir / "readme.md"] if p.is_file()), None)
+    readme_txt = read(readme) if readme else ""
+    readme_has_setup = bool(re.search(r"install|setup|getting started|instalasi|cara menjalankan", readme_txt, re.I))
+    readme_has_test = bool(re.search(r"\btest\b|pytest|phpunit|npm test|flutter test|pengujian", readme_txt, re.I))
+    adr_dirs = [p for p in [target_dir / "docs" / "adr", target_dir / "docs" / "decisions", target_dir / "adr", target_dir / "docs"] if p.is_dir()]
+    seo_ok = "viewportMeta=PRESENT" in browser_out and 'lang="n/a"' not in browser_out
+    contrast_runtime_fail = "CONTRAST FAIL" in browser_out
+    overflow_fail = "Horizontal scroll leak" in browser_out
+    overlap_fail = "OVERLAP FAIL" in browser_out
+    load_ms = [int(x) for x in re.findall(r"HTTP \d+ \((\d+)ms\)", browser_out)]
+    pint_warn = any("Formatting diffs" in d for d in results["static_analysis"]["details"])
+
+    if is_skill_repo:
+        results["static_analysis"]["details"].append("Library mode: validate-skills.py schema/link checks")
+    if not results["static_analysis"]["details"]:
+        results["static_analysis"]["status"] = "REVIEW"
+        results["static_analysis"]["details"].append("No native linter detected; agent must run the stack linter per SKILL-07")
+    elif pint_warn:
+        results["static_analysis"]["status"] = "WARN"
+
+    test_skill_status = "N/A" if (is_skill_repo is False and not t_ran and not test_files and "NOT APPLICABLE" in t_status) else ("PASS" if t_status.startswith("PASS") else "FAIL")
+    if test_skill_status == "PASS" and f_status == "FAIL":
+        test_skill_status = "FAIL"
+
+    lib = is_skill_repo
+    M = []
+
+    def add(sid, name, status, evidence):
+        M.append((sid, name, status, evidence))
+
+    add("SKILL-01", "project-discovery", "PASS", f"Stack detected from manifests: {', '.join(results['stack'])}")
+    add("SKILL-02", "requirements-analysis", "REVIEW", f"Agent must map {len(controller_files)} route/controller files into a workflow map (Phase 1)")
+    add("SKILL-03", "adaptive-architecture", "N/A" if lib else "REVIEW", f"{len(model_files)} model, {len(controller_files)} controller, {len(blade_files)} view files inventoried")
+    add("SKILL-04", "technical-decision-records", "PASS" if (readme or adr_dirs) else "WARN", f"README={'yes' if readme else 'no'}, docs/ADR dirs={[str(p.relative_to(target_dir)) for p in adr_dirs] or 'none'}")
+    add("SKILL-05", "ai-anti-slop", "PASS" if results["slop_check"]["status"] == "PASS" else "WARN", (results["slop_check"]["output"] or "slopcheck.py not found").splitlines()[0])
+    add("SKILL-06", "adaptive-engineering", "REVIEW", "Agent must confirm new code follows existing framework idioms (applies when writing code)")
+    add("SKILL-07", "code-quality-static-analysis", results["static_analysis"]["status"], "; ".join(results["static_analysis"]["details"]))
+    add("SKILL-08", "refactoring-legacy-safety", "PASS" if not stale_files else "WARN", f"{len(stale_files)} stale backup/orig files" + (f": {rel(stale_files)}" if stale_files else ""))
+    add("SKILL-09", "dependency-supply-chain-security", "N/A" if lib else ("PASS" if lockfiles else "WARN"), f"Lockfiles: {lockfiles or 'none committed'} (agent should also run npm/composer/pip audit)")
+    add("SKILL-10", "application-security-owasp", results["security_scan"]["status"], "; ".join(results["security_scan"]["details"]))
+    if webhook_files:
+        add("SKILL-11", "api-security-webhook-reliability", "PASS" if sig_files else "FAIL", f"{len(webhook_files)} webhook files; signature verification found in: {rel(sig_files) or 'NONE'}")
+    elif api_files:
+        add("SKILL-11", "api-security-webhook-reliability", "REVIEW", f"{len(api_files)} API route files ({rel(api_files)}); agent must verify auth + validation per endpoint")
+    else:
+        add("SKILL-11", "api-security-webhook-reliability", "N/A", "No API routes or webhook handlers found")
+    add("SKILL-12", "privacy-data-protection", "WARN" if pii_log_files else ("N/A" if lib else "REVIEW"), f"Logging of password/token/secret detected in: {rel(pii_log_files)}" if pii_log_files else "No sensitive values in log calls; agent must review PII storage/exports")
+    add("SKILL-13", "threat-modeling-risk-assessment", "N/A" if lib else "REVIEW", "Agent must list trust boundaries (public/auth/admin/external) in Phase 1")
+    add("SKILL-14", "ai-security-prompt-injection", "REVIEW" if ai_files else "N/A", f"AI SDK usage in: {rel(ai_files)}" if ai_files else "No LLM/AI SDK usage found")
+    add("SKILL-15", "testing-strategy-design", "N/A" if lib else ("PASS" if test_files else "FAIL"), f"{len(test_files)} test files found" + ("" if test_files else " - no automated tests exist"))
+    add("SKILL-16", "backend-testing-tdd", test_skill_status, f"{results['test_run']['command'] or 'no runner'} -> {t_status}" + (f"; flutter -> {f_status}" if f_status != "NOT APPLICABLE" else ""))
+    add("SKILL-17", "playwright-mcp-browser-qa", browser_status(), results["browser_run"]["status"] if not lib else "Library repo has no web UI")
+    add("SKILL-18", "test-data-environment-isolation", "N/A" if lib else ("PASS" if (target_dir / "phpunit.xml").is_file() and re.search(r"DB_DATABASE|sqlite|:memory:", read(target_dir / "phpunit.xml")) else ("REVIEW" if test_files else "N/A")), "phpunit.xml overrides DB for tests" if (target_dir / "phpunit.xml").is_file() else "Agent must confirm tests never touch prod DB")
+    add("SKILL-19", "test-reporting-failure-diagnosis", "PASS" if t_ran or lib else "N/A", "Raw runner output captured above with exit codes" if t_ran else "No test runner executed")
+    add("SKILL-20", "ui-ux-design-systems", "N/A" if not has_ui else ("REVIEW"), f"{len(blade_files)} UI files; agent must check loading/empty/error states")
+    add("SKILL-21", "accessibility-engineering", "N/A" if not has_ui else ("FAIL" if (results["contrast_check"]["status"] != "PASS" or contrast_runtime_fail or not b_ran) else "PASS"), ("runtime contrast failures in Chromium" if contrast_runtime_fail else (results["contrast_check"]["output"] or "").splitlines()[0] if results["contrast_check"]["output"] else "contrast scan not run"))
+    add("SKILL-22", "frontend-performance", "N/A" if not has_ui else ("REVIEW" if not load_ms else ("PASS" if max(load_ms) < 2500 else "WARN")), f"Chromium DOMContentLoaded: max {max(load_ms)}ms" if load_ms else "No browser timing captured")
+    add("SKILL-23", "cross-browser-responsive-qa", "N/A" if not has_ui else ("FAIL" if (not b_ran or overflow_fail or overlap_fail) else "PASS"), "Chromium only (Firefox/WebKit not run); " + ("overflow/overlap defects found" if (overflow_fail or overlap_fail) else ("0 overflow, 0 overlaps at 1440 & 375" if b_ran else "browser QA did not run")))
+    add("SKILL-24", "database-architecture-integrity", "N/A" if not migration_files else ("PASS" if fk_count else "WARN"), f"{len(migration_files)} migrations, {fk_count} FK constraints")
+    add("SKILL-25", "query-optimization-performance", "N/A" if not migration_files else "REVIEW", f"{eager_count} eager-load calls, {paginate_count} paginated queries; agent must check N+1 on list endpoints")
+    add("SKILL-26", "import-export-data-processing", "REVIEW" if upload_files else "N/A", f"Upload/import/export code in: {rel(upload_files)}" if upload_files else "No upload/import/export code found")
+    add("SKILL-27", "api-external-service-integration", "N/A" if not http_files else ("PASS" if len(http_timeout_files) == len(http_files) else "WARN"), f"{len(http_files)} files call external HTTP; {len(http_files) - len(http_timeout_files)} without explicit timeout" + (f": {rel([p for p in http_files if p not in http_timeout_files])}" if len(http_timeout_files) < len(http_files) else ""))
+    add("SKILL-28", "ai-provider-integration", "REVIEW" if ai_files else "N/A", f"AI provider calls in: {rel(ai_files)}" if ai_files else "No AI provider integration found")
+    add("SKILL-29", "performance-profiling-optimization", "N/A" if lib else "REVIEW", "No profiler baseline captured; only run when a perf issue is reported")
+    add("SKILL-30", "caching-background-jobs", "REVIEW" if queue_files else "N/A", f"Queue/cache usage in: {rel(queue_files)}" if queue_files else "No queue/cache usage found")
+    add("SKILL-31", "ci-cd-release-engineering", "PASS" if ci_files else "WARN", f"CI config: {[str(p.relative_to(target_dir)) for p in ci_files]}" if ci_files else "No CI pipeline (.github/workflows, .gitlab-ci.yml, ...) found")
+    add("SKILL-32", "environment-configuration-management", results["env_check"]["status"], "; ".join(results["env_check"]["details"]))
+    add("SKILL-33", "deployment-readiness", "N/A" if lib else "REVIEW", "Only evaluated when user requests a release; never auto-deploy")
+    add("SKILL-34", "observability-incident-diagnosis", "N/A" if lib else ("PASS" if health_files else "WARN"), f"Health endpoint in: {rel(health_files)}" if health_files else "No /health, /up or /ready endpoint found")
+    add("SKILL-35", "backup-recovery-disaster-preparedness", "N/A" if (lib or not migration_files) else ("REVIEW" if backup_files else "WARN"), f"Backup/restore files: {rel(backup_files)}" if backup_files else "No backup/restore script or runbook found")
+    add("SKILL-36", "seo-web-discoverability", "N/A" if not has_ui else ("PASS" if seo_ok else ("FAIL" if b_ran else "REVIEW")), "viewport meta + html lang present on audited routes" if seo_ok else "Missing viewport/lang or browser QA not run")
+    add("SKILL-37", "documentation-developer-handoff", "PASS" if (readme_has_setup and readme_has_test) else "WARN", f"README setup section={'yes' if readme_has_setup else 'no'}, test command={'yes' if readme_has_test else 'no'}")
+
+    blocking = [m for m in M if m[2] == "FAIL"]
+    review = [m for m in M if m[2] == "REVIEW"]
+    final_status = "FAIL" if blocking else ("REVIEW" if review else "PASS")
+    add("SKILL-38", "final-quality-gate", final_status, f"{len(blocking)} FAIL, {len(review)} REVIEW, {sum(1 for m in M if m[2] == 'WARN')} WARN, {sum(1 for m in M if m[2] == 'N/A')} N/A")
+    results["skills_matrix"] = M
+
+    by_id = {m[0]: m for m in M}
+
+    def gate(gid, label, ids):
+        sts = [by_id[i][2] for i in ids]
+        if "FAIL" in sts:
+            st = "FAIL"
+        elif "REVIEW" in sts:
+            st = "REVIEW"
+        elif "WARN" in sts:
+            st = "WARN"
+        elif all(s == "N/A" for s in sts):
+            st = "N/A"
+        else:
+            st = "PASS"
+        ev = ", ".join(f"{i[-2:]}={by_id[i][2]}" for i in ids)
+        return (gid, f"{label} ({', '.join(ids)})", st, ev)
 
     results["gates_matrix"] = [
-        ("Gate 01", "Requirements & Workflow Traceability (SKILL-01, SKILL-02)", "PASS", f"Stack & {len(controller_files)} controllers mapped"),
-        ("Gate 02", "Functional Completeness & Anti-Slop (SKILL-05, SKILL-06)", results["slop_check"]["status"], results["slop_check"]["output"].splitlines()[0] if results["slop_check"]["output"] else "Clean"),
-        ("Gate 03", "Code Quality & Static Analysis (SKILL-07, SKILL-08)", results["static_analysis"]["status"], "; ".join(results["static_analysis"]["details"])),
-        ("Gate 04", "Automated Backend & CRUD Tests (SKILL-15, SKILL-16, SKILL-18, SKILL-19)", "PASS" if t_pass else "FAIL", f"{results['test_run']['command']} -> {results['test_run']['status']}"),
-        ("Gate 05", "Application Security & OWASP ASVS (SKILL-10, SKILL-12, SKILL-13, SKILL-14)", results["security_scan"]["status"], "; ".join(results["security_scan"]["details"])),
-        ("Gate 06", "Dependency & Supply-Chain Security (SKILL-09)", "PASS", f"Lockfiles verified: {lockfiles or ['library-mode']}"),
-        ("Gate 07", "Database Integrity & Migrations (SKILL-24, SKILL-25, SKILL-26)", "PASS", "; ".join(results["db_scan"]["details"])),
-        ("Gate 08", "API & External Service Reliability (SKILL-11, SKILL-27, SKILL-28)", "PASS", "Timeouts, auth guards, & AI fallbacks verified"),
-        ("Gate 09", "Playwright Browser QA, Contrast, & Mobile View (SKILL-17, SKILL-20, SKILL-21, SKILL-23)", "PASS" if (b_pass and c_pass) else "FAIL", f"Chromium QA: {results['browser_run']['status']}"),
-        ("Gate 10", "Frontend & Backend Performance (SKILL-22, SKILL-29, SKILL-30)", "PASS", f"Eager-loads: {eager_count}, Paginated: {paginate_count}"),
-        ("Gate 11", "Environment Config & Secret Isolation (SKILL-32)", results["env_check"]["status"], "; ".join(results["env_check"]["details"])),
-        ("Gate 12", "Backup, Recovery, & Rollback Readiness (SKILL-33, SKILL-35)", "PASS", f"{len(migration_files)} reversible migrations & {len(seeder_files)} seeders"),
-        ("Gate 13", "Observability, Logging, & Health Checks (SKILL-34)", "PASS", "Logging & health endpoints verified"),
-        ("Gate 14", "Documentation & Architecture Records (SKILL-03, SKILL-04, SKILL-37)", "PASS", "README.md & architecture docs verified"),
-        ("Gate 15", "CI/CD, SEO, & Post-Deploy Smoke Readiness (SKILL-31, SKILL-33, SKILL-36, SKILL-38)", "PASS" if (t_pass and b_pass) else "BLOCKED", "All 38 skills evaluated"),
+        gate("Gate 01", "Requirements & Workflow Traceability", ["SKILL-01", "SKILL-02"]),
+        gate("Gate 02", "Functional Completeness & Anti-Slop", ["SKILL-05", "SKILL-06"]),
+        gate("Gate 03", "Code Quality & Static Analysis", ["SKILL-07", "SKILL-08"]),
+        gate("Gate 04", "Automated Backend & CRUD Tests", ["SKILL-15", "SKILL-16", "SKILL-18", "SKILL-19"]),
+        gate("Gate 05", "Application Security & OWASP ASVS", ["SKILL-10", "SKILL-12", "SKILL-13", "SKILL-14"]),
+        gate("Gate 06", "Dependency & Supply-Chain Security", ["SKILL-09"]),
+        gate("Gate 07", "Database Integrity & Migrations", ["SKILL-24", "SKILL-25", "SKILL-26"]),
+        gate("Gate 08", "API & External Service Reliability", ["SKILL-11", "SKILL-27", "SKILL-28"]),
+        gate("Gate 09", "Browser QA, Contrast & Mobile View", ["SKILL-17", "SKILL-20", "SKILL-21", "SKILL-23"]),
+        gate("Gate 10", "Frontend & Backend Performance", ["SKILL-22", "SKILL-29", "SKILL-30"]),
+        gate("Gate 11", "Environment Config & Secret Isolation", ["SKILL-32"]),
+        gate("Gate 12", "Backup, Recovery & Rollback", ["SKILL-33", "SKILL-35"]),
+        gate("Gate 13", "Observability, Logging & Health Checks", ["SKILL-34"]),
+        gate("Gate 14", "Documentation & Architecture Records", ["SKILL-03", "SKILL-04", "SKILL-37"]),
+        gate("Gate 15", "CI/CD, SEO & Smoke Readiness", ["SKILL-31", "SKILL-33", "SKILL-36"]),
     ]
 
     return results
@@ -679,12 +783,19 @@ def print_report(res: dict) -> None:
     for gid, gname, gst, gev in res["gates_matrix"]:
         print(f"  [{gst:7s}] {gid} | {gname:68s} | {gev}")
 
+    statuses = [m[2] for m in res["skills_matrix"]]
+    n_fail, n_review = statuses.count("FAIL"), statuses.count("REVIEW")
     print("\n" + "=" * 80)
-    all_pass = all(g[2] == "PASS" for g in res["gates_matrix"])
-    if all_pass:
-        print("  AUTHORITATIVE RELEASE VERDICT: READY (ALL 38 SKILLS & 15 GATES PASSED)")
+    if n_fail:
+        print(f"  AUTOMATED VERDICT: BLOCKED ({n_fail} FAIL). Fix every FAIL, then re-run this script.")
+    elif n_review:
+        print(f"  AUTOMATED VERDICT: AUTOMATED CHECKS CLEAN - {n_review} skill(s) still need AGENT REVIEW.")
+        print("  The agent MUST open each REVIEW skill's SKILL.md, inspect the code, and cite")
+        print("  file:line evidence. A REVIEW item may only be reported as PASS with that evidence.")
     else:
-        print("  AUTHORITATIVE RELEASE VERDICT: BLOCKED / ACTION REQUIRED")
+        print("  AUTOMATED VERDICT: READY (no FAIL, no REVIEW)")
+    print("  Status legend: PASS=check ran & passed | FAIL=defect | WARN=non-blocking gap |")
+    print("                 N/A=feature absent (0 matching files) | REVIEW=needs agent code inspection")
     print("=" * 80)
 
 

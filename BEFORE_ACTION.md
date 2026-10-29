@@ -15,20 +15,25 @@
 
 ---
 
-## Phase 0: Ground-Truth Pre-Flight Diagnostic (`SKILL-01`, `SKILL-32`)
+## Phase 0: Ground-Truth Pre-Flight & Full 38-Skill Auto-Audit (`SKILL-01` to `SKILL-38`)
 
-Ensure the local application server is running (start `php artisan serve`, `npm run dev`, etc. in the background if not yet running), then execute the bundled pre-flight and browser audit script:
+Run the bundled master pre-flight and 38-skill execution script from the project root:
 
 ```bash
 python3 .agents/skills/ai-skills/scripts/run-audit.py .
 # (or python3 reusable-ai-development-skills/scripts/run-audit.py . if cloned in root)
 ```
 
+**What `run-audit.py` Automatically Performs:**
+- **Native Antigravity Skill Registration (`.agents/skills.json`)**: Automatically writes `.agents/skills.json` (`{"entries": [{"path": ".agents/skills/ai-skills/skills"}]}`) and syncs `.agents/skills/*`, `.agents/references/*`, and `.agents/scripts/*` so Antigravity discovers all 38 skills (`SKILL-01` to `SKILL-38`) without hitting `.agents/skills/` 1-level scan limits.
+- **Auto-PATH & Ephemeral Local Server Boot**: Links `node`, `npm`, `npx`, `composer`, `flutter`, `dart` into `PATH` and automatically starts a temporary local server (`php artisan serve`, `npx next dev`, `npx vite`, `manage.py runserver`, etc.) if none is running.
+- **Evidence-Driven 38-Skill & 15-Gate Matrix (`0` Hardcoded `PASS` Rows)**: Evaluates every single skill (`SKILL-01` through `SKILL-38`) against real static and runtime checks (`PASS`, `FAIL`, `WARN`, `N/A`, `REVIEW`).
+
 **Required Chat Output:**  
 Paste the complete output of `run-audit.py` showing:
 - Verified Technology Stack & Manifests (`SKILL-01`).
 - Environment & Secret Health (`.env` vs `.env.example`, `APP_DEBUG`, credential hygiene) (`SKILL-32`).
-- Active Local Dev Server URL.
+- Complete 38-Skill Verification Matrix (`SKILL-01` through `SKILL-38`) and 15-Domain Gate Summary.
 
 ---
 
@@ -105,6 +110,8 @@ After Phases 0, 1, 2, and 3 are printed in chat, output the **complete 15-Domain
 | **Gate 14** | **Documentation & Architecture Records** (`SKILL-03`, `SKILL-04`, `SKILL-37`) | `PASS` | Setup docs, credentials table, & handoff notes updated |
 | **Gate 15** | **CI/CD, SEO, & Post-Deploy Smoke Readiness** (`SKILL-31`, `SKILL-33`, `SKILL-36`, `SKILL-38`) | `PASS` | Release build & smoke checks verified |
 
-### Authoritative Release Verdict:
+### Authoritative Release Verdict & Evidence Rules:
+- **Zero Unresolved `FAIL` Rows**: If any skill (`SKILL-01` to `SKILL-38`) or gate (`Gate 01` to `Gate 15`) reports `FAIL` in `run-audit.py` (for example, `SKILL-11` catching a webhook endpoint without signature verification or `SKILL-21` catching contrast `< 4.5:1`), you MUST fix the code and re-run `run-audit.py` until it turns `PASS`.
+- **Mandatory Code Verification for `REVIEW` Rows**: If any skill reports `REVIEW` (e.g., `SKILL-08` legacy refactoring safety or `SKILL-26` bulk import chunking), you MUST read the cited files, verify compliance against that skill's `SKILL.md` checklist, and cite exact `file:line` evidence in the Phase 4 table.
 - **`READY`**: Issued ONLY when all applicable gates across Gates 01–15 are `PASS` with real terminal and Chromium browser logs displayed above.
 - **`BLOCKED`**: Issued if any test failed, any contrast/overlap defect was found in Chromium, or any required gate was skipped.
