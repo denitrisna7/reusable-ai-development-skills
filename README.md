@@ -34,11 +34,12 @@ git clone https://github.com/denitrisna7/reusable-ai-development-skills.git .age
 You can simply give this exact prompt to Antigravity:
 > **Prompt**: *"git clone kan skill ini kemudian kerjakan sesuai skill tersebut: https://github.com/denitrisna7/reusable-ai-development-skills.git"*
 
-Whenever Antigravity sees this command, it is bound by **[`BEFORE_ACTION.md`](./BEFORE_ACTION.md)** to execute the 4-phase protocol strictly in order without skipping or hallucinating:
-1. **Phase 0 (Before Action)**: Executes `python3 .agents/skills/ai-skills/scripts/run-audit.py` to collect empirical baseline evidence (stack, `.env`, server, and test runners).
-2. **Phase 1 (Error & CRUD Fixes)**: Resolves all 500, 404, and 403 errors, and executes real automated test commands.
-3. **Phase 2 (Browser & UI Verification)**: Inspects live pages via Playwright MCP or reports `BLOCKED` honestly if tools/server are inactive.
-4. **Phase 3 (Final Quality Gate)**: Outputs the verified audit table and binding release verdict (`READY` or `BLOCKED`).
+Whenever Antigravity sees this command, it is bound by **[`BEFORE_ACTION.md`](./BEFORE_ACTION.md)** to execute the 5-phase protocol strictly in order without skipping, truncating to 1-line JSON, or faking results:
+1. **Phase 0 (Before Action)**: Executes `python3 .agents/skills/ai-skills/scripts/run-audit.py` to collect empirical baseline evidence (stack, `.env`, active server, verbose `--testdox` tests, and automatic Playwright Chromium run).
+2. **Phase 1 (Workflow & Architecture Map)**: Inspects actual routes, controllers, roles, and state machines, and prints the complete application workflow map in chat.
+3. **Phase 2 (Verbose Unit & CRUD Tests)**: Executes `./vendor/bin/phpunit --testdox --colors=never` (or `npm test` / `pytest -v`) so every individual `✔` test case is shown in chat (never collapsed into a 1-line JSON summary).
+4. **Phase 3 (Real Headless Chromium Playwright Browser QA)**: Executes `node .agents/skills/ai-skills/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` to test live pages in real Chromium across Desktop (`1440x900`) and Mobile (`375x812`), auditing real DOM contrast (`>= 4.5:1`), element overlaps, horizontal overflow, and console/network errors—never failing with `BROWSER TESTING BLOCKED` just because MCP tools aren't declared in the IDE.
+5. **Phase 4 (Complete 15-Domain Final Quality Gate)**: Outputs the full 15-Domain Final Quality Gate Table (covering all 38 skills) and binding release verdict (`READY` or `BLOCKED`).
 
 ### Option 2 — Global Install Across All Projects (Pasang 1 Kali untuk Selamanya)
 Install once to your machine's Antigravity global plugin directory to make all 38 skills available across all current and future projects on your computer:

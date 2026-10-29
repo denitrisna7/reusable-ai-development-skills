@@ -5,125 +5,104 @@
 > **"git clone kan skill ini kemudian kerjakan sesuai skill tersebut"**  
 > *(or any variation such as "audit aplikasi kita dengan skill ini", "kerjakan sesuai skill", or "jalankan testing dan audit menyeluruh")*  
 > 
-> **THE "NO SHORTCUTS & NO BLACK-BOX" RULE**:  
-> You are strictly prohibited from acting as a "black-box" that jumps directly to the final summary table. You must NOT be lazy or seek the path of least resistance. Every single step of analysis, terminal testing, and browser interaction MUST be printed progressively in the chat so the user can verify real progress in real time.
-> 
-> **YOU MUST EXECUTE THE FOLLOWING 5-PHASE PROTOCOL IN EXACT ORDER:**
+> **THE "NO SHORTCUTS, NO 1-LINE JSON, & NO FAKE BLOCKED" RULES**:  
+> 1. **Never Collapse Unit Tests into 1-Line JSON**: In Laravel 12+, `php artisan test` outputs a 1-line JSON summary (`{"tool":"phpunit","result":"passed"...}`) when it detects an AI environment. You MUST run `./vendor/bin/phpunit --testdox` (or `pytest -v` / `npm test`) so every single test case (`✔ ...`) is printed visibly in the chat!  
+> 2. **Never Skip Playwright with `BROWSER TESTING BLOCKED`**: Even if the IDE session does not declare `@playwright/mcp` tools, this repository includes a real Headless Chromium Playwright runner (`scripts/run-browser-audit.mjs`). You MUST start the local dev server and execute `node <skills-path>/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` to run real Chromium browser QA across Desktop (`1440x900`) and Mobile (`375x812`) viewports!  
+> 3. **Never Output a Partial 5-Row Final Table**: Phase 4 MUST output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering all 38 skills `SKILL-01` through `SKILL-38`)**.  
+> 4. **Never Deploy When Any Gate is `FAIL` or `BLOCKED`**: Production deployment is strictly prohibited unless all applicable gates are `PASS` and the user explicitly requested deployment.
 
 ---
 
-## Phase 0: Ground-Truth Pre-Flight Diagnostic
+## Phase 0: Ground-Truth Pre-Flight Diagnostic (`SKILL-01`, `SKILL-32`)
 
-Before doing anything else, execute the bundled diagnostic script to establish empirical facts about the project:
+Ensure the local application server is running (start `php artisan serve`, `npm run dev`, etc. in the background if not yet running), then execute the bundled pre-flight and browser audit script:
 
 ```bash
 python3 .agents/skills/ai-skills/scripts/run-audit.py .
-# (or python3 reusable-ai-development-skills/scripts/run-audit.py . if in root)
+# (or python3 reusable-ai-development-skills/scripts/run-audit.py . if cloned in root)
 ```
 
 **Required Chat Output:**  
-Print the raw pre-flight report in chat, detailing:
-- Verified Technology Stack (Laravel, Node/React/Next, Django, FastAPI, Go, etc.).
-- Environment and Secret Health (`.env` vs `.env.example`, `APP_DEBUG` status, sensitive token leaks).
-- Active Local Ports (`3000`, `5173`, `8000`, `8080`).
-- Configured Test Runner availability.
+Paste the complete output of `run-audit.py` showing:
+- Verified Technology Stack & Manifests (`SKILL-01`).
+- Environment & Secret Health (`.env` vs `.env.example`, `APP_DEBUG`, credential hygiene) (`SKILL-32`).
+- Active Local Dev Server URL.
 
 ---
 
-## Phase 1: Real Application Workflow Analysis (Anti-Hallucination Grounding)
+## Phase 1: Real Application Workflow & Architecture Analysis (`SKILL-01` to `SKILL-04`)
 
-Before writing or running tests, you must inspect the actual codebase to understand the real user workflows so tests are grounded in real routes and logic rather than hallucinated assumptions:
+Before running or writing tests, inspect the actual codebase so tests match the real routes, controllers, roles, and state machines:
 
-1. **Map Real Application Endpoints and Data Contracts**:
-   - Inspect router definitions (`routes/web.php`, `routes/api.php`, `src/app/**/route.ts`, `urls.py`, etc.).
-   - Inspect controllers, form requests, and database schema migrations (`SKILL-24`).
-2. **Output the Workflow Map in Chat**:
-   Print the concrete application workflow map in chat before testing:
-   ```text
-   [ALUR KERJA APLIKASI TERDETEKSI]:
-   1. Autentikasi: POST /login -> Verifikasi session & CSRF token.
-   2. Halaman Utama: GET /dashboard -> Render tabel data.
-   3. Operasi CRUD:
-      - Create: GET /items/create (Form) -> POST /items (Simpan data)
-      - Read: GET /items (Tabel data) & GET /items/{id} (Detail)
-      - Update: GET /items/{id}/edit -> PUT/PATCH /items/{id}
-      - Delete: DELETE /items/{id} -> Status 200/204
-   ```
+1. **Inspect Routes, Controllers, Models, and Views**:
+   - Read route definitions (`routes/web.php`, `routes/api.php`, `src/app/**`, `urls.py`, etc.).
+   - Read controllers, form validation rules, authorization scopes/policies, and database migrations (`SKILL-24`).
+2. **Print the Complete Application Workflow Map in Chat**:
+   - List all active user roles and permissions.
+   - Map the full end-to-end user journeys and CRUD endpoints (Create -> Read -> Update -> Delete -> Post-Delete verification).
 
 ---
 
-## Phase 2: Live Backend & CRUD Unit Testing (Real Terminal Output)
+## Phase 2: Full Verbose Unit, CRUD, & Static Analysis Execution (`SKILL-05` to `SKILL-16`, `SKILL-18`, `SKILL-19`)
 
-You MUST execute the project's native test runner via `run_command` in the terminal and **display the actual test progress and output directly in chat**:
+Execute the project's test runner and static analyzers in verbose mode and **print the real per-test checklist in chat**:
 
-1. **Execute Native Test Suite**:
-   - Node / React / Vue: `npm test` or `npm test -- --run`
-   - PHP / Laravel: `php artisan test` or `./vendor/bin/pest`
-   - Python: `pytest -v`
-   - Go: `go test -v ./...`
-2. **Strict Transparency Rule**:
-   - **Do NOT** simply state "All tests passed".
-   - You MUST output the actual terminal stdout showing each test case, assertions, execution time, and exit code.
-   - If any test fails with a 500, 404, or 403 error, fix the root-cause in the code (`SKILL-34`, `SKILL-16`), re-run the test command, and show the passing re-run in chat.
+1. **Backend / Unit / CRUD Test Suite (Verbose TestDox Mandatory)**:
+   - **Laravel / PHP**: Run `./vendor/bin/phpunit --testdox --colors=never` (do NOT rely solely on 1-line JSON from `php artisan test`).
+   - **Node / TypeScript**: Run `npm test -- --run --reporter=verbose`.
+   - **Python**: Run `pytest -v`.
+   - **Flutter / Mobile (if present)**: Run `flutter analyze && flutter test --expanded`.
+2. **Display Real Test Progress in Chat**:
+   - Print the actual test suite groups and individual `✔` test cases in the chat response so the user can see every CRUD, RBAC, and validation test executing.
+   - If any test fails (500, 404, 403), fix the root cause in the code, re-run `./vendor/bin/phpunit --testdox`, and show the passing output.
 
 ---
 
-## Phase 3: Step-by-Step Browser QA with Playwright MCP (Live Progress Stream)
+## Phase 3: Real Headless Chromium Playwright Browser QA (`SKILL-17`, `SKILL-20` to `SKILL-23`)
 
-When web/frontend views are in scope, you must execute interactive browser verification. **Every single step must be reported in chat as it happens**:
+You MUST verify the live web application in a real Chromium browser across **both Desktop (`1440x900`) and Mobile (`375x812`) viewports**.
 
-### 1. Check Pre-requisites:
-- Confirm local dev server is running (e.g. `http://localhost:3000` or `http://127.0.0.1:8000`).
-- Check if Playwright MCP tools (`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_resize`) are active.
+### Execution Method (Always Runnable):
+Run the bundled Playwright Chromium auditor against the active local server, passing key public routes and interactive login credentials if applicable:
 
-### 2. If Playwright MCP is AVAILABLE, Output Each Step Live in Chat:
-```text
-🌐 [Step 1: Navigasi Browser]
-   -> Membuka URL: http://localhost:<port>/<route> via browser_navigate
-   -> Status: HTTP 200 OK, Page Title: "<title>"
-
-📸 [Step 2: Inspeksi DOM & Kontras]
-   -> Memanggil browser_snapshot(boxes=true)
-   -> Elemen terdeteksi: Form input, tombol submit [ref=...], tabel data
-   -> Rasio kontras teks: PASS (>= 4.5:1, tidak ada teks putih di kolom putih)
-
-🖱️ [Step 3: Interaksi CRUD Nyata]
-   -> Mengisi form via browser_fill_form & klik tombol submit via browser_click
-   -> Hasil: Data baru berhasil disimpan dan muncul di tabel data
-
-📱 [Step 4: Audit Tampilan Mobile View (375x812)]
-   -> Mengubah ukuran viewport via browser_resize (width: 375, height: 812)
-   -> Memeriksa bounding boxes: Target sentuh >= 44x44px, tidak ada teks bertindih, horizontal scroll: 0px (PASS)
-
-🛡️ [Step 5: Audit Console & Network Runtime]
-   -> Memeriksa browser_console_messages: 0 error merah, 0 uncaught exception
-   -> Memeriksa browser_network_requests: Semua request API mengembalikan status 200/201/204
+```bash
+node .agents/skills/ai-skills/scripts/run-browser-audit.mjs http://127.0.0.1:8000 / /login --login-url=/login --user=<test-email> --pass=<test-password>
 ```
+*(If Playwright MCP tools `browser_navigate` / `browser_snapshot` are also active in the session, you may run them in addition to `run-browser-audit.mjs`).*
 
-### 3. If Playwright MCP is NOT Available or Server is Inactive:
-- You are **STRICTLY FORBIDDEN** from simulating or pretending browser testing passed.
-- You MUST report honestly in chat:
-  ```text
-  ⛔ [BROWSER TESTING BLOCKED]:
-  Tool Playwright MCP tidak terdaftar di sesi ini atau server lokal belum menyala.
-  Sesuai aturan SKILL-17, pengujian browser nyata tidak dapat dijalankan secara fiktif.
-  Status Browser QA: BLOCKED.
-  ```
+### Required Live Progress Stream in Chat:
+Paste the real output from `run-browser-audit.mjs` showing for **every route** at **Desktop (`1440x900`)** and **Mobile (`375x812`)**:
+- **HTTP Status & Title**: Confirm `HTTP 200` (zero unexpected `404`/`403`/`500`).
+- **DOM Structure**: Count of verified text nodes, forms, buttons, and tables.
+- **Horizontal Overflow (`SKILL-23`)**: Confirm `0px (PASS - No horizontal leak)` on Mobile `375x812` and Desktop `1440x900`.
+- **Real DOM Computed Color Contrast (`SKILL-21`)**: Confirm minimum contrast ratio `>= 4.5:1` across all visible text nodes (proving zero white-on-white or unreadable text).
+- **Real DOM Bounding-Box Collisions (`SKILL-23`)**: Confirm `0 overlapping text elements (PASS)` and `0 clipped text elements (PASS)`.
+- **Console & Network Diagnostics (`SKILL-17`)**: Confirm `0 JS errors` and `0 failed HTTP requests`.
 
 ---
 
-## Phase 4: Final Quality Gate Sign-Off (`SKILL-38`)
+## Phase 4: Complete 15-Domain Final Quality Gate Sign-Off (`SKILL-33` to `SKILL-38`)
 
-Only after Phases 0, 1, 2, and 3 have been executed and displayed in chat, assemble the final release table:
+After Phases 0, 1, 2, and 3 are printed in chat, output the **complete 15-Domain Final Quality Gate Table** (never truncate to 5 rows):
 
-| Domain Audit | Status | Bukti Nyata yang Ditampilkan di Chat |
-| :--- | :---: | :--- |
-| **1. Analisa Alur & Prasyarat** | `PASS` | Alur kerja aplikasi terpetakan di Phase 1 |
-| **2. Lingkungan & Secret** | `PASS` / `FAIL` | Output dari `run-audit.py` (.env check) |
-| **3. Automated Tests & CRUD** | `PASS` / `FAIL` | Log terminal asli dari Phase 2 (exit code 0) |
-| **4. Browser QA & Mobile View** | `PASS` / `BLOCKED` | Log Playwright MCP dari Phase 3 (atau BLOCKED) |
-| **5. Build & Keamanan OWASP** | `PASS` / `FAIL` | Output build & verifikasi CSRF/Auth |
+| Gate ID | Quality Gate Domain & Skills Covered | Status (`PASS` / `FAIL` / `BLOCKED` / `N/A`) | Concrete Evidence Cited from Phases 0–3 |
+| :--- | :--- | :---: | :--- |
+| **Gate 01** | **Requirements & Workflow Traceability** (`SKILL-01`, `SKILL-02`) | `PASS` | Workflow map & PRD requirements verified in Phase 1 |
+| **Gate 02** | **Functional Completeness & Anti-Slop** (`SKILL-05`, `SKILL-06`) | `PASS` | Zero placeholder stubs, dead buttons, or AI slop |
+| **Gate 03** | **Code Quality & Static Analysis** (`SKILL-07`, `SKILL-08`) | `PASS` | Linter / analyzer exit code 0 |
+| **Gate 04** | **Automated Backend & CRUD Tests** (`SKILL-15`, `SKILL-16`, `SKILL-18`, `SKILL-19`) | `PASS` | Full `--testdox` suite output & assertion count cited |
+| **Gate 05** | **Application Security & OWASP ASVS** (`SKILL-10`, `SKILL-12`, `SKILL-13`, `SKILL-14`) | `PASS` | Auth, RBAC, CSRF, SQLi/XSS defenses verified |
+| **Gate 06** | **Dependency & Supply-Chain Security** (`SKILL-09`) | `PASS` | Lockfile & dependency audit clean |
+| **Gate 07** | **Database Integrity & Migrations** (`SKILL-24`, `SKILL-25`, `SKILL-26`) | `PASS` | Foreign keys, ACID transactions, & seeders/migrations verified |
+| **Gate 08** | **API & External Service Reliability** (`SKILL-11`, `SKILL-27`, `SKILL-28`) | `PASS` | Timeouts, webhook validation, & error handling verified |
+| **Gate 09** | **Playwright Browser QA, Contrast, & Mobile View** (`SKILL-17`, `SKILL-20`, `SKILL-21`, `SKILL-23`) | `PASS` | Real Chromium `1440x900` & `375x812`: contrast `>= 4.5:1`, `0` overlaps, `0` console errors |
+| **Gate 10** | **Frontend & Backend Performance** (`SKILL-22`, `SKILL-29`, `SKILL-30`) | `PASS` | Query optimization, caching, & asset build verified |
+| **Gate 11** | **Environment Config & Secret Isolation** (`SKILL-32`) | `PASS` | `.env` check via `run-audit.py`; `APP_DEBUG=false` in prod |
+| **Gate 12** | **Backup, Recovery, & Rollback Readiness** (`SKILL-33`, `SKILL-35`) | `PASS` | Reversibility & backup safety verified |
+| **Gate 13** | **Observability, Logging, & Health Checks** (`SKILL-34`) | `PASS` | Error logs clean & health endpoints verified |
+| **Gate 14** | **Documentation & Architecture Records** (`SKILL-03`, `SKILL-04`, `SKILL-37`) | `PASS` | Setup docs, credentials table, & handoff notes updated |
+| **Gate 15** | **CI/CD, SEO, & Post-Deploy Smoke Readiness** (`SKILL-31`, `SKILL-33`, `SKILL-36`, `SKILL-38`) | `PASS` | Release build & smoke checks verified |
 
-### Official Release Verdict Rules:
-- **`READY`**: Diberikan HANYA JIKA seluruh Phase 0 sampai Phase 3 dieksekusi nyata dan lulus dengan bukti log terminal/browser di chat.
-- **`BLOCKED`**: Diberikan jika ada tes yang gagal, Playwright MCP tidak aktif, server mati, atau ada phase yang dilewati.
+### Authoritative Release Verdict:
+- **`READY`**: Issued ONLY when all applicable gates across Gates 01–15 are `PASS` with real terminal and Chromium browser logs displayed above.
+- **`BLOCKED`**: Issued if any test failed, any contrast/overlap defect was found in Chromium, or any required gate was skipped.

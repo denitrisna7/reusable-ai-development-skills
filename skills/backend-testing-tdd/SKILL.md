@@ -54,7 +54,7 @@ Before writing or running backend tests, inspect the project to confirm:
 Follow this numbered TDD and backend verification workflow:
 
 ### Step 1: Inspect the Target Module and Run Actual Test Suite
-1. Run the existing test file or module suite via actual CLI command execution (`run_command`) to verify the baseline environment is healthy and runnable. Output the raw terminal stdout directly in the chat response so observers can verify test progress. The agent is strictly forbidden from assuming or hallucinating test passes without real terminal execution evidence. If the test runner fails to execute, report `BLOCKED: Test execution failed to run`.
+1. Run the existing test file or module suite via actual CLI command execution (`run_command`) to verify the baseline environment is healthy and runnable. On Laravel 12+ projects, run `./vendor/bin/phpunit --testdox --colors=never` (rather than plain `php artisan test` which collapses output into a single JSON line in AI environments) so every individual test case (`✔`) is printed visibly in the chat response. The agent is strictly forbidden from assuming or hallucinating test passes without real terminal execution evidence. If the test runner fails to execute, report `BLOCKED: Test execution failed to run`.
 2. Identify the public contract of the unit, service, or endpoint under test (inputs, return payload, database side effects, dispatched jobs/events, and error conditions).
 
 ### Step 2: Write Failing Tests First (The `Red` Phase)
