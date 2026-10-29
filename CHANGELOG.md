@@ -4,7 +4,16 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
-## [`v1.5.0`] — 2026-10-30
+## [`v1.5.1`] — 2026-10-30
+### Added & Improved (Universal Multi-Stack Audit & Server Auto-Boot)
+- **Universal Multi-Stack Server Boot (`scripts/run-audit.py`)**: Added automatic ephemeral dev server boot support for Next.js (`npx next dev -p 18124`), Vite (`npx vite --port 18124`), Django (`python3 manage.py runserver`), FastAPI/Flask, native PHP (`php -S`), and Static HTML (`python3 -m http.server`), ensuring real Headless Chromium QA runs out-of-the-box on ANY web stack without manual configuration.
+- **Universal Multi-Stack Code & Architecture Discovery (`scripts/run-audit.py`)**: Expanded discovery patterns to map controllers, routers, models, schemas, UI views/components/screens, and migrations across Node.js/Next.js/React/Vue, Python, Go, and Flutter, not just PHP/Laravel.
+- **Cross-Framework `npm test` CI Runner (`scripts/run-audit.py`)**: Switched to `CI=true npm test` (removing hardcoded `-- --run`) so native Node test runner (`node --test`), Jest, Vitest, and Mocha execute deterministically in single-run mode.
+- **Multi-File Seeder Credential Discovery (`scripts/run-browser-audit.mjs`)**: Searches `UserSeeder.php`, `DemoDataSeeder.php`, `prisma/seed.ts`, and `seed.py` for seeded test login accounts, skipping comments and deletion lines.
+
+---
+
+## [`v1.5.0`] — 2026-10-30 (Commit `86cff59`)
 ### Added & Improved (Full 38-Skill Code Audit & Context-Budget Optimization)
 - **Context-Budget Optimization Across All 38 `SKILL.md` Frontmatters**: Compacted YAML frontmatter `description` fields across all 38 skills (`14,448` chars -> `6,750` chars, `-53.3%`) and removed duplicate upstream `sources/anti-slop/skills/*/SKILL.md` files from git tracking so Antigravity never excludes any of the 38 skills due to `<skills>` context budget limits.
 - **Master 38-Skill & 15-Gate Automated Execution Engine (`scripts/run-audit.py`)**:

@@ -84,12 +84,22 @@ function findChromiumExecutable() {
 }
 
 function autoDiscoverCredentialsFromRepo() {
-  const seederPath = path.join(process.cwd(), 'database', 'seeders', 'DatabaseSeeder.php');
-  if (fs.existsSync(seederPath)) {
+  const candidates = [
+    path.join(process.cwd(), 'database', 'seeders', 'DatabaseSeeder.php'),
+    path.join(process.cwd(), 'database', 'seeders', 'UserSeeder.php'),
+    path.join(process.cwd(), 'database', 'seeders', 'DemoDataSeeder.php'),
+    path.join(process.cwd(), 'prisma', 'seed.ts'),
+    path.join(process.cwd(), 'prisma', 'seed.js'),
+    path.join(process.cwd(), 'seed.py'),
+  ];
+  for (const seederPath of candidates) {
+    if (!fs.existsSync(seederPath)) continue;
     try {
       const lines = fs.readFileSync(seederPath, 'utf8').split(/\r?\n/);
       for (const line of lines) {
-        if (line.includes('delete') || line.trim().startsWith('//') || line.trim().startsWith('*')) continue;
+        if (line.includes('delete') || line.trim().startsWith('//') || line.trim().startsWith('*') || line.trim().startsWith('#')) {
+          continue;
+        }
         const m = line.match(/['"]([a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})['"]/);
         if (m) {
           return { loginUrl: '/login', user: m[1], pass: 'password' };

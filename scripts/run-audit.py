@@ -160,7 +160,7 @@ def wait_for_port(host: str, port: int, timeout: float = 12.0) -> bool:
 def run_cmd(cmd: list[str], cwd: Path, timeout: int = 120, env_overrides: dict | None = None) -> tuple[int, str, str]:
     """Execute a CLI command safely and capture exit code, stdout, and stderr."""
     env = os.environ.copy()
-    for key in ["CLAUDECODE", "CLAUDE_CODE", "CURSOR_TRACE_ID", "AGENT", "AI_AGENT"]:
+    for key in ["ANTIGRAVITY_AGENT", "CLAUDECODE", "CLAUDE_CODE", "CURSOR_TRACE_ID", "AGENT", "AI_AGENT", "OPENCODE"]:
         env.pop(key, None)
     if env_overrides:
         env.update(env_overrides)
@@ -232,11 +232,13 @@ def audit_project(target_dir: Path) -> dict:
     if is_skill_repo:
         results["stack"].append("Agent Skills Library (38 Skills)")
 
+    pkg_deps: dict = {}
     if pkg_json.is_file():
         try:
             data = json.loads(pkg_json.read_text(encoding="utf-8"))
             results["stack"].append(f"Node.js ({data.get('name', 'unnamed')})")
             results["pkg_scripts"] = list(data.get("scripts", {}).keys())
+            pkg_deps = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
         except Exception:
             results["stack"].append("Node.js (package.json)")
 
@@ -257,16 +259,46 @@ def audit_project(target_dir: Path) -> dict:
     if not results["stack"]:
         results["stack"].append("Generic / Static Web")
 
-    php_files = iter_project_files(target_dir, {".php"})
-    blade_files = [p for p in php_files if p.name.endswith(".blade.php")]
-    controller_files = [p for p in php_files if "Controllers" in p.parts]
-    model_files = [p for p in php_files if "Models" in p.parts]
-    migration_files = [p for p in php_files if "migrations" in p.parts]
-    seeder_files = [p for p in php_files if "seeders" in p.parts]
+    all_code_files = iter_project_files(
+        target_dir, {".php", ".ts", ".tsx", ".js", ".jsx", ".vue", ".py", ".go", ".dart", ".html", ".sql", ".prisma"}
+    )
+    php_files = [p for p in all_code_files if p.suffix == ".php"]
+    blade_files = [
+        p
+        for p in all_code_files
+        if p.name.endswith(".blade.php")
+        or p.suffix in {".tsx", ".jsx", ".vue", ".html"}
+        or ("lib" in p.parts and p.name.endswith(("_screen.dart", "_page.dart", "_widget.dart")))
+    ]
+    controller_files = [
+        p
+        for p in all_code_files
+        if any(seg in p.parts for seg in ("Controllers", "controllers", "routers", "routes", "handlers", "pages", "app"))
+        and p.suffix in {".php", ".ts", ".tsx", ".js", ".py", ".go"}
+    ]
+    model_files = [
+        p
+        for p in all_code_files
+        if any(seg in p.parts for seg in ("Models", "models", "entities", "schemas", "prisma"))
+        or p.name in ("models.py", "schema.prisma")
+    ]
+    migration_files = [
+        p
+        for p in all_code_files
+        if "migrations" in p.parts or "alembic" in p.parts or p.name == "schema.prisma"
+    ]
+    seeder_files = [
+        p
+        for p in all_code_files
+        if "seeders" in p.parts or p.name in ("seed.ts", "seed.js", "seed.py")
+    ]
     test_files = [
         p
-        for p in iter_project_files(target_dir, {".php", ".ts", ".tsx", ".js", ".py", ".dart"})
-        if "tests" in p.parts or "test" in p.parts or p.name.endswith(("Test.php", ".test.ts", ".spec.ts", "_test.dart", "_test.py"))
+        for p in all_code_files
+        if "tests" in p.parts
+        or "test" in p.parts
+        or "__tests__" in p.parts
+        or p.name.endswith(("Test.php", ".test.ts", ".test.tsx", ".spec.ts", ".test.js", "_test.dart", "_test.py", "_test.go"))
     ]
 
     # 2. Environment & Secret Inspection (SKILL-32)
@@ -383,9 +415,9 @@ def audit_project(target_dir: Path) -> dict:
         results["test_run"]["output"] = (out + "\n" + err).strip()
         results["test_run"]["status"] = "PASS" if code == 0 else "FAIL"
     elif pkg_json.is_file() and "test" in results.get("pkg_scripts", []):
-        cmd = ["npm", "test", "--", "--run"]
-        code, out, err = run_cmd(cmd, target_dir)
-        results["test_run"]["command"] = "npm test"
+        cmd = ["npm", "test"]
+        code, out, err = run_cmd(cmd, target_dir, env_overrides={"CI": "true"})
+        results["test_run"]["command"] = "CI=true npm test"
         results["test_run"]["returncode"] = code
         results["test_run"]["output"] = (out + "\n" + err).strip()
         results["test_run"]["status"] = "PASS" if code == 0 else "FAIL"
@@ -438,17 +470,60 @@ def audit_project(target_dir: Path) -> dict:
             if wait_for_port("127.0.0.1", temp_port, timeout=10.0):
                 results["active_url"] = f"http://127.0.0.1:{temp_port}"
                 results["dev_servers"].append(f"AUTO-STARTED EPHEMERAL SERVER: {results['active_url']} (php artisan serve)")
-        elif pkg_json.is_file() and "dev" in results.get("pkg_scripts", []):
-            temp_port = 18124
+        elif (target_dir / "public" / "index.php").is_file() or (target_dir / "index.php").is_file():
+            temp_port = 18123
+            doc_root = "public" if (target_dir / "public" / "index.php").is_file() else "."
             temp_server_proc = subprocess.Popen(
-                ["npm", "run", "dev", "--", "--host", "127.0.0.1", "--port", str(temp_port)],
+                ["php", "-S", f"127.0.0.1:{temp_port}", "-t", doc_root],
                 cwd=str(target_dir),
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            if wait_for_port("127.0.0.1", temp_port, timeout=12.0):
+            if wait_for_port("127.0.0.1", temp_port, timeout=8.0):
                 results["active_url"] = f"http://127.0.0.1:{temp_port}"
-                results["dev_servers"].append(f"AUTO-STARTED EPHEMERAL SERVER: {results['active_url']} (npm run dev)")
+                results["dev_servers"].append(f"AUTO-STARTED EPHEMERAL SERVER: {results['active_url']} (php -S -t {doc_root})")
+        elif pkg_json.is_file() and "dev" in results.get("pkg_scripts", []):
+            temp_port = 18124
+            dev_env = os.environ.copy()
+            dev_env["PORT"] = str(temp_port)
+            cmd = ["npm", "run", "dev"]
+            if "next" in pkg_deps:
+                cmd = ["npx", "next", "dev", "-H", "127.0.0.1", "-p", str(temp_port)]
+            elif "vite" in pkg_deps:
+                cmd = ["npx", "vite", "--host", "127.0.0.1", "--port", str(temp_port)]
+            temp_server_proc = subprocess.Popen(
+                cmd,
+                cwd=str(target_dir),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                env=dev_env,
+            )
+            if wait_for_port("127.0.0.1", temp_port, timeout=14.0):
+                results["active_url"] = f"http://127.0.0.1:{temp_port}"
+                results["dev_servers"].append(f"AUTO-STARTED EPHEMERAL SERVER: {results['active_url']} ({cmd[0]} {cmd[1] if len(cmd) > 1 else ''})")
+        elif (target_dir / "manage.py").is_file():
+            temp_port = 18125
+            temp_server_proc = subprocess.Popen(
+                ["python3", "manage.py", "runserver", f"127.0.0.1:{temp_port}", "--noreload"],
+                cwd=str(target_dir),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if wait_for_port("127.0.0.1", temp_port, timeout=10.0):
+                results["active_url"] = f"http://127.0.0.1:{temp_port}"
+                results["dev_servers"].append(f"AUTO-STARTED EPHEMERAL SERVER: {results['active_url']} (python manage.py runserver)")
+        elif (target_dir / "index.html").is_file() or (target_dir / "public" / "index.html").is_file():
+            temp_port = 18126
+            web_root = "public" if (target_dir / "public" / "index.html").is_file() else "."
+            temp_server_proc = subprocess.Popen(
+                ["python3", "-m", "http.server", str(temp_port), "--bind", "127.0.0.1", "-d", web_root],
+                cwd=str(target_dir),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if wait_for_port("127.0.0.1", temp_port, timeout=6.0):
+                results["active_url"] = f"http://127.0.0.1:{temp_port}"
+                results["dev_servers"].append(f"AUTO-STARTED EPHEMERAL SERVER: {results['active_url']} (python http.server in {web_root})")
 
     browser_script = find_helper_script("run-browser-audit.mjs", target_dir)
     try:
