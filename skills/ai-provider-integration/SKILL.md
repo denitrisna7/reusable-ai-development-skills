@@ -1,6 +1,6 @@
 ---
 name: ai-provider-integration
-description: "Integrates LLM and generative AI provider APIs with server-side API key protection, structured schema output validation, token and cost budgets, rate-limit handling, streaming timeouts, model fallbacks, PII privacy controls, and deterministic mock testing. Activate when building or reviewing AI/LLM features. Do not use for adversarial prompt injection defense alone (pair with ai-security-prompt-injection)."
+description: "Integrates LLM/AI SDKs with server-side key isolation, schema-validated outputs, token budgets, timeouts, and fallbacks. Use for AI integrations. Pair with AI security for prompts."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

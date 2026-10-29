@@ -1,6 +1,6 @@
 ---
 name: code-quality-static-analysis
-description: "Executes and enforces stack-appropriate linting, code formatting, static type checking, cyclomatic complexity bounds, error handling discipline, and duplication checks on modified code. Activate during or immediately after code changes and during code reviews. Do not force stack-specific tools like PHPStan or Laravel Pint onto non-applicable ecosystems."
+description: "Runs stack-native linting, formatting, type checking, complexity bounds, and duplication checks on modified code. Use during code changes and reviews. Do not force non-native tools."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

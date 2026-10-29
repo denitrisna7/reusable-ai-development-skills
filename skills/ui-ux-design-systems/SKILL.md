@@ -1,6 +1,6 @@
 ---
 name: ui-ux-design-systems
-description: "Designs, implements, and audits user interface components, design tokens, forms, tables, dialogs, navigation, and view states while respecting the existing UI stack. Activate when building, styling, or refactoring frontend screens, component libraries, or design systems, including shadcn/ui when compatible. Do not use for backend APIs, low-level WCAG audits (use accessibility-engineering), or runtime bundle profiling (use frontend-performance)."
+description: "Builds cohesive, accessible UI components, design tokens, forms, tables, and loading/empty/error states (including shadcn/ui). Use for frontend UI work. Do not use for SQL tuning."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

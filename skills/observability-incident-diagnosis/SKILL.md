@@ -1,6 +1,6 @@
 ---
 name: observability-incident-diagnosis
-description: Implements structured logging, RED/USE metrics, distributed tracing, health and readiness endpoints, correlation IDs, sensitive log redaction, and incident root-cause analysis. Activate when adding telemetry, designing alerts, or diagnosing production outages and errors. Do not use for CPU/memory optimization without incident telemetry.
+description: "Implements structured logging, RED/USE metrics, tracing, health probes, log redaction, and incident root-cause analysis. Use for telemetry and outages. Do not use for routine unit tests."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

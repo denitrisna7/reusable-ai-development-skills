@@ -1,6 +1,6 @@
 ---
 name: api-external-service-integration
-description: "Designs and hardens outbound integrations with third-party REST, GraphQL, gRPC, and SOAP APIs, covering typed contracts, authentication, payload validation, connection and read timeouts, exponential backoff retries, pagination, rate-limit handling, and circuit breakers. Activate when calling external services or SDKs. Do not use for LLM/AI API specifics (use ai-provider-integration)."
+description: "Integrates third-party REST/GraphQL/gRPC APIs with strict contracts, timeouts, backoff retries, rate limits, and mocks. Use for external APIs. Do not use for LLM provider specifics."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: dependency-supply-chain-security
-description: "Audits direct and transitive dependencies, verifies lockfile integrity and package registries, evaluates CVEs and lifecycle install scripts, eliminates redundant packages, and plans risk-based dependency upgrades. Activate when adding, updating, removing, or auditing third-party packages across any ecosystem. Do not use for application-layer OWASP logic reviews."
+description: "Audits direct/transitive dependencies, lockfile integrity, CVEs, and install scripts across package managers. Use when managing packages. Do not use for app logic OWASP reviews."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

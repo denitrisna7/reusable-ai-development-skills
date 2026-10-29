@@ -1,6 +1,6 @@
 ---
 name: cross-browser-responsive-qa
-description: "Verifies cross-browser compatibility (Chromium, Firefox, WebKit/Safari) and responsive layout behavior across mobile, tablet, and desktop viewports (320px to 1440px+), touch targets, keyboard interactions, and CSS regressions. Activate when testing UI changes across screen sizes or browsers, or fixing horizontal overflow and mobile layout bugs. Do not use for backend unit testing (use backend-testing-tdd)."
+description: "Verifies responsive reflow from 320px mobile to 1440px desktop, zero horizontal overflow, 44x44px touch targets, and zero text overlap. Use for responsive QA. Do not use for APIs."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

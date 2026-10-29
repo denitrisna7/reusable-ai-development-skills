@@ -1,6 +1,6 @@
 ---
 name: project-discovery
-description: "Inspects repository structure, manifests, lockfiles, runtime versions, entry points, routing, databases, conventions, test tooling, CI/CD workflows, and security-sensitive modules before technical work begins. Activate when onboarding to a codebase or starting a feature, refactor, audit, or bug fix. Do not use for writing business requirements or executing application code changes directly."
+description: "Inspects repository manifests, stack, routes, databases, tests, and CI/CD before coding. Use when onboarding or starting work. Do not use for direct code edits."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

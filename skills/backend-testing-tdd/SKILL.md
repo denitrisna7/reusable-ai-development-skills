@@ -1,6 +1,6 @@
 ---
 name: backend-testing-tdd
-description: "Implements reliable automated backend tests and Red-Green-Refactor TDD workflows using the project's native testing framework. Activate when writing or fixing unit, integration, API, database transaction, auth/authorization, or validation tests for backend business logic and services. Do not use for interactive browser UI inspection or setting up production infrastructure."
+description: "Writes and runs deterministic backend unit, integration, API, RBAC, and DB tests using Red-Green-Refactor TDD. Use for backend test suites. Do not use for live browser UI QA."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

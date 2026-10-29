@@ -1,6 +1,6 @@
 ---
 name: database-architecture-integrity
-description: "Designs and audits relational and document database schemas, entity relations, primary and foreign key constraints, indexes, deterministic migrations, ACID transactions, concurrency locks, and zero-downtime backward-compatible schema changes. Activate when creating or modifying tables, migrations, foreign keys, or transactional workflows. Do not use for pure query execution plan tuning (use query-optimization-performance)."
+description: "Designs resilient relational schemas, foreign keys, indexes, ACID transactions, and zero-downtime reversible migrations. Use for database changes. Do not use for read-query tuning."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

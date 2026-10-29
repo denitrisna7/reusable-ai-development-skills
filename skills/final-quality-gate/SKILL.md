@@ -1,6 +1,6 @@
 ---
 name: final-quality-gate
-description: Executes the comprehensive 15-domain Final Quality Gate and Release Audit, consolidating evidence from all engineering skills (`SKILL-01` through `SKILL-37`) and integrating with `deployment-readiness` (`SKILL-33`). Activate for final pre-release verification or project sign-off. Never fabricate evidence or execute unauthorized deployments.
+description: "Executes the 15-domain Final Quality Gate audit consolidating evidence across all 38 skills (SKILL-01 to SKILL-38) for release sign-off. Use for final audits. Never fabricate evidence."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: ai-anti-slop
-description: "Enforces engineering craftsmanship, UI and visual intentionality, copywriting hygiene, and code comment discipline by filtering out AI-generated slop, premature abstractions, placeholder stubs, and unverified completion claims. Activate during or after coding, UI design, copywriting, or review tasks. Do not use as a substitute for project design tokens or functional requirements analysis."
+description: "Eliminates AI code, UI, copywriting, and comment slop while enforcing craftsmanship and evidence-backed delivery. Use when coding or reviewing UI. Do not use for discovery."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: query-optimization-performance
-description: "Analyzes and optimizes database queries, composite and covering indexes, N+1 query elimination, cursor and keyset pagination, EXPLAIN ANALYZE execution plans, query caching, and connection pooling. Activate when diagnosing slow database endpoints, high query counts, sequential table scans, or pagination bottlenecks. Do not use for initial entity modeling (use database-architecture-integrity)."
+description: "Eliminates N+1 query loops, tunes EXPLAIN plans, adds composite indexes, and optimizes pagination and connection pools. Use for DB performance. Do not use for initial schema design."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

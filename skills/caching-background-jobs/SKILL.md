@@ -1,6 +1,6 @@
 ---
 name: caching-background-jobs
-description: Designs and audits caching layers, cache invalidation strategies, asynchronous job queues, scheduled tasks, idempotency controls, and dead-letter recovery. Activate when implementing or troubleshooting Redis/Memcached caching, background workers, cron jobs, retry backoff, or queue concurrency. Do not use for synchronous HTTP API client retries or pure SQL query tuning.
+description: "Designs Redis/cache invalidation strategies, idempotent background queues, scheduled tasks, locks, and DLQ recovery. Use for caching and workers. Do not use for simple SQL indexing."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

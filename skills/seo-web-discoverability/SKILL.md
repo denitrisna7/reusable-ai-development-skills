@@ -1,6 +1,6 @@
 ---
 name: seo-web-discoverability
-description: Audits and implements technical SEO and web discoverability including metadata, Open Graph tags, canonical URLs, XML sitemaps, robots directives, SSR/SSG indexability, link integrity, and JSON-LD structured data for public pages. Activate for public websites or marketing pages. Do not apply public indexing to private dashboards or internal apps.
+description: "Audits and implements titles, meta descriptions, canonical URLs, sitemaps, robots directives, Open Graph, and JSON-LD for public pages. Use for public web SEO. Do not index private admin apps."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

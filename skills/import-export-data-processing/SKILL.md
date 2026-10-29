@@ -1,6 +1,6 @@
 ---
 name: import-export-data-processing
-description: "Engineers safe, memory-bounded CSV, spreadsheet, and bulk data import/export pipelines with header and schema validation, duplicate detection, relational integrity checks, chunked streaming, per-row error reporting, formula injection defense, and audit reconciliation. Activate when building file imports, bulk uploads, or data exports. Do not use for simple single-record CRUD endpoints."
+description: "Builds memory-safe, chunked CSV/Excel/JSON/file import-export pipelines with validation, upserts, and formula injection defense. Use for bulk data I/O. Do not use for single forms."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

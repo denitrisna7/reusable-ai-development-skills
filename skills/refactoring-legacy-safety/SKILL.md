@@ -1,6 +1,6 @@
 ---
 name: refactoring-legacy-safety
-description: "Guides safe, incremental refactoring and modification of legacy or tightly coupled codebases by characterizing existing behavior first, preserving backward compatibility, minimizing blast radius, and verifying regression tests. Activate when restructuring code, removing dead code, or modernizing legacy modules. Do not use for greenfield feature architecture."
+description: "Guides incremental refactoring of legacy code by verifying behavior first and preserving backward compatibility. Use when restructuring code. Do not use for greenfield features."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

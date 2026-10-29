@@ -1,6 +1,6 @@
 ---
 name: frontend-performance
-description: "Profiles and optimizes frontend web and client rendering performance across Core Web Vitals (LCP, INP, CLS), asset compression, JavaScript and CSS bundle size, network request waterfalls, caching, lazy loading, and resource prioritization. Activate when diagnosing slow page loads, layout shifts, sluggish interactions, or oversized bundles. Do not use for backend SQL query tuning (use query-optimization-performance)."
+description: "Optimizes Core Web Vitals (LCP, INP, CLS), asset bundles, image sizing, lazy loading, and rendering efficiency. Use for client-side performance. Do not use for backend SQL tuning."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

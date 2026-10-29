@@ -1,6 +1,6 @@
 ---
 name: requirements-analysis
-description: "Translates ambiguous user requests and feature briefs into explicit functional and non-functional requirements, user workflows, edge cases, security and privacy constraints, performance expectations, and testable acceptance criteria. Activate when scoping new features, enhancements, or complex fixes. Do not use for repository stack discovery or low-level architectural pattern design."
+description: "Translates feature requests into functional/non-functional requirements, workflows, and acceptance criteria. Use when scoping tasks. Do not use for stack discovery."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

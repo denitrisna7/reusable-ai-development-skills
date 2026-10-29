@@ -1,6 +1,6 @@
 ---
 name: environment-configuration-management
-description: Manages environment separation (development, staging, production), secret storage, startup configuration validation, environment parity, and drift prevention. Activate when configuring `.env` templates, cloud secret managers, runtime config schemas, or auditing for leaked credentials and public bundle variables. Do not use for CI/CD pipeline authoring.
+description: "Manages dev/staging/prod environment parity, .env validation, secret isolation, and safe production defaults (DEBUG=false). Use for config/secrets. Do not use for CI YAML syntax."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

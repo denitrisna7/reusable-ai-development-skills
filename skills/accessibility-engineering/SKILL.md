@@ -1,6 +1,6 @@
 ---
 name: accessibility-engineering
-description: "Audits and engineers user interfaces for WCAG 2.2 Level A and AA accessibility, semantic HTML landmarks, keyboard navigation, focus management, accessible forms, color contrast, and screen reader compatibility. Activate when building or reviewing frontend UI, dialogs, forms, or color palettes. Do not use for backend API logic or non-UI code quality checks (use code-quality-static-analysis)."
+description: "Engineers and audits WCAG 2.2 AA compliance including semantic HTML, keyboard focus, ARIA forms, and 4.5:1 contrast. Use for all UI work. Do not use for headless backend services."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

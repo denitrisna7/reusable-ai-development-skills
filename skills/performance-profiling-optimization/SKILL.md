@@ -1,6 +1,6 @@
 ---
 name: performance-profiling-optimization
-description: Establishes baseline performance metrics, profiles CPU, memory, database, and network bottlenecks, and applies verified optimizations including Core Web Vitals (LCP, INP, CLS). Activate when diagnosing slow endpoints, memory leaks, high latency, or frontend rendering bottlenecks. Do not use for purely SQL index design without broader profiling or initial UI layout styling.
+description: "Baselines and profiles CPU, memory, DB, network, and Web Vitals bottlenecks with before/after benchmarks. Use when diagnosing slow performance. Do not claim gains without metrics."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: adaptive-architecture
-description: "Evaluates existing system architecture, selects context-appropriate design patterns, defines dependency boundaries, analyzes trade-offs, and produces incremental implementation plans that avoid unnecessary rewrites. Activate when planning structural changes, new modules, or system integrations. Do not use for initial stack detection or for writing standalone API and setup documentation."
+description: "Evaluates system architecture, module boundaries, and incremental technical plans without unnecessary rewrites. Use when designing modules. Do not use for standalone ADRs."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

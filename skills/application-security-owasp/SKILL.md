@@ -1,6 +1,6 @@
 ---
 name: application-security-owasp
-description: "Implements and verifies application security controls aligned with OWASP ASVS (Levels 1-3) and OWASP Top 10. Activate when designing, implementing, or auditing authentication, authorization, input validation, session management, CSRF/XSS/SQLi defenses, file handling, rate limiting, secrets, error handling, or audit logging. Do not use for third-party supply chain audits or LLM prompt injection."
+description: "Implements and audits OWASP ASVS/Top 10 controls including auth, RBAC, SQLi/XSS/CSRF defense, and file upload safety. Use for security reviews. Do not use for webhook retries."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

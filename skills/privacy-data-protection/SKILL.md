@@ -1,6 +1,6 @@
 ---
 name: privacy-data-protection
-description: "Enforces data privacy, PII/PHI/PCI protection, and regulatory compliance across storage, transit, logs, integrations, and AI prompts. Activate when designing schemas or workflows handling personal data, implementing data minimization, retention schedules, right-to-erasure deletion, log redaction, or scrubbing sensitive fields before external API or LLM calls. Do not use for general network firewall setup."
+description: "Protects PII/sensitive data via minimization, encryption, log redaction, access controls, and safe deletion. Use when handling user data. Do not use for pure SQL index tuning."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

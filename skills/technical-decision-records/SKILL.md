@@ -1,6 +1,6 @@
 ---
 name: technical-decision-records
-description: "Authors and maintains architecture documentation, Architecture Decision Records (ADRs), setup guides, environment configurations, dependency docs, API contracts, and operational runbooks aligned with actual code. Activate when recording technical decisions, updating system docs, or documenting APIs and operations. Do not use for making initial architectural choices or writing inline code comments."
+description: "Authors Architecture Decision Records (ADRs), API contracts, and technical specs synced with code. Use when recording design decisions. Do not use for final handoffs."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

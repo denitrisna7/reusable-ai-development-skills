@@ -1,6 +1,6 @@
 ---
 name: ai-security-prompt-injection
-description: "Secures LLM and agentic AI features against direct and indirect prompt injection, unsafe tool invocation, secret leakage, and untrusted output rendering. Activate when building or auditing AI chat, RAG pipelines, function calling, agent tools, or structured LLM outputs. Do not use for standard non-AI form validation or general API client setup without security concerns."
+description: "Defends LLM/agent features against direct/indirect prompt injection, unsafe tool calls, secret leaks, and output XSS. Use for AI security. Do not use for basic SDK setup."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

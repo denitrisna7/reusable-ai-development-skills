@@ -1,6 +1,6 @@
 ---
 name: adaptive-engineering
-description: "Adapts code implementation to the repository's actual programming language, framework idioms, runtime version constraints, existing project patterns, and installed toolchain without making stack assumptions. Activate whenever writing or modifying application code across any tech stack. Do not use for initial codebase discovery or standalone static analysis configuration."
+description: "Adapts implementation to the repository language, framework idioms, runtime version, and conventions. Use whenever writing or modifying code. Do not use for initial discovery."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -4,6 +4,18 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.5.0`] — 2026-10-30
+### Added & Improved (Full 38-Skill Code Audit & Context-Budget Optimization)
+- **Context-Budget Optimization Across All 38 `SKILL.md` Frontmatters**: Compacted YAML frontmatter `description` fields across all 38 skills (`14,448` chars -> `6,750` chars, `-53.3%`) and removed duplicate upstream `sources/anti-slop/skills/*/SKILL.md` files from git tracking so Antigravity never excludes any of the 38 skills due to `<skills>` context budget limits.
+- **Master 38-Skill & 15-Gate Automated Execution Engine (`scripts/run-audit.py`)**:
+  - Automatically evaluates and prints the **Complete 38-Skill Verification Matrix (`SKILL-01` to `SKILL-38`)** and **15-Domain Final Quality Gate Summary (`Gate 01` to `Gate 15`)** on any target repository.
+  - Automatically syncs `skills/`, `references/`, `scripts/`, and `BEFORE_ACTION.md` into `<target-project>/.agents/` so all 38 skills and all 8 shared reference manuals resolve relative links cleanly.
+- **Repository-Wide WCAG 2.2 AA Contrast Scanner (`scripts/contrast-check.py` / `scripts/contrast_check.py`)**: Upgraded `contrast-check.py` to support both 2-color pair mode (`contrast-check.py "#767676" "#FFFFFF"`) and full-repository UI scan mode (`contrast-check.py .`).
+- **Standalone & Integrated AI Anti-Slop Scanner (`scripts/slopcheck.py` / `scripts/slopcheck.sh`)**: Audits UI templates and source code for placeholder text (`Lorem ipsum`), dead links (`href="#"`), banned AI copywriting clichés, and leftover debug calls (`dd()`, `var_dump()`).
+- **Tailwind CSS v4 `oklab()` / `oklch()` & Landmark/SEO Support in `scripts/run-browser-audit.mjs`**: Added Chromium 2D `<canvas>` color rasterization for modern CSS Color 4 (`oklab`, `oklch`, `color()`) contrast accuracy, plus DOM landmark, `img[alt]`, `<meta name="viewport">`, `<html lang>`, and route load latency (`ms`) checks.
+
+---
+
 ## [`v1.4.0`] — 2026-10-30 (Commit `16c6450`)
 ### Added & Improved (Zero-Reload Playwright & Auto-Heal PATH)
 - **Auto-PATH & Binary Healer (`scripts/run-audit.py`)**: Automatically injects and symlinks `~/.local/bin/{node,npm,npx,composer}` and `~/development/flutter/bin/{flutter,dart}` into `~/.gemini/antigravity/bin` and `PATH` so commands in fresh project sessions never fail with `Exit Code 127 (command not found)`.

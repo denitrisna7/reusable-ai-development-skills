@@ -1,6 +1,6 @@
 ---
 name: test-reporting-failure-diagnosis
-description: "Standardizes evidence-based test reporting (strictly distinguishing PASS, FAIL, BLOCKED, and NOT TESTED) and guides systematic root-cause diagnosis for failing or flaky tests. Activate after executing any test suite or QA workflow, when triaging test failures or regressions, or when preparing release verification reports. Do not use to fabricate unexecuted test results."
+description: "Produces evidence-backed PASS/FAIL/BLOCKED test reports with root-cause diagnosis and reproduction steps. Use when reporting test results. Do not use for initial test planning."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

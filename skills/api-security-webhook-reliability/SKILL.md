@@ -1,6 +1,6 @@
 ---
 name: api-security-webhook-reliability
-description: "Hardens incoming and outgoing API endpoints and webhook handlers for security, resilience, and idempotency. Activate when building or reviewing REST/GraphQL/RPC APIs, webhook receivers, or webhook dispatchers requiring signature verification, replay protection, timeouts, retries, idempotency keys, duplicate suppression, and rate limiting. Do not use for general database schema design or browser UI testing."
+description: "Secures REST/GraphQL APIs and builds idempotent, HMAC-verified webhooks with rate limiting and retries. Use for APIs and webhooks. Do not use for general outbound SDK calls."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

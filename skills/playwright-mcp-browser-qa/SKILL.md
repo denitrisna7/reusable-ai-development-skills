@@ -1,6 +1,6 @@
 ---
 name: playwright-mcp-browser-qa
-description: "Executes evidence-based interactive browser QA using Playwright MCP accessibility snapshots, semantic locators, network inspection, and console diagnostics. Activate when verifying web UI flows, forms, navigation, auth states, negative validation, and regressions in a real browser without routine screenshot spam. Do not use for non-web CLI/API projects or static linting."
+description: "Executes real Chromium browser QA via Playwright MCP and CLI runner across desktop/mobile viewports, forms, auth, and console logs. Use for web UI QA. Do not use for CLI-only apps."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: threat-modeling-risk-assessment
-description: "Performs structured threat modeling and security risk assessments using STRIDE, trust boundary mapping, and likelihood-impact scoring. Activate before implementing new architectures, multi-tenant flows, payment/auth systems, external integrations, or high-risk changes to identify assets, attack surfaces, mitigations, and residual risks. Do not use for routine syntax linting or UI styling."
+description: "Maps assets, trust boundaries, attack surfaces, and STRIDE threats with prioritized mitigations. Use when designing auth, payments, or architectures. Do not use for lint fixes."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

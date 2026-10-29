@@ -87,10 +87,13 @@ function autoDiscoverCredentialsFromRepo() {
   const seederPath = path.join(process.cwd(), 'database', 'seeders', 'DatabaseSeeder.php');
   if (fs.existsSync(seederPath)) {
     try {
-      const content = fs.readFileSync(seederPath, 'utf8');
-      const m = content.match(/['"]([a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})['"]/);
-      if (m) {
-        return { loginUrl: '/login', user: m[1], pass: 'password' };
+      const lines = fs.readFileSync(seederPath, 'utf8').split(/\r?\n/);
+      for (const line of lines) {
+        if (line.includes('delete') || line.trim().startsWith('//') || line.trim().startsWith('*')) continue;
+        const m = line.match(/['"]([a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})['"]/);
+        if (m) {
+          return { loginUrl: '/login', user: m[1], pass: 'password' };
+        }
       }
     } catch {
       // ignore
@@ -103,16 +106,42 @@ function autoDiscoverCredentialsFromRepo() {
  * Injected into the live Chromium DOM to audit computed contrast, text-range overlaps, overflow, and touch targets.
  */
 function domAuditEvaluator(viewportLabel) {
+  const colorCanvas = document.createElement('canvas');
+  colorCanvas.width = 1;
+  colorCanvas.height = 1;
+  const colorCtx = colorCanvas.getContext('2d', { willReadFrequently: true });
+
   function parseRgba(str) {
-    if (!str) return { r: 255, g: 255, b: 255, a: 0 };
+    if (!str || str === 'transparent' || str === 'rgba(0, 0, 0, 0)') {
+      return { r: 255, g: 255, b: 255, a: 0 };
+    }
     const m = str.match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*[,/]\s*([\d.]+))?\s*\)/i);
-    if (!m) return { r: 255, g: 255, b: 255, a: 0 };
-    return {
-      r: Number(m[1]),
-      g: Number(m[2]),
-      b: Number(m[3]),
-      a: m[4] !== undefined ? Number(m[4]) : 1,
-    };
+    if (m) {
+      return {
+        r: Number(m[1]),
+        g: Number(m[2]),
+        b: Number(m[3]),
+        a: m[4] !== undefined ? Number(m[4]) : 1,
+      };
+    }
+    // Support Tailwind v4 oklab(), oklch(), color(srgb ...), hsl() via Chromium 2D canvas rasterizer
+    if (colorCtx) {
+      try {
+        colorCtx.clearRect(0, 0, 1, 1);
+        colorCtx.fillStyle = str;
+        colorCtx.fillRect(0, 0, 1, 1);
+        const data = colorCtx.getImageData(0, 0, 1, 1).data;
+        return {
+          r: data[0],
+          g: data[1],
+          b: data[2],
+          a: Number((data[3] / 255).toFixed(3)),
+        };
+      } catch {
+        // fallback below
+      }
+    }
+    return { r: 255, g: 255, b: 255, a: 0 };
   }
 
   function blend(fg, bg) {
@@ -276,6 +305,13 @@ function domAuditEvaluator(viewportLabel) {
     }
   }
 
+  const missingAltCount = Array.from(document.querySelectorAll('img')).filter(
+    (img) => isVisible(img) && !img.hasAttribute('alt')
+  ).length;
+  const hasViewportMeta = Boolean(document.querySelector('meta[name="viewport"]'));
+  const htmlLang = document.documentElement.getAttribute('lang') || '';
+  const landmarksCount = document.querySelectorAll('main, nav, header, footer, [role="main"], [role="navigation"]').length;
+
   return {
     viewportLabel,
     viewportSize: `${vw}x${window.innerHeight}`,
@@ -289,6 +325,10 @@ function domAuditEvaluator(viewportLabel) {
     formsCount: document.querySelectorAll('form').length,
     buttonsCount: document.querySelectorAll('button, [type="submit"]').length,
     tablesCount: document.querySelectorAll('table').length,
+    missingAltCount,
+    hasViewportMeta,
+    htmlLang,
+    landmarksCount,
   };
 }
 
@@ -389,14 +429,17 @@ async function main() {
         failedRequests.length = 0;
 
         await page.setViewportSize({ width: vp.width, height: vp.height });
+        const t0 = Date.now();
         const response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+        const loadMs = Date.now() - t0;
         const status = response ? response.status() : 0;
 
         const audit = await page.evaluate(domAuditEvaluator, vp.label);
 
         console.log(`  📐 [${vp.label} (${vp.width}x${vp.height})]`);
-        console.log(`     • HTTP Status & Title : HTTP ${status} | "${audit.title}"`);
-        console.log(`     • DOM Structure       : ${audit.textElementsChecked} text nodes, ${audit.formsCount} forms, ${audit.buttonsCount} buttons, ${audit.tablesCount} tables`);
+        console.log(`     • HTTP Status & Load  : HTTP ${status} (${loadMs}ms) | Title: "${audit.title}"`);
+        console.log(`     • DOM & A11y Landmarks: ${audit.textElementsChecked} text nodes, ${audit.landmarksCount} landmarks, ${audit.formsCount} forms, ${audit.buttonsCount} buttons, ${audit.missingAltCount} missing alt`);
+        console.log(`     • SEO & Viewport Meta : lang="${audit.htmlLang || 'n/a'}", viewportMeta=${audit.hasViewportMeta ? 'PRESENT' : 'MISSING'}`);
         console.log(`     • Horizontal Overflow : ${audit.horizontalOverflowPx === 0 ? '0px (PASS - No horizontal leak)' : `${audit.horizontalOverflowPx}px (FAIL - Horizontal scroll leak!)`}`);
         console.log(`     • Color Contrast      : Min ${audit.minContrast ?? 'N/A'}:1 (${audit.contrastFailures.length === 0 ? 'PASS WCAG AA' : `${audit.contrastFailures.length} FAILURES`})`);
         console.log(`     • Element Collisions  : ${audit.overlaps.length === 0 ? '0 overlapping text elements (PASS)' : `${audit.overlaps.length} OVERLAPS DETECTED (FAIL)`}`);
@@ -440,7 +483,7 @@ async function main() {
     try {
       await page.setViewportSize({ width: 1440, height: 900 });
       const loginRes = await page.goto(baseUrl + loginUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
-      if (loginRes && loginRes.status() < 400) {
+      if (!loginRes || loginRes.status() < 400) {
         const emailInput = page.locator('input[type="email"], input[name="email"], input[name="username"]').first();
         const passInput = page.locator('input[type="password"], input[name="password"]').first();
         const submitBtn = page.locator('button[type="submit"], input[type="submit"]').first();
@@ -449,10 +492,8 @@ async function main() {
           console.log(`\n🔐 [AUTH FLOW] Testing Interactive Browser Login at ${baseUrl}${loginUrl} (${loginUser})...`);
           await emailInput.fill(loginUser);
           await passInput.fill(loginPass);
-          await Promise.all([
-            page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {}),
-            submitBtn.click(),
-          ]);
+          await submitBtn.click();
+          await page.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
           const postPath = new URL(page.url()).pathname;
           console.log(`   -> Post-Login Redirect: ${page.url()} | Title: "${await page.title()}"`);
           if (postPath !== loginUrl) {
@@ -460,8 +501,8 @@ async function main() {
           }
         }
       }
-    } catch {
-      // ignore if project has no login route
+    } catch (err) {
+      console.log(`   [AUTH FLOW NOTICE]: ${err.message}`);
     }
   }
 

@@ -1,6 +1,6 @@
 ---
 name: deployment-readiness
-description: Evaluates whether an application is ready for production release through build verification, configuration audits, migration safety, backup checks, health endpoints, rollback procedures, and smoke-test plans. Activate before any release or deployment decision. Do not use to execute an actual deployment unless explicitly authorized by the user.
+description: "Audits production builds, config safety, migrations, backups, health checks, and rollback runbooks before release. Use for pre-deploy audits. Never execute unauthorized deployments."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

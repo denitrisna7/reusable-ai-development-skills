@@ -14,5 +14,8 @@ __pycache__/
 venv/
 env/
 
-# Raw documentation snapshots (optional offline research cache, 1.9MB)
+# Raw documentation snapshots & upstream research clones (kept locally, excluded from lightweight plugin clones)
 sources/web-docs/
+sources/anti-slop/
+sources/playwright-mcp/
+sources/agentskills/

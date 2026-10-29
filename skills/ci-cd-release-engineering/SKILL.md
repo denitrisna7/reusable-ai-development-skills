@@ -1,6 +1,6 @@
 ---
 name: ci-cd-release-engineering
-description: Designs, hardens, and troubleshoots CI/CD pipelines, release automation, quality gates, migration checks, and rollback workflows across GitHub Actions, GitLab CI, Jenkins, and other platforms. Activate when creating or auditing build, test, security scan, or deployment pipelines. Do not use for manual deployment readiness sign-off or application runtime code.
+description: "Authors and hardens CI/CD pipelines, quality gates, migration checks, and rollback workflows across GitHub Actions/GitLab CI. Use for pipelines. Do not use for manual release sign-off."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: documentation-developer-handoff
-description: Authors and verifies accurate project documentation, clean-clone setup instructions, environment configuration guides, testing commands, architecture references, deployment runbooks, and operational handoff materials. Activate when creating or updating READMEs, runbooks, or developer onboarding docs. Do not use for inline code comments only.
+description: "Authors and verifies clean-clone setup guides, .env references, test commands, architecture docs, and operational handoff runbooks. Use for project docs. Do not use for inline comments."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

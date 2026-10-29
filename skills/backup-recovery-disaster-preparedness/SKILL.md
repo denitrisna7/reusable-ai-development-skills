@@ -1,6 +1,6 @@
 ---
 name: backup-recovery-disaster-preparedness
-description: Designs and audits backup architectures (3-2-1 rule, full and incremental/WAL backups), data retention policies, RPO/RTO targets, automated restore verification, encryption, and disaster recovery runbooks. Activate when planning data protection, backup automation, or disaster recovery. Do not use for routine git branching or code rollback.
+description: "Designs 3-2-1 backup architectures, retention policies, RPO/RTO targets, encrypted archives, and verified restore runbooks. Use for data recovery planning. Do not use for git branching."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

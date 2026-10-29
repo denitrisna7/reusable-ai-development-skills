@@ -1,4 +1,4 @@
-# Reusable AI Development Skills Library for Antigravity (`v1.4.0`)
+# Reusable AI Development Skills Library for Antigravity (`v1.5.0`)
 
 A comprehensive, modular, technology-agnostic **38-skill software engineering lifecycle library** designed for **Google Antigravity** (App, CLI, and IDE) and compatible **Agent Skills (`agentskills.io`)** environments.
 
@@ -10,7 +10,8 @@ Seluruh rincian perubahan juga tercatat lengkap di [`CHANGELOG.md`](./CHANGELOG.
 
 | Versi | Commit SHA | Tanggal | Ringkasan Perubahan yang Di-Push ke GitHub |
 | :--- | :---: | :---: | :--- |
-| **`v1.4.0` (Terbaru)** | `16c6450` | 2026-10-30 | **Auto-Heal `PATH` & Zero-Reload Playwright**: `run-audit.py` otomatis menyambungkan binary `node`, `npm`, `npx`, `composer`, `flutter`, `dart` (mencegah `Exit Code 127`), otomatis menyalakan server lokal sementara jika belum aktif, auto-login dashboard, dan melarang AI berhenti meminta *Reload MCP / Sesi Baru*. |
+| **`v1.5.0` (Terbaru)** | `HEAD` | 2026-10-30 | **Full 38-Skill Code Audit & Context-Budget Optimization**: Memadatkan `description` frontmatter di 38 `SKILL.md` (`-53.3%` ukuran karakter) & menghapus duplikat `sources/anti-slop/skills/*/SKILL.md` agar tidak ada skill yang terpotong oleh *context budget* Antigravity; `run-audit.py` kini otomatis menginstal `.agents/` dan mencetak **Matriks Verifikasi 38 Skill (`SKILL-01` s/d `SKILL-38`)** + **15-Domain Final Quality Gate**; menambahkan `slopcheck.py`/`slopcheck.sh`, scan repo penuh di `contrast-check.py`, serta dukungan warna `oklab()`/`oklch()` Tailwind v4 di `run-browser-audit.mjs`. |
+| **`v1.4.0`** | `2668aea` / `16c6450` | 2026-10-30 | **Auto-Heal `PATH` & Zero-Reload Playwright**: `run-audit.py` otomatis menyambungkan binary `node`, `npm`, `npx`, `composer`, `flutter`, `dart` (mencegah `Exit Code 127`), otomatis menyalakan server lokal sementara jika belum aktif, auto-login dashboard, dan melarang AI berhenti meminta *Reload MCP / Sesi Baru*. |
 | **`v1.3.0`** | `bf56a63` | 2026-10-30 | **Real Headless Chromium Runner (`run-browser-audit.mjs`) & 15-Domain Gate**: Menambahkan eksekutor Playwright Chromium langsung via CLI (audit Desktop `1440x900` & Mobile `375x812`, kontras DOM asli `>= 4.5:1`, deteksi teks bertindih, console/network error), bypass ringkasan 1-baris JSON Laravel 12 dengan `--testdox`, serta mewajibkan tabel penuh **15 Domain Quality Gate**. |
 | **`v1.2.1`** | `a8b0ae5` | 2026-10-29 | **Workflow Mapping & Live Progress Streaming**: Mewajibkan analisa dan pemetaan alur kerja aplikasi nyata di Fase 1 sebelum menjalankan unit test serta menampilkan progres pengujian secara bertahap di chat. |
 | **`v1.2.0`** | `d8ae779` | 2026-10-29 | **Master Protocol (`BEFORE_ACTION.md`) & `run-audit.py`**: Menambahkan protokol eksekusi satu perintah dan skrip diagnosa otomatis *pre-flight*. |

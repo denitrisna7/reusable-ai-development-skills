@@ -1,6 +1,6 @@
 ---
 name: test-data-environment-isolation
-description: "Configures isolated test environments, safe test databases, deterministic factories/fixtures, frozen clocks, and external service mocks to prevent production data corruption or live side effects. Activate before running automated test suites or browser QA, or when fixing flaky, order-dependent tests. Do not use for managing live production secrets or deployment pipelines."
+description: "Isolates test environments and databases (:memory:/test schemas) with deterministic factories, seeders, and mocks. Use when configuring tests. Do not use for prod schema design."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

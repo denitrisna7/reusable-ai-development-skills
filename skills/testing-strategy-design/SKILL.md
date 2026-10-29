@@ -1,6 +1,6 @@
 ---
 name: testing-strategy-design
-description: "Designs risk-based, multi-layered testing strategies across unit, integration, feature, API, E2E, regression, acceptance, performance, and security test levels. Activate when planning test coverage for a new project, major feature, or legacy module, or when prioritizing high-value tests over superficial coverage metrics. Do not use for executing a single isolated unit test."
+description: "Designs risk-based testing strategies across unit, integration, API, E2E, security, and performance levels. Use when planning test coverage. Do not use for running a single test."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:
