@@ -54,7 +54,7 @@ Before starting a Playwright MCP browser session, verify:
 
 ## 5. Step-by-Step Workflow
 
-Follow this numbered procedure during every Playwright MCP QA session (refer to `[references/playwright-mcp-tools.md](references/playwright-mcp-tools.md)` for full tool parameter details):
+Follow this numbered procedure during every Playwright MCP QA session. The agent MUST stream every step progressively in the chat response (displaying navigation status, snapshot element counts, mobile resize results, and console error counts) so observers can verify real testing progress in real time (refer to `[references/playwright-mcp-tools.md](references/playwright-mcp-tools.md)` for full tool parameter details):
 
 ### Step 1: Navigate and Audit Initial Page Health
 1. Call `browser_navigate` to open the target URL.
