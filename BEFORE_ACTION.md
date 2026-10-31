@@ -65,9 +65,16 @@ Execute the project's test runner and static analyzers in verbose mode and **pri
 
 ---
 
-## Phase 3: Real Headless Chromium Playwright Browser QA (`SKILL-17`, `SKILL-20` to `SKILL-23`)
+## Phase 3: Real Playwright Browser QA — Live GUI on Screen / Headless (`SKILL-17`, `SKILL-20` to `SKILL-23`, `SKILL-36`)
 
 You MUST verify the live web application in a real Chromium browser across **both Desktop (`1440x900`) and Mobile (`375x812`) viewports**.
+
+### Live Visual Execution on Screen:
+On interactive desktop environments (`$DISPLAY`, `$WAYLAND_DISPLAY`, Windows, macOS), Playwright automatically opens a **visible Google Chrome window directly on screen (`headless: false`)** so the user can watch the entire automated test unfold live. It features:
+- **Floating HUD Status Banner**: Displays real-time test progress, active routes, viewports, WCAG AA contrast status, and login events.
+- **Glowing Element Highlights**: Inputs and buttons glow in amber (`#f59e0b`), green (`#10b981`), or red (`#ef4444`) during interaction.
+- **Paced Execution (`slowMo: 250ms`) & Visual Hold**: Automatically holds the final screen for 3 seconds before closing.
+- **Graceful Headless Fallback**: Falls back smoothly to `headless: true` on CI/CD pipelines, Docker, or when passing `--headless`.
 
 ### Execution Method (Always Runnable):
 Run the bundled Playwright Chromium auditor against the active local server, passing key public routes and interactive login credentials if applicable:
@@ -75,7 +82,7 @@ Run the bundled Playwright Chromium auditor against the active local server, pas
 ```bash
 node .agents/skills/ai-skills/scripts/run-browser-audit.mjs http://127.0.0.1:8000 / /login --login-url=/login --user=<test-email> --pass=<test-password>
 ```
-*(If Playwright MCP tools `browser_navigate` / `browser_snapshot` are also active in the session, you may run them in addition to `run-browser-audit.mjs`).*
+*(Flags available: `--headed`, `--headless`, `--slowmo=<ms>`, `--hold=<sec>`. If Playwright MCP tools `browser_navigate` / `browser_snapshot` are also active in the session, you may run them in addition to `run-browser-audit.mjs`).*
 
 ### Required Live Progress Stream in Chat:
 Paste the real output from `run-browser-audit.mjs` showing for **every route** at **Desktop (`1440x900`)** and **Mobile (`375x812`)**:

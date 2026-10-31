@@ -66,6 +66,18 @@ async function loadPlaywright() {
 }
 
 function findChromiumExecutable() {
+  const customPaths = [
+    '/var/lib/flatpak/app/com.google.Chrome/current/active/files/extra/chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/google-chrome',
+    '/opt/google/chrome/chrome',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+  ];
+  for (const bin of customPaths) {
+    if (fs.existsSync(bin)) return bin;
+  }
+
   const cacheDir = path.join(os.homedir(), '.cache', 'ms-playwright');
   if (fs.existsSync(cacheDir)) {
     const dirs = fs.readdirSync(cacheDir).filter((d) => d.startsWith('chromium-')).sort().reverse();
@@ -75,10 +87,6 @@ function findChromiumExecutable() {
       const binLegacy = path.join(cacheDir, dir, 'chrome-linux', 'chrome');
       if (fs.existsSync(binLegacy)) return binLegacy;
     }
-  }
-  const sysBins = ['/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
-  for (const bin of sysBins) {
-    if (fs.existsSync(bin)) return bin;
   }
   return undefined;
 }
@@ -209,6 +217,9 @@ function domAuditEvaluator(viewportLabel) {
   function isVisible(el) {
     let cur = el;
     while (cur && cur.nodeType === 1) {
+      if (cur.id === 'playwright-live-hud' || (cur.closest && cur.closest('#playwright-live-hud'))) {
+        return false;
+      }
       if (cur.hasAttribute('hidden') || cur.hasAttribute('x-cloak') || cur.getAttribute('aria-hidden') === 'true') {
         return false;
       }
@@ -252,6 +263,7 @@ function domAuditEvaluator(viewportLabel) {
   const allElements = Array.from(document.querySelectorAll('body *'));
   if (horizontalOverflowPx > 4) {
     for (const el of allElements) {
+      if (el.id === 'playwright-live-hud' || (el.closest && el.closest('#playwright-live-hud'))) continue;
       const r = el.getBoundingClientRect();
       if (r.right > vw + 4 && !isInsideHorizontalScrollContainer(el, vw)) {
         const cls = typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
@@ -264,6 +276,7 @@ function domAuditEvaluator(viewportLabel) {
     }
     if (overflowCulprits.length === 0) {
       for (const el of allElements) {
+        if (el.id === 'playwright-live-hud' || (el.closest && el.closest('#playwright-live-hud'))) continue;
         const r = el.getBoundingClientRect();
         if (r.right > vw + 4 || el.scrollWidth > vw + 4) {
           const cls = typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
@@ -399,10 +412,25 @@ async function main() {
   let loginUser = null;
   let loginPass = null;
 
+  const hasDisplay = Boolean(
+    process.env.DISPLAY ||
+    process.env.WAYLAND_DISPLAY ||
+    process.platform === 'win32' ||
+    process.platform === 'darwin'
+  );
+
+  let isHeaded = hasDisplay;
+  let slowMo = isHeaded ? 250 : 0;
+  let holdSec = isHeaded ? 3 : 0;
+
   for (const arg of args) {
     if (arg.startsWith('--login-url=')) loginUrl = arg.split('=')[1];
     else if (arg.startsWith('--user=')) loginUser = arg.split('=')[1];
     else if (arg.startsWith('--pass=')) loginPass = arg.split('=')[1];
+    else if (arg === '--headless') { isHeaded = false; slowMo = 0; holdSec = 0; }
+    else if (arg === '--headed' || arg === '--visual') { isHeaded = true; slowMo = 250; holdSec = 3; }
+    else if (arg.startsWith('--slowmo=')) slowMo = parseInt(arg.split('=')[1], 10) || 0;
+    else if (arg.startsWith('--hold=')) holdSec = parseInt(arg.split('=')[1], 10) || 0;
     else if (arg.startsWith('http://') || arg.startsWith('https://')) baseUrl = arg.replace(/\/$/, '');
     else if (arg.startsWith('/')) routes.push(arg);
   }
@@ -420,18 +448,95 @@ async function main() {
   const executablePath = findChromiumExecutable();
 
   console.log('========================================================================');
-  console.log('  PLAYWRIGHT REAL CHROMIUM BROWSER QA & VISUAL/DOM AUDITOR (LIVE LOG)');
+  console.log('  PLAYWRIGHT BROWSER QA & VISUAL/DOM AUDITOR (LIVE ON SCREEN)');
   console.log('========================================================================');
   console.log(`Target Base URL : ${baseUrl}`);
-  console.log(`Browser Engine  : Headless Chromium (${executablePath || 'Playwright Default'})`);
+  console.log(`Display Target  : ${isHeaded ? 'LIVE GUI WINDOW (Tampil di Layar Monitor Anda)' : 'Headless Chromium (Background/CI)'}`);
+  console.log(`Browser Engine  : ${executablePath || 'Playwright Default Chromium'}`);
+  if (isHeaded) {
+    console.log(`Visual Features : SlowMo=${slowMo}ms, Floating HUD Banner=Aktif, Highlight Glow=Aktif`);
+  }
 
-  const browser = await pw.chromium.launch({
-    headless: true,
-    ...(executablePath ? { executablePath } : {}),
+  let browser;
+  try {
+    browser = await pw.chromium.launch({
+      headless: !isHeaded,
+      slowMo,
+      ...(executablePath ? { executablePath } : {}),
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--window-size=1440,960',
+      ],
+    });
+  } catch (launchErr) {
+    if (isHeaded) {
+      console.log(`⚠️  [NOTICE] Gagal membuka jendela GUI (${launchErr.message}). Beralih otomatis ke mode Headless...`);
+      isHeaded = false;
+      slowMo = 0;
+      holdSec = 0;
+      browser = await pw.chromium.launch({
+        headless: true,
+        slowMo: 0,
+        ...(executablePath ? { executablePath } : {}),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
+    } else {
+      throw launchErr;
+    }
+  }
+
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
   });
-
-  const context = await browser.newContext();
   const page = await context.newPage();
+
+  async function setHUD(text, type = 'action') {
+    if (!isHeaded) return;
+    try {
+      await page.evaluate(({ text, type }) => {
+        let el = document.getElementById('playwright-live-hud');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'playwright-live-hud';
+          el.setAttribute('aria-hidden', 'true');
+          document.body.appendChild(el);
+        }
+        const colors = {
+          action: 'linear-gradient(135deg, #0284c7, #0369a1)',
+          audit: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+          success: 'linear-gradient(135deg, #059669, #047857)',
+          warning: 'linear-gradient(135deg, #d97706, #b45309)',
+          danger: 'linear-gradient(135deg, #dc2626, #991b1b)',
+        };
+        const bg = colors[type] || colors.action;
+        el.innerHTML = `
+          <div style="position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:99999999; background:${bg}; color:#ffffff; padding:10px 24px; border-radius:9999px; font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:13px; font-weight:800; letter-spacing:0.3px; box-shadow:0 12px 30px rgba(0,0,0,0.5); display:flex; align-items:center; gap:10px; pointer-events:none; border:2px solid rgba(255,255,255,0.4); text-shadow:0 1px 2px rgba(0,0,0,0.5); user-select:none; transition:all 0.25s ease;">
+            <span style="background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:9999px; font-size:11px; font-weight:700;">PLAYWRIGHT LIVE QA</span>
+            <span>${text}</span>
+          </div>
+        `;
+      }, { text, type });
+    } catch {
+      // ignore
+    }
+  }
+
+  async function highlightElement(locator, color = '#f59e0b') {
+    if (!isHeaded) return;
+    try {
+      await locator.evaluate((el, c) => {
+        el.style.outline = `3px solid ${c}`;
+        el.style.boxShadow = `0 0 16px ${c}`;
+        el.style.transition = 'all 0.25s ease';
+      }, color);
+    } catch {}
+  }
+
+  page.on('dialog', async (dialog) => {
+    console.log(`   💬 Browser Dialog: "${dialog.message()}" -> Auto-accepted (OK)`);
+    await dialog.accept().catch(() => {});
+  });
 
   const consoleErrors = [];
   const pageErrors = [];
@@ -503,10 +608,12 @@ async function main() {
         failedRequests.length = 0;
 
         await page.setViewportSize({ width: vp.width, height: vp.height });
+        await setHUD(`🌐 [${phaseLabel}] ${route} (${vp.label} ${vp.width}x${vp.height})`, 'action');
         const t0 = Date.now();
         const response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
         const loadMs = Date.now() - t0;
-        await page.waitForTimeout(120);
+        await setHUD(`📐 Memeriksa Kontras WCAG AA, Overflow & Tata Letak (${vp.width}x${vp.height})...`, 'audit');
+        await page.waitForTimeout(160);
         const status = response ? response.status() : 0;
 
         const audit = await page.evaluate(domAuditEvaluator, vp.label);
@@ -568,12 +675,29 @@ async function main() {
 
         if ((await emailInput.count()) > 0 && (await passInput.count()) > 0) {
           console.log(`\n🔐 [AUTH FLOW] Testing Interactive Browser Login at ${baseUrl}${loginUrl} (${loginUser})...`);
+          await setHUD(`🔐 Login Otomatis ke Portal: ${loginUser}`, 'action');
+          if (isHeaded) {
+            await highlightElement(emailInput, '#f59e0b');
+            await page.waitForTimeout(250);
+          }
           await emailInput.fill(loginUser);
+          if (isHeaded) {
+            await highlightElement(emailInput, '#10b981');
+            await highlightElement(passInput, '#f59e0b');
+            await page.waitForTimeout(250);
+          }
           await passInput.fill(loginPass);
+          if (isHeaded) {
+            await highlightElement(passInput, '#10b981');
+            await highlightElement(submitBtn, '#ef4444');
+            await page.waitForTimeout(300);
+          }
           await submitBtn.click();
           await page.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
           const postPath = new URL(page.url()).pathname;
           console.log(`   -> Post-Login Redirect: ${page.url()} | Title: "${await page.title()}"`);
+          await setHUD(`🚀 Login Berhasil! Memeriksa Dashboard: ${postPath}`, 'success');
+          await page.waitForTimeout(500);
           if (postPath !== loginUrl) {
             await auditRoutesList([postPath], 'AUTHENTICATED DASHBOARD AUDIT');
           }
@@ -582,6 +706,16 @@ async function main() {
     } catch (err) {
       console.log(`   [AUTH FLOW NOTICE]: ${err.message}`);
     }
+  }
+
+  if (isHeaded && holdSec > 0) {
+    const finalType = totalDefects === 0 ? 'success' : 'danger';
+    const finalMsg = totalDefects === 0
+      ? `🌟 SEMUA PENGUJIAN BROWSER LULUS (PASS)! Menutup dalam ${holdSec}s...`
+      : `⚠️ AUDIT SELESAI: ${totalDefects} temuan terdeteksi. Menutup dalam ${holdSec}s...`;
+    await setHUD(finalMsg, finalType);
+    console.log(`\n🖥️  [LIVE DISPLAY] Menahan browser selama ${holdSec} detik agar Anda dapat melihat tampilan akhir di layar...`);
+    await page.waitForTimeout(holdSec * 1000);
   }
 
   await browser.close();

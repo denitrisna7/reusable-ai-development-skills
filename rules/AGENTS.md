@@ -12,8 +12,9 @@ Whenever this library or plugin (`reusable-ai-development-skills`) is active in 
    - Print the complete workflow and role-permission map in chat.
 3. **Phase 2 — Verbose Unit, CRUD, & Mobile Test Execution (`SKILL-05` to `SKILL-16`, `SKILL-18`, `SKILL-19`)**:
    - **Never collapse unit tests into a 1-line JSON summary**: Run `./vendor/bin/phpunit --testdox --colors=never` (for Laravel/PHP), `CI=true npm test` (for Node/TS), `pytest -v` (for Python), and `flutter analyze && flutter test` (for Flutter) so every individual test case (`✔ ...`) is visible in chat.
-4. **Phase 3 — Real Headless Chromium Browser QA (`SKILL-17`, `SKILL-20` to `SKILL-23`, `SKILL-36`)**:
+4. **Phase 3 — Real Playwright Browser QA — Live GUI on Screen / Headless (`SKILL-17`, `SKILL-20` to `SKILL-23`, `SKILL-36`)**:
    - **Never stop to ask the user to reload MCP servers or restart the IDE window**: Even if `mcp_playwright_*` tools are not registered in the current chat turn, execute `node .agents/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` directly via `run_command` (or let `run-audit.py` auto-boot an ephemeral server and run it automatically).
+   - **Live GUI Window on Screen**: On desktop environments with `$DISPLAY` / `$WAYLAND_DISPLAY`, Playwright automatically opens a visible Google Chrome window directly on screen with a Floating HUD Status Banner, glowing field outlines, and auto-dialog handling so the user can watch the automation execute live. On headless servers or CI/CD pipelines, it falls back smoothly to headless mode (or via `--headless`).
    - Verify Desktop (`1440x900`) and Mobile (`375x812`) viewports for HTTP `200`, `0px` horizontal overflow, WCAG 2.2 AA computed DOM contrast (`>= 4.5:1`), `0` overlapping text elements, and `0` JS/network errors.
 5. **Phase 4 — Complete 38-Skill & 15-Domain Final Quality Gate (`SKILL-33` to `SKILL-38`)**:
    - Output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering `SKILL-01` through `SKILL-38`)**. Never truncate the final table to 5 rows.

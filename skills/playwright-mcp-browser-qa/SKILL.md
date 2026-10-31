@@ -49,7 +49,16 @@ Every browser QA session conducted with this skill must uphold the following eng
 
 Before starting a Playwright MCP browser session, verify:
 1. **Target Application Server & Safe Environment**: Confirm the local or staging web server is running (or start it in a background task if authorized) and verify the target URL is a safe test/local host (`localhost`, `127.0.0.1`, `.test`, or isolated staging), **never** a live production system with real customer transactions (`SKILL-18`).
-2. **Playwright Execution Engine (Zero-Reload CLI Chromium Runner + MCP Tools)**: Check whether Playwright MCP tools (`browser_navigate`, `browser_snapshot`, `browser_click`, etc.) are already active in the current agent session. If MCP tools are not declared in the current session, NEVER stop to ask the user to reload MCP servers or restart the IDE window, and NEVER mark `BLOCKED`: immediately execute the bundled real Headless Chromium Playwright script (`node ../../scripts/run-browser-audit.mjs http://127.0.0.1:<port> / /login --login-url=/login --user=<email> --pass=<password>`) via `run_command` in the current session and print its full multi-viewport DOM contrast, overlap, and console report in chat.
+2. **Playwright Execution Engine (Live GUI Visual Browser on Screen + Zero-Reload CLI Runner + MCP Tools)**: Check whether Playwright MCP tools (`browser_navigate`, `browser_snapshot`, `browser_click`, etc.) are already active in the current agent session. If MCP tools are not declared in the current session, NEVER stop to ask the user to reload MCP servers or restart the IDE window, and NEVER mark `BLOCKED`: immediately execute the bundled Playwright script (`node ../../scripts/run-browser-audit.mjs http://127.0.0.1:<port> / /login --login-url=/login --user=<email> --pass=<password>`) via `run_command` in the current session and print its full multi-viewport DOM contrast, overlap, and console report in chat.
+   - **Live GUI Visual Execution on Screen**: When a graphical desktop display is detected (`$DISPLAY`, `$WAYLAND_DISPLAY`, Windows, macOS), `run-browser-audit.mjs` automatically opens a real, visible Google Chrome window directly in front of the user (`headless: false`) so the user can watch the entire testing sequence unfold live.
+   - **Interactive Floating HUD Banner**: Displays real-time test status, active viewport, WCAG contrast checks, and login flow in a pinned top pill banner (`#playwright-live-hud`, fully excluded from DOM audit metrics).
+   - **Glowing Element Highlights**: Actively highlights form input elements in amber (`#f59e0b`), valid values in emerald green (`#10b981`), and submit buttons in ruby red (`#ef4444`) with glowing outlines (`box-shadow`) so users can follow form submissions visually.
+   - **SlowMo & Visual Hold**: Automatically paces interactions at 250ms slowMo and holds the final test screen for 3 seconds before closing.
+   - **Custom CLI Flags**:
+     - `--headed` or `--visual`: Force GUI window on screen.
+     - `--headless`: Force headless background mode (ideal for CI/CD or headless servers).
+     - `--slowmo=<ms>`: Customize delay between Playwright actions (default 250ms in visual mode).
+     - `--hold=<sec>`: Customize visual hold time before closing (default 3s in visual mode).
 3. **Test Accounts & Seeded Data**: Identify valid test credentials or storage states for each required user role (guest, standard user, admin, second tenant user).
 
 ## 5. Step-by-Step Workflow

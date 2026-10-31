@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Master 38-Skill & 15-Domain Automated Project Auditor, Environment Healer, & Playwright Chromium Runner.
+"""Master 38-Skill & 15-Domain Automated Project Auditor, Environment Healer, & Live Playwright GUI Runner.
 
 Executes real, non-hallucinatable ground-truth checks across all 38 skills (SKILL-01 to SKILL-38)
 and all 15 Final Quality Gate domains (Gate 01 to Gate 15):
@@ -9,7 +9,7 @@ and all 15 Final Quality Gate domains (Gate 01 to Gate 15):
    or ~/development/flutter/bin are accessible in PATH and ~/.gemini/antigravity/bin (preventing Exit Code 127).
 3. Full 38-Skill Static, Architectural, Security (OWASP ASVS), Anti-Slop, Contrast, & Database Analysis.
 4. Full Verbose Unit & Feature Test Execution (./vendor/bin/phpunit --testdox, npm test, pytest -v, flutter test).
-5. Automatic Local Dev Server Boot (if none active) + Real Headless Chromium Playwright Audit (run-browser-audit.mjs).
+5. Automatic Local Dev Server Boot + Live GUI Playwright Chromium Browser QA on Screen (or headless in CI).
 6. Prints the Complete 38-Skill Verification Matrix (SKILL-01..SKILL-38) and 15-Domain Final Quality Gate Table.
 """
 
@@ -549,8 +549,11 @@ def audit_project(target_dir: Path) -> dict:
             results["browser_run"]["status"] = "PASS (Library CLI verified; web server N/A for standalone skill repo)"
         elif results["active_url"] and browser_script:
             b_cmd = ["node", str(browser_script), results["active_url"]]
-            b_code, b_out, b_err = run_cmd(b_cmd, target_dir, timeout=90)
-            results["browser_run"]["command"] = f"node {browser_script} {results['active_url']}"
+            for a in sys.argv[1:]:
+                if a in ("--headless", "--headed", "--visual") or a.startswith("--slowmo=") or a.startswith("--hold="):
+                    b_cmd.append(a)
+            b_code, b_out, b_err = run_cmd(b_cmd, target_dir, timeout=180)
+            results["browser_run"]["command"] = " ".join(b_cmd)
             results["browser_run"]["returncode"] = b_code
             results["browser_run"]["output"] = (b_out + "\n" + b_err).strip()
             results["browser_run"]["status"] = "PASS" if b_code == 0 else "FAIL"
@@ -1049,7 +1052,7 @@ def print_report(res: dict) -> None:
         for line in (res["flutter_run"]["output"] or "").splitlines()[-15:]:
             print(f"    {line}")
 
-    print(f"\nPlaywright Real Chromium Browser QA ({res['browser_run']['status']}):")
+    print(f"\nPlaywright Live Visual / Chromium Browser QA ({res['browser_run']['status']}):")
     if res["browser_run"]["command"]:
         print(f"  Command    : {res['browser_run']['command']} (exit: {res['browser_run']['returncode']})")
         for line in (res["browser_run"]["output"] or "").splitlines():
@@ -1086,6 +1089,10 @@ def print_report(res: dict) -> None:
 
 
 if __name__ == "__main__":
-    target = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd()
+    target = Path.cwd()
+    for arg in sys.argv[1:]:
+        if not arg.startswith("-"):
+            target = Path(arg).resolve()
+            break
     report = audit_project(target)
     print_report(report)

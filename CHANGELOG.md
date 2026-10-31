@@ -4,6 +4,30 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.7.0`] — 2026-10-31
+### Added & Enhanced (Live Visual GUI Playwright Browser on Screen by Default)
+- **Live Visual GUI Browser Mode on Screen (`scripts/run-browser-audit.mjs` & `scripts/run-audit.py`)**:
+  - Automatically detects desktop display availability (`DISPLAY`, `WAYLAND_DISPLAY`, Windows, macOS). On desktop environments, Playwright now opens a visible Google Chrome window directly on the user's screen (`headless: false`) by default instead of running silently in the background, allowing the user to watch the entire automation unfold in real time.
+  - Automatically falls back to headless mode (`headless: true`) in headless servers, Docker containers, or CI/CD pipelines without a display, or when the launch fails.
+  - Prioritizes Google Chrome Flatpak (`/var/lib/flatpak/app/com.google.Chrome/current/active/files/extra/chrome`) and system Chrome binaries alongside Playwright cache binaries.
+- **Interactive Visual Testing UX & Floating HUD Status Banner**:
+  - **Floating HUD Banner (`#playwright-live-hud`)**: Displays real-time test progress, current phase, routes, viewports, WCAG AA contrast status, and login state in a styled pill banner pinned to the top of the browser window.
+  - **DOM Audit Isolation**: The HUD banner is explicitly excluded from DOM audits, visibility calculations, and overflow detection so it causes zero false positives.
+  - **Glowing Element Highlights**: Automatically highlights active form input fields in amber (`#f59e0b`), valid inputs in emerald green (`#10b981`), and submit buttons in ruby red (`#ef4444`) with glowing outlines (`box-shadow`) so the user can clearly see each interaction.
+  - **Paced Execution (`slowMo`)**: Runs at 250ms slowMo in headed mode so human eyes can track each click, fill, and navigation comfortably.
+  - **End-of-Run Visual Hold**: Automatically holds the browser window for 3 seconds after completing tests so the user can inspect the final screen before the browser closes.
+  - **Automatic Browser Dialog Handling**: Automatically detects and accepts browser `alert()` and `confirm()` dialogs (e.g. deletion confirmation dialogs) and logs them to the console.
+- **Configurable CLI Flags**:
+  - `--headed` or `--visual`: Force GUI window on screen.
+  - `--headless`: Force headless background execution (ideal for CI/CD).
+  - `--slowmo=<ms>`: Customize delay between Playwright actions (default 250ms in visual mode).
+  - `--hold=<sec>`: Customize visual hold time before closing (default 3s in visual mode).
+- **Timeout Extension & Forwarding (`scripts/run-audit.py`)**:
+  - Extended browser audit command timeout from 90s to 180s to accommodate visual executions with `slowMo`.
+  - Automatically forwards `--headed`, `--headless`, `--visual`, `--slowmo`, and `--hold` arguments to `run-browser-audit.mjs`.
+- **Protocol & Documentation Updates**:
+  - Updated `BEFORE_ACTION.md`, `rules/AGENTS.md`, `AGENTS.md`, `README.md`, and `skills/playwright-mcp-browser-qa/SKILL.md` to reflect Live Visual On-Screen execution and new CLI flags.
+
 ## [`v1.6.0`] — 2026-10-30
 ### Added, Fixed & Hardened (Deep Audit Across Real Applications)
 - **Native Antigravity `<user_rules>` Auto-Injection (`rules/AGENTS.md` & `AGENTS.md`)**: Added `rules/AGENTS.md` inside the plugin root and `AGENTS.md` at the repository root (plus automatic sync to `<target>/.agents/rules/AGENTS.md`, `.agents/scripts/`, and `.agents/references/` via `scripts/run-audit.py`) so Antigravity automatically loads the 5-phase execution protocol into `<user_rules>` on every session.
