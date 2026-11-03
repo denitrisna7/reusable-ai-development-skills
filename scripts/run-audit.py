@@ -568,6 +568,30 @@ def audit_project(target_dir: Path) -> dict:
             for a in sys.argv[1:]:
                 if a in ("--headless", "--headed", "--visual") or a.startswith("--slowmo=") or a.startswith("--hold="):
                     b_cmd.append(a)
+
+            # Auto-detect admin credentials to enable deep admin dashboard & CRUD audit
+            if not any(a.startswith("--user=") for a in sys.argv):
+                env_candidates = [
+                    target_dir / ".env",
+                    target_dir / "sdmk_app" / ".env",
+                    target_dir / "app" / ".env",
+                    target_dir / "backend" / ".env",
+                ]
+                for ef in env_candidates:
+                    if ef.is_file():
+                        try:
+                            txt = ef.read_text(encoding="utf-8")
+                            u_m = re.search(r'(?:ADMIN_USERNAME|ADMIN_EMAIL|ADMIN_USER|TEST_USER_EMAIL)\s*=\s*[\'"]?([^\'"\r\n]+)', txt, re.IGNORECASE)
+                            p_m = re.search(r'(?:ADMIN_INITIAL_PASSWORD|ADMIN_PASSWORD|ADMIN_PASS|TEST_USER_PASSWORD)\s*=\s*[\'"]?([^\'"\r\n]+)', txt, re.IGNORECASE)
+                            if u_m and p_m:
+                                b_cmd.extend([
+                                    "--login-url=/login",
+                                    f"--user={u_m.group(1).strip()}",
+                                    f"--pass={p_m.group(1).strip()}",
+                                ])
+                                break
+                        except Exception:
+                            pass
             b_code, b_out, b_err = run_cmd(b_cmd, target_dir, timeout=180)
             results["browser_run"]["command"] = " ".join(b_cmd)
             results["browser_run"]["returncode"] = b_code

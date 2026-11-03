@@ -4,6 +4,21 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.9.4`] — 2026-11-04
+### Added & Enhanced (Deep Interactive Button Testing, CRUD Action Preview, & Auto-Credential Login)
+- **Deep Interactive Button & Modal Explorer (`scripts/run-browser-audit.mjs`)**:
+  - Automatically identifies and clicks visible interactive elements (tabs, accordions, filter buttons, modals, dropdowns) on every visited page.
+  - Highlights clicked buttons with glowing blue outlines and displays live HUD action banners.
+  - Automatically verifies modal dialog openings, inspects modal content, and safely dismisses them with close buttons or Escape.
+- **Search & Filter Form Exercising**:
+  - Automatically discovers search/filter inputs (`input[type="search"]`, `input[name*="search"]`, `input[placeholder*="cari"]`).
+  - Animates typing dummy queries in amber highlights to visually demonstrate form interactivity on screen.
+- **Table Row CRUD Action Hover/Highlight**:
+  - Highlights row action buttons (View, Edit, Detail) in data tables to verify interactive action controls.
+- **Auto-Discovery of Admin Login Credentials (`scripts/run-audit.py` & `scripts/run-browser-audit.mjs`)**:
+  - Automatically scans `.env` (`ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_INITIAL_PASSWORD`) across project roots.
+  - Seamlessly logs in to the admin dashboard and crawls all protected admin routes (`/admin/*`, `/kelola-*`), solving the issue where admin CRUD pages were previously skipped.
+
 ## [`v1.9.3`] — 2026-11-04
 ### Fixed & Hardened (Strict Workflow Separation & Permanent Screenshot Feature Disabling)
 - **Strict Intent Separation: Feature Addition vs Full Audit (`AGENTS.md`, `rules/AGENTS.md`, `BEFORE_ACTION.md`)**:

@@ -92,6 +92,32 @@ function findChromiumExecutable() {
 }
 
 function autoDiscoverCredentialsFromRepo() {
+  const envCandidates = [
+    path.join(process.cwd(), '.env'),
+    path.join(process.cwd(), 'sdmk_app', '.env'),
+    path.join(process.cwd(), 'app', '.env'),
+    path.join(process.cwd(), 'backend', '.env'),
+    path.join(process.cwd(), '..', '.env'),
+  ];
+  for (const envPath of envCandidates) {
+    if (fs.existsSync(envPath)) {
+      try {
+        const txt = fs.readFileSync(envPath, 'utf8');
+        const uMatch = txt.match(/(?:ADMIN_USERNAME|ADMIN_EMAIL|ADMIN_USER|TEST_USER_EMAIL)\s*=\s*['"]?([^'"\r\n]+)['"]?/i);
+        const pMatch = txt.match(/(?:ADMIN_INITIAL_PASSWORD|ADMIN_PASSWORD|ADMIN_PASS|TEST_USER_PASSWORD)\s*=\s*['"]?([^'"\r\n]+)['"]?/i);
+        if (uMatch && pMatch) {
+          const u = uMatch[1].trim();
+          const p = pMatch[1].trim();
+          if (u && p) {
+            return { loginUrl: '/login', user: u, pass: p };
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
   const candidates = [
     path.join(process.cwd(), 'database', 'seeders', 'DatabaseSeeder.php'),
     path.join(process.cwd(), 'database', 'seeders', 'UserSeeder.php'),
@@ -626,14 +652,58 @@ async function main() {
           await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'smooth' })).catch(() => {});
           await page.waitForTimeout(120);
 
-          // Test clicking visible interactive elements (accordion, summary, tab) on desktop view
+          // Test clicking visible interactive elements (buttons, accordion, tabs, modals, search) on desktop view
           if (vp.width === 1440) {
             try {
-              const interactiveTrigger = page.locator('details > summary, [data-bs-toggle="collapse"], .faq-item summary, .accordion-button').first();
-              if ((await interactiveTrigger.count()) > 0 && (await interactiveTrigger.isVisible())) {
-                await highlightElement(interactiveTrigger, '#3b82f6');
-                await interactiveTrigger.click();
-                await page.waitForTimeout(180);
+              // 1. Test clicking visible interactive buttons, tabs, accordions, and modal triggers
+              const interactiveSelectors = [
+                'details > summary',
+                '[data-bs-toggle="collapse"]',
+                '.faq-item summary',
+                '.accordion-button',
+                'button.tab-btn, [role="tab"], .nav-tabs .nav-link',
+                '[data-bs-toggle="modal"], [data-toggle="modal"]',
+                'button:has-text("Tambah"), button:has-text("Create"), button:has-text("New")',
+                'button.filter-btn, [data-filter]',
+              ];
+              for (const sel of interactiveSelectors) {
+                const loc = page.locator(sel).first();
+                if ((await loc.count()) > 0 && (await loc.isVisible())) {
+                  const label = ((await loc.innerText().catch(() => '')) || sel).trim().replace(/\s+/g, ' ').slice(0, 30);
+                  await setHUD(`🖱️ Menguji Klik Tombol: "${label}"...`, 'action');
+                  await highlightElement(loc, '#3b82f6');
+                  await loc.click({ timeout: 2500 }).catch(() => {});
+                  await page.waitForTimeout(250);
+
+                  // If modal opened, inspect it and close it
+                  const modalClose = page.locator('.modal.show [data-bs-dismiss="modal"], .modal.show .btn-close, dialog[open] button:has-text("Tutup"), dialog[open] button:has-text("Close"), [aria-label="Close"]').first();
+                  if ((await modalClose.count()) > 0 && (await modalClose.isVisible())) {
+                    await setHUD(`📋 Modal Terbuka! Memeriksa Elemen & Menutup Modal...`, 'audit');
+                    await highlightElement(modalClose, '#ef4444');
+                    await modalClose.click({ timeout: 2000 }).catch(() => {});
+                    await page.waitForTimeout(200);
+                  }
+                }
+              }
+
+              // 2. Test interactive search/filter form inputs if present
+              const searchInput = page.locator('input[type="search"], input[name*="search"], input[name*="cari"], input[placeholder*="cari" i], input[placeholder*="search" i]').first();
+              if ((await searchInput.count()) > 0 && (await searchInput.isVisible())) {
+                await setHUD(`🔍 Menguji Input Form Pencarian & Filter...`, 'action');
+                await highlightElement(searchInput, '#f59e0b');
+                await searchInput.fill('Uji Otomasi Playwright');
+                await page.waitForTimeout(300);
+                await searchInput.fill('');
+                await page.waitForTimeout(150);
+              }
+
+              // 3. Test table action buttons / row hover (previewing CRUD action buttons)
+              const rowActionButton = page.locator('table tbody tr:first-child button, table tbody tr:first-child a.btn, table tbody tr:first-child [title*="Edit" i], table tbody tr:first-child [title*="Detail" i]').first();
+              if ((await rowActionButton.count()) > 0 && (await rowActionButton.isVisible())) {
+                await setHUD(`⚡ Menguji Aksi Baris Data Tabel (CRUD Action)...`, 'action');
+                await highlightElement(rowActionButton, '#10b981');
+                await rowActionButton.hover().catch(() => {});
+                await page.waitForTimeout(250);
               }
             } catch {
               // Ignore if non-interactable
