@@ -1,6 +1,6 @@
 ---
 name: frontend-performance
-description: "Optimizes Core Web Vitals (LCP, INP, CLS), asset bundles, image sizing, lazy loading, and rendering efficiency. Use for client-side performance. Do not use for backend SQL tuning."
+description: "Mandatory lifecycle skill (SKILL-22). Audits and optimizes Core Web Vitals (LCP, INP, CLS), asset bundles, image sizing, and rendering speed. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

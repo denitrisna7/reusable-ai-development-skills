@@ -1,6 +1,6 @@
 ---
 name: seo-web-discoverability
-description: "Audits and implements titles, meta descriptions, canonical URLs, sitemaps, robots directives, Open Graph, and JSON-LD for public pages. Use for public web SEO. Do not index private admin apps."
+description: "Mandatory lifecycle skill (SKILL-36). Audits HTML titles, meta descriptions, canonical URLs, sitemaps, robots.txt, Open Graph, and JSON-LD. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

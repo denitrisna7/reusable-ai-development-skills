@@ -1,6 +1,6 @@
 ---
 name: database-architecture-integrity
-description: "Designs resilient relational schemas, foreign keys, indexes, ACID transactions, and zero-downtime reversible migrations. Use for database changes. Do not use for read-query tuning."
+description: "Mandatory lifecycle skill (SKILL-24). Audits relational schemas, foreign keys, indexes, ACID transactions, and reversible migrations. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

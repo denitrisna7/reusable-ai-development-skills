@@ -1,6 +1,6 @@
 ---
 name: testing-strategy-design
-description: "Designs risk-based testing strategies across unit, integration, API, E2E, security, and performance levels. Use when planning test coverage. Do not use for running a single test."
+description: "Mandatory lifecycle skill (SKILL-15). Designs and validates the complete test pyramid across unit, integration, API, E2E, and regression levels. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

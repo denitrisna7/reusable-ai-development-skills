@@ -1,6 +1,6 @@
 ---
 name: refactoring-legacy-safety
-description: "Guides incremental refactoring of legacy code by verifying behavior first and preserving backward compatibility. Use when restructuring code. Do not use for greenfield features."
+description: "Mandatory lifecycle skill (SKILL-08). Guides safe, incremental refactoring of legacy code, preserving backward compatibility and removing stale files. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

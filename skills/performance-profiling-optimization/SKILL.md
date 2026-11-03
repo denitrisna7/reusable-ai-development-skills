@@ -1,6 +1,6 @@
 ---
 name: performance-profiling-optimization
-description: "Baselines and profiles CPU, memory, DB, network, and Web Vitals bottlenecks with before/after benchmarks. Use when diagnosing slow performance. Do not claim gains without metrics."
+description: "Mandatory lifecycle skill (SKILL-29). Profiles CPU, memory, database, and network bottlenecks with empirical before/after benchmarks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

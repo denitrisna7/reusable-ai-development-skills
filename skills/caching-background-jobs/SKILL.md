@@ -1,6 +1,6 @@
 ---
 name: caching-background-jobs
-description: "Designs Redis/cache invalidation strategies, idempotent background queues, scheduled tasks, locks, and DLQ recovery. Use for caching and workers. Do not use for simple SQL indexing."
+description: "Mandatory lifecycle skill (SKILL-30). Audits Redis/cache invalidation strategies, idempotent background queues, scheduled jobs, and locks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: playwright-mcp-browser-qa
-description: "Executes real Chromium browser QA via Playwright MCP and CLI runner across desktop/mobile viewports, forms, auth, and console logs. Use for web UI QA. Do not use for CLI-only apps."
+description: "Mandatory lifecycle skill (SKILL-17). Executes live visual on-screen and headless Chromium browser QA across Desktop & Mobile viewports. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

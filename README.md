@@ -1,4 +1,4 @@
-# Reusable AI Development Skills Library for Antigravity (`v1.7.0`)
+# Reusable AI Development Skills Library for Antigravity (`v1.8.0`)
 
 A comprehensive, modular, technology-agnostic **38-skill software engineering lifecycle library** designed for **Google Antigravity** (App, CLI, and IDE) and compatible **Agent Skills (`agentskills.io`)** environments.
 
@@ -10,7 +10,8 @@ Seluruh rincian perubahan juga tercatat lengkap di [`CHANGELOG.md`](./CHANGELOG.
 
 | Versi | Commit SHA | Tanggal | Ringkasan Perubahan yang Di-Push ke GitHub |
 | :--- | :---: | :---: | :--- |
-| **`v1.7.0` (Terbaru)** | `HEAD` | 2026-10-31 | **Live GUI Playwright Browser on Screen by Default (`run-browser-audit.mjs` & `run-audit.py`)**: Playwright secara otomatis mendeteksi display desktop (`$DISPLAY` / `$WAYLAND_DISPLAY`) dan membuka jendela Google Chrome nyata di layar monitor pengguna (`headless: false`, slowMo 250ms, Floating HUD Banner, glowing highlights, auto-accept dialogs, 3s visual hold), dengan fallback otomatis ke headless mode di server CI/CD atau opsi `--headless`; opsi CLI `--headed`, `--headless`, `--slowmo`, `--hold`. |
+| **`v1.8.0` (Terbaru)** | `HEAD` | 2026-11-03 | **Mandatory All-38-Skill Forced Execution & Zero-Touch Project Bootstrap (`setup-project.py` & `--force-all`)**: Menambahkan aturan mutlak Anti-Cherry-Picking (`AGENTS.md`, `rules/AGENTS.md`, `BEFORE_ACTION.md`) yang melarang keras AI hanya menjalankan *"yang dibutuhkan saja"*; skrip `setup-project.py` otomatis menginjeksi aturan ke `<target>/AGENTS.md`, `<target>/.gemini/rules/AGENTS.md`, dan `.agents/skills.json`; memperbarui seluruh 38 deskripsi `SKILL.md` agar bebas dari klausul eksklusi negatif (`Do not use for...`); menambahkan opsi `--force-all` di `run-audit.py` untuk mengevaluasi dan mencetak rincian aktif seluruh 38 skill (`38/38 skills verified`). |
+| **`v1.7.0`** | `36d5ecd` | 2026-10-31 | **Live GUI Playwright Browser on Screen by Default (`run-browser-audit.mjs` & `run-audit.py`)**: Playwright secara otomatis mendeteksi display desktop (`$DISPLAY` / `$WAYLAND_DISPLAY`) dan membuka jendela Google Chrome nyata di layar monitor pengguna (`headless: false`, slowMo 250ms, Floating HUD Banner, glowing highlights, auto-accept dialogs, 3s visual hold), dengan fallback otomatis ke headless mode di server CI/CD atau opsi `--headless`; opsi CLI `--headed`, `--headless`, `--slowmo`, `--hold`. |
 | **`v1.6.0`** | `2618956` | 2026-10-30 | **Deep Audit Architecture (`rules/AGENTS.md`, Pinpoint DOM Overflow/Contrast Selector, & Zero False-Positive 38-Skill Engine)**: Menambahkan `rules/AGENTS.md` & `AGENTS.md` agar Antigravity otomatis memuat aturan eksekusi ke dalam `<user_rules>` di setiap sesi; memperbarui `run-browser-audit.mjs` untuk mendeteksi URL rute penuh (`{{ route(...) }}`), mengabaikan *drawer* mobile yang tertutup (`-translate-x-full`), serta mencetak *class selector* pasti pada `CONTRAST FAIL` dan `OVERFLOW CULPRIT`; menghilangkan *false positive* regex (`SKILL-12`, `SKILL-14`, `SKILL-27`, `SKILL-28`) dan mengganti 12 jebakan `REVIEW` statis menjadi verifikasi otomatis deterministik di `run-audit.py`. |
 | **`v1.5.2`** | `a1a4b34` | 2026-10-30 | **Registrasi Otomatis `.agents/skills.json` & Evaluasi 38 Skill Berbasis Bukti Nyata (0 Hardcoded `PASS`)**: Mengatasi batas *scan* 1 level direktori `.agents/skills/` di Antigravity dengan mendaftarkan `.agents/skills.json` (`{"entries":[{"path":".agents/skills/ai-skills/skills"}]}`) secara otomatis; mengganti 19 status `PASS` statis di `scripts/run-audit.py` menjadi pemindaian kode/runtime nyata (`PASS` / `FAIL` / `WARN` / `N/A` / `REVIEW`) di seluruh 38 skill (`SKILL-01` s/d `SKILL-38`); serta membersihkan variabel `ANTIGRAVITY_AGENT` agar `php artisan test` tidak terpotong menjadi 1 baris JSON. |
 | **`v1.5.1`** | `01fb565` | 2026-10-30 | **Universal Multi-Stack Audit & Server Auto-Boot**: Menambahkan auto-boot ephemeral server untuk Next.js (`npx next dev -p 18124`), Vite (`npx vite --port 18124`), Django (`manage.py runserver`), FastAPI/Flask, native PHP (`php -S`), dan Static HTML (`python3 -m http.server`); memperluas deteksi arsitektur/komponen lintas framework (Node/React/Vue/Python/Go/Flutter); menstandarkan `CI=true npm test` agar kompatibel dengan Node test runner, Jest, Vitest, dan Mocha. |
@@ -46,22 +47,23 @@ You can use this skill library in any project immediately so that Google Antigra
 ### Option 1 — Project-Specific via Git Clone (Rekomendasi per Proyek)
 In the root directory of any new project (Laravel, React, Vue, Next.js, Django, Flutter, etc.):
 ```bash
-# Clone into .agents/skills/ai-skills and register .agents/skills.json for 1-level Antigravity discovery:
+# Clone into .agents/skills/ai-skills and run zero-touch bootstrap:
 git clone https://github.com/denitrisna7/reusable-ai-development-skills.git .agents/skills/ai-skills && \
-python3 .agents/skills/ai-skills/scripts/run-audit.py .
+python3 .agents/skills/ai-skills/scripts/setup-project.py .
 ```
-*Running `run-audit.py` (or `echo '{"entries":[{"path":".agents/skills/ai-skills/skills"}]}' > .agents/skills.json`) automatically registers `.agents/skills.json` and syncs all 38 skills (`SKILL-01` to `SKILL-38`), `references/`, and `scripts/` into `.agents/` so Antigravity discovers all 38 skills immediately.*
+*Running `setup-project.py` (or `setup.sh`) automatically auto-injects `AGENTS.md` into `<target>/AGENTS.md`, `<target>/.gemini/rules/AGENTS.md`, and `<target>/.agents/rules/AGENTS.md`, registers `.agents/skills.json`, heals the PATH environment, and triggers the forced 38-skill audit.*
 
 ### Master Single-Command Trigger (Perintah 1 Kalimat Langsung Beres)
 You can simply give this exact prompt to Antigravity:
 > **Prompt**: *"git clone kan skill ini kemudian kerjakan sesuai skill tersebut: https://github.com/denitrisna7/reusable-ai-development-skills.git"*
 
-Whenever Antigravity sees this command, it is bound by **[`BEFORE_ACTION.md`](./BEFORE_ACTION.md)** to execute the 5-phase protocol strictly in order without skipping, truncating to 1-line JSON, or faking results:
-1. **Phase 0 (Before Action)**: Executes `python3 .agents/skills/ai-skills/scripts/run-audit.py` to collect empirical baseline evidence (stack, `.env`, active server, verbose `--testdox` tests, and automatic Playwright Chromium run).
-2. **Phase 1 (Workflow & Architecture Map)**: Inspects actual routes, controllers, roles, and state machines, and prints the complete application workflow map in chat.
-3. **Phase 2 (Verbose Unit & CRUD Tests)**: Executes `./vendor/bin/phpunit --testdox --colors=never` (or `npm test` / `pytest -v`) so every individual `✔` test case is shown in chat (never collapsed into a 1-line JSON summary).
-4. **Phase 3 (Live GUI / Chromium Playwright Browser QA on Screen)**: Executes `node .agents/skills/ai-skills/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` to test live pages in a real Google Chrome browser window directly on screen across Desktop (`1440x900`) and Mobile (`375x812`), with a real-time Floating HUD banner, element highlights, auditing real DOM contrast (`>= 4.5:1`), element overlaps, horizontal overflow, and console/network errors (falling back smoothly to headless mode on servers/CI).
-5. **Phase 4 (Complete 15-Domain Final Quality Gate)**: Outputs the full 15-Domain Final Quality Gate Table (covering all 38 skills) and binding release verdict (`READY` or `BLOCKED`).
+Whenever Antigravity sees this command, it is bound by **[`BEFORE_ACTION.md`](./BEFORE_ACTION.md)** and **[`AGENTS.md`](./AGENTS.md)** to execute the forced 38-skill protocol strictly in order without cherry-picking or skipping:
+1. **Aturan Mutlak Anti-Cherry-Picking**: AI dilarang keras hanya menjalankan *"yang dibutuhkan saja"*. Seluruh 38 skill (`SKILL-01` s/d `SKILL-38`) adalah satu paket wajib yang harus dievaluasi dan diverifikasi berurutan dengan bukti empiris terminal.
+2. **Phase 0 (Before Action & Forced 38-Skill Audit)**: Menjalankan `python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all` untuk mengaudit seluruh 38 skill dan mencetak bukti nyata terminal di chat (`38/38 skills verified`).
+3. **Phase 1 (Workflow & Architecture Map)**: Memeriksa rute, kontroler, role, dan mencetak peta alur kerja aplikasi nyata.
+4. **Phase 2 (Verbose Unit & CRUD Tests)**: Menjalankan `./vendor/bin/phpunit --testdox --colors=never` (atau `npm test` / `pytest -v`) sehingga setiap kasus uji `✔` tercetak nyata di chat.
+5. **Phase 3 (Live GUI / Chromium Playwright Browser QA on Screen)**: Menjalankan Playwright di layar monitor secara visual (Desktop `1440x900` & Mobile `375x812`), menguji kontras DOM WCAG AA (`>= 4.5:1`), floating HUD banner, glowing highlight elemen, zero overflow, dan zero error console.
+6. **Phase 4 (Complete 15-Domain Final Quality Gate)**: Menampilkan tabel lengkap 15 Domain Quality Gate (mencakup `SKILL-01` s/d `SKILL-38`) beserta status `READY` atau `BLOCKED`.
 
 ### Option 2 — Global Install Across All Projects (Pasang 1 Kali untuk Selamanya)
 Install once to your machine's Antigravity global plugin directory to make all 38 skills available across all current and future projects on your computer:

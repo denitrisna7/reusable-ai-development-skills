@@ -1,6 +1,6 @@
 ---
 name: ai-provider-integration
-description: "Integrates LLM/AI SDKs with server-side key isolation, schema-validated outputs, token budgets, timeouts, and fallbacks. Use for AI integrations. Pair with AI security for prompts."
+description: "Mandatory lifecycle skill (SKILL-28). Audits LLM SDK integrations for server-side key isolation, schema validation, token budgets, and fallbacks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

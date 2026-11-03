@@ -1,6 +1,6 @@
 ---
 name: ci-cd-release-engineering
-description: "Authors and hardens CI/CD pipelines, quality gates, migration checks, and rollback workflows across GitHub Actions/GitLab CI. Use for pipelines. Do not use for manual release sign-off."
+description: "Mandatory lifecycle skill (SKILL-31). Audits and hardens CI/CD pipelines, automated quality gates, migration safety, and rollback workflows. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

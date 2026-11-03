@@ -1,6 +1,6 @@
 ---
 name: privacy-data-protection
-description: "Protects PII/sensitive data via minimization, encryption, log redaction, access controls, and safe deletion. Use when handling user data. Do not use for pure SQL index tuning."
+description: "Mandatory lifecycle skill (SKILL-12). Audits and protects PII/sensitive data via minimization, encryption, log redaction, and safe deletion. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

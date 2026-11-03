@@ -1,6 +1,6 @@
 ---
 name: environment-configuration-management
-description: "Manages dev/staging/prod environment parity, .env validation, secret isolation, and safe production defaults (DEBUG=false). Use for config/secrets. Do not use for CI YAML syntax."
+description: "Mandatory lifecycle skill (SKILL-32). Audits dev/staging/prod environment parity, .env validation, secret isolation, and APP_DEBUG=false. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

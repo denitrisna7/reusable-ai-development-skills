@@ -1,6 +1,6 @@
 ---
 name: observability-incident-diagnosis
-description: "Implements structured logging, RED/USE metrics, tracing, health probes, log redaction, and incident root-cause analysis. Use for telemetry and outages. Do not use for routine unit tests."
+description: "Mandatory lifecycle skill (SKILL-34). Audits structured logging, RED/USE metrics, tracing, health probes (/health, /up), and log redaction. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

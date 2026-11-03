@@ -1,6 +1,6 @@
 ---
 name: adaptive-architecture
-description: "Evaluates system architecture, module boundaries, and incremental technical plans without unnecessary rewrites. Use when designing modules. Do not use for standalone ADRs."
+description: "Mandatory lifecycle skill (SKILL-03). Evaluates system architecture, module boundaries, layering, and technical plans without unnecessary rewrites. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

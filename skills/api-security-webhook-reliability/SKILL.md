@@ -1,6 +1,6 @@
 ---
 name: api-security-webhook-reliability
-description: "Secures REST/GraphQL APIs and builds idempotent, HMAC-verified webhooks with rate limiting and retries. Use for APIs and webhooks. Do not use for general outbound SDK calls."
+description: "Mandatory lifecycle skill (SKILL-11). Secures REST/GraphQL APIs and audits idempotent, HMAC-verified webhooks with rate limiting and retries. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

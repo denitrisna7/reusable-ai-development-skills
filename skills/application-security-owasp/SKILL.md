@@ -1,6 +1,6 @@
 ---
 name: application-security-owasp
-description: "Implements and audits OWASP ASVS/Top 10 controls including auth, RBAC, SQLi/XSS/CSRF defense, and file upload safety. Use for security reviews. Do not use for webhook retries."
+description: "Mandatory lifecycle skill (SKILL-10). Audits OWASP ASVS/Top 10 controls including auth, RBAC, SQLi, XSS, CSRF defense, and file upload safety. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

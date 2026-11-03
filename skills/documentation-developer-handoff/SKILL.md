@@ -1,6 +1,6 @@
 ---
 name: documentation-developer-handoff
-description: "Authors and verifies clean-clone setup guides, .env references, test commands, architecture docs, and operational handoff runbooks. Use for project docs. Do not use for inline comments."
+description: "Mandatory lifecycle skill (SKILL-37). Audits clean-clone setup guides, .env references, test commands, architecture docs, and handoff runbooks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

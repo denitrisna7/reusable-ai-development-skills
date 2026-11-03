@@ -1,6 +1,6 @@
 ---
 name: threat-modeling-risk-assessment
-description: "Maps assets, trust boundaries, attack surfaces, and STRIDE threats with prioritized mitigations. Use when designing auth, payments, or architectures. Do not use for lint fixes."
+description: "Mandatory lifecycle skill (SKILL-13). Maps assets, trust boundaries, attack surfaces, and STRIDE threats with prioritized mitigations. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

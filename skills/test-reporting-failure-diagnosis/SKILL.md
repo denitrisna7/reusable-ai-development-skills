@@ -1,6 +1,6 @@
 ---
 name: test-reporting-failure-diagnosis
-description: "Produces evidence-backed PASS/FAIL/BLOCKED test reports with root-cause diagnosis and reproduction steps. Use when reporting test results. Do not use for initial test planning."
+description: "Mandatory lifecycle skill (SKILL-19). Produces evidence-backed PASS/FAIL test reports with verbose failure diagnosis and reproduction steps. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

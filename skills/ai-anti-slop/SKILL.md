@@ -1,6 +1,6 @@
 ---
 name: ai-anti-slop
-description: "Eliminates AI code, UI, copywriting, and comment slop while enforcing craftsmanship and evidence-backed delivery. Use when coding or reviewing UI. Do not use for discovery."
+description: "Mandatory lifecycle skill (SKILL-05). Audits and eliminates AI slop, placeholder copy (Lorem ipsum), fake icons, dead links, and clichés across the repo. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

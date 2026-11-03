@@ -1,6 +1,6 @@
 ---
 name: api-external-service-integration
-description: "Integrates third-party REST/GraphQL/gRPC APIs with strict contracts, timeouts, backoff retries, rate limits, and mocks. Use for external APIs. Do not use for LLM provider specifics."
+description: "Mandatory lifecycle skill (SKILL-27). Audits third-party REST/GraphQL APIs for strict contracts, timeouts, backoff retries, and rate limits. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

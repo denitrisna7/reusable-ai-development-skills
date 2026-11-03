@@ -1,6 +1,6 @@
 ---
 name: project-discovery
-description: "Inspects repository manifests, stack, routes, databases, tests, and CI/CD before coding. Use when onboarding or starting work. Do not use for direct code edits."
+description: "Mandatory lifecycle skill (SKILL-01). Inspects repository manifests, stack, entrypoints, routes, schemas, and CI/CD before any modifications. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

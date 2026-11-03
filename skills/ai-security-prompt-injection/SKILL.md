@@ -1,6 +1,6 @@
 ---
 name: ai-security-prompt-injection
-description: "Defends LLM/agent features against direct/indirect prompt injection, unsafe tool calls, secret leaks, and output XSS. Use for AI security. Do not use for basic SDK setup."
+description: "Mandatory lifecycle skill (SKILL-14). Defends AI/LLM features against direct/indirect prompt injection, unsafe tool calls, and output XSS. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

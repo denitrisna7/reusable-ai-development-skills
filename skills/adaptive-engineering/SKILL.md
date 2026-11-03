@@ -1,6 +1,6 @@
 ---
 name: adaptive-engineering
-description: "Adapts implementation to the repository language, framework idioms, runtime version, and conventions. Use whenever writing or modifying code. Do not use for initial discovery."
+description: "Mandatory lifecycle skill (SKILL-06). Enforces repository idioms, framework conventions, runtime versions, and clean code craftsmanship. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

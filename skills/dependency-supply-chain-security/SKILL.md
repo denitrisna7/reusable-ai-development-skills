@@ -1,6 +1,6 @@
 ---
 name: dependency-supply-chain-security
-description: "Audits direct/transitive dependencies, lockfile integrity, CVEs, and install scripts across package managers. Use when managing packages. Do not use for app logic OWASP reviews."
+description: "Mandatory lifecycle skill (SKILL-09). Audits direct/transitive dependencies, lockfile integrity, CVEs, and installation scripts. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

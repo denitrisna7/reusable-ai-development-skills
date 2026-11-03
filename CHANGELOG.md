@@ -4,6 +4,23 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.8.0`] — 2026-11-03
+### Added & Enforced (Mandatory All-38-Skill Forced Execution & Zero-Touch Project Bootstrap)
+- **Ironclad Anti-Cherry-Picking Rule (`AGENTS.md`, `rules/AGENTS.md`, & `BEFORE_ACTION.md`)**:
+  - Solved the issue where AI agents only ran "what they thought was needed" ("hanya yang dibutuhkan saja") or cherry-picked 2–3 skills.
+  - Added an absolute non-negotiable rule strictly prohibiting the agent from skipping skills or treating the library as an à la carte menu.
+  - Forces the agent to systematically evaluate, execute, and verify ALL 38 skills (`SKILL-01` to `SKILL-38`) across the application with concrete code or terminal evidence.
+- **Zero-Touch Project Bootstrap & Rule Auto-Injection (`scripts/setup-project.py` & `scripts/setup.sh`)**:
+  - Automatically auto-injects `AGENTS.md` into `<project_root>/AGENTS.md`, `<project_root>/.gemini/rules/AGENTS.md`, and `<project_root>/.agents/rules/AGENTS.md` when cloned into any external repository.
+  - Writes `<target>/.agents/skills.json` and syncs `.agents/scripts/` and `.agents/references/`.
+  - Permanently binds Antigravity to inject the mandatory 38-skill execution rules into `<user_rules>` in that project.
+- **Forced 38-Skill Active Execution Matrix & Breakdown (`scripts/run-audit.py --force-all`)**:
+  - Enhanced `scripts/run-audit.py` to evaluate and verify all 38 skills with an explicit active execution matrix (`38/38 skills actively verified (0 skills skipped)`).
+  - Added `--force-all` flag to print detailed per-skill execution breakdowns with evidence lines for each individual skill from `[01/38]` to `[38/38]`.
+- **SKILL.md Frontmatter Router Optimization (All 38 Skills)**:
+  - Eliminated restrictive negative phrasing ("Do not use for...") across all 38 `SKILL.md` frontmatters that previously tricked AI model routers into suppressing skills.
+  - Replaced descriptions with positive, authoritative mandatory lifecycle statements (`Mandatory lifecycle skill (SKILL-XX)... Part of the 38-skill quality suite.`) while maintaining strict context budget compliance.
+
 ## [`v1.7.0`] — 2026-10-31
 ### Added & Enhanced (Live Visual GUI Playwright Browser on Screen by Default)
 - **Live Visual GUI Browser Mode on Screen (`scripts/run-browser-audit.mjs` & `scripts/run-audit.py`)**:

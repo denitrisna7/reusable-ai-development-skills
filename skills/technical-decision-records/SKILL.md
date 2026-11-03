@@ -1,6 +1,6 @@
 ---
 name: technical-decision-records
-description: "Authors Architecture Decision Records (ADRs), API contracts, and technical specs synced with code. Use when recording design decisions. Do not use for final handoffs."
+description: "Mandatory lifecycle skill (SKILL-04). Authors and verifies Architecture Decision Records (ADRs), API contracts, and specs synced with codebase. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

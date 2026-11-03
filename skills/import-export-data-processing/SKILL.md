@@ -1,6 +1,6 @@
 ---
 name: import-export-data-processing
-description: "Builds memory-safe, chunked CSV/Excel/JSON/file import-export pipelines with validation, upserts, and formula injection defense. Use for bulk data I/O. Do not use for single forms."
+description: "Mandatory lifecycle skill (SKILL-26). Audits memory-safe, chunked CSV/Excel/JSON import-export pipelines and formula injection defenses. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

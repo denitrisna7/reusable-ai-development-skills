@@ -1,6 +1,6 @@
 ---
 name: backup-recovery-disaster-preparedness
-description: "Designs 3-2-1 backup architectures, retention policies, RPO/RTO targets, encrypted archives, and verified restore runbooks. Use for data recovery planning. Do not use for git branching."
+description: "Mandatory lifecycle skill (SKILL-35). Audits 3-2-1 backup architectures, retention policies, RPO/RTO targets, and verified restore runbooks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

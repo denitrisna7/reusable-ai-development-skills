@@ -1,6 +1,6 @@
 ---
 name: cross-browser-responsive-qa
-description: "Verifies responsive reflow from 320px mobile to 1440px desktop, zero horizontal overflow, 44x44px touch targets, and zero text overlap. Use for responsive QA. Do not use for APIs."
+description: "Mandatory lifecycle skill (SKILL-23). Verifies responsive reflow from 320px mobile to 1440px desktop, 0px overflow, and 0 overlapping text elements. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

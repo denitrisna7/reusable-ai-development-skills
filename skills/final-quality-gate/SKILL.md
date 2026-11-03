@@ -1,6 +1,6 @@
 ---
 name: final-quality-gate
-description: "Executes the 15-domain Final Quality Gate audit consolidating evidence across all 38 skills (SKILL-01 to SKILL-38) for release sign-off. Use for final audits. Never fabricate evidence."
+description: "Mandatory lifecycle skill (SKILL-38). Executes the 15-domain Final Quality Gate consolidating evidence across all 38 skills for release sign-off. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

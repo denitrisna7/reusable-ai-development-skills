@@ -2,11 +2,23 @@
 
 Whenever this library or plugin (`reusable-ai-development-skills`) is active in the workspace or cloned via `git clone` (for example, when the user prompts *"git clone kan skill ini kemudian kerjakan sesuai skill tersebut"*, *"audit aplikasi ini"*, or *"kerjakan sesuai skill"*), you MUST follow these non-negotiable rules:
 
-## 1. Mandatory 5-Phase Execution Protocol (`BEFORE_ACTION.md`)
+## 1. Absolute Rule of Forced 38-Skill Execution (Anti-Cherry-Picking / "DILARANG HANYA MENJALANKAN YANG DIBUTUHKAN SAJA")
 
-1. **Phase 0 — Ground-Truth Pre-Flight & 38-Skill Auto-Audit**:
+- **Zero Cherry-Picking Permitted**: You are STRICTLY FORBIDDEN from selecting only a subset of skills (such as running only unit tests or only linting) under the premise of *"hanya menjalankan yang dibutuhkan"* or *"skill lainnya tidak relevan"*.
+- **All 38 Skills Are Compulsory**: You MUST actively evaluate, execute, and verify ALL 38 skills (`SKILL-01` through `SKILL-38`) sequentially across the entire application as a unified software engineering lifecycle.
+- **Active Verification for Every Skill**:
+  1. For every domain existing in the project (database, authentication, APIs, UI/UX, accessibility, security, background workers, caching), you MUST actively inspect the codebase, run automated checks, and cite concrete file and line evidence.
+  2. For any technology or domain absent from the project (e.g., no AI provider SDK in a pure PHP app, or no Flutter mobile code in a web-only app), you MUST provide empirical search evidence proving its absence (`0 matching files / imports found`), confirm that no shadow/unprotected implementation exists, and mark `N/A` with evidence—NEVER silently skipping the skill.
+- **Zero-Touch Bootstrap Auto-Execution**:
+  When cloned or invoked, immediately ensure project rules and skills are active in the target workspace by running:
+  `python3 .agents/skills/ai-skills/scripts/setup-project.py .`
+  (or `python3 reusable-ai-development-skills/scripts/setup-project.py .`), which automatically injects `AGENTS.md` into `<project_root>/AGENTS.md`, `<project_root>/.gemini/rules/AGENTS.md`, and `<project_root>/.agents/rules/AGENTS.md`, registers `.agents/skills.json`, and triggers the forced 38-skill audit.
+
+## 2. Mandatory 5-Phase Execution Protocol (`BEFORE_ACTION.md`)
+
+1. **Phase 0 — Ground-Truth Pre-Flight & Forced 38-Skill Auto-Audit**:
    - Always pull the latest skill repository first if already cloned (`git -C .agents/skills/ai-skills pull origin main`).
-   - Run `python3 .agents/skills/ai-skills/scripts/run-audit.py .` (or `python3 ~/.gemini/config/plugins/reusable-ai-development-skills/scripts/run-audit.py .`) and paste the real output in chat.
+   - Run `python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all` and paste the real output in chat, demonstrating active verification across all 38 skills (`38/38 skills actively verified`).
 2. **Phase 1 — Real Application Workflow & Architecture Map (`SKILL-01` to `SKILL-04`)**:
    - Inspect actual routes, controllers, models, roles, permissions, and state machines before writing or modifying tests.
    - Print the complete workflow and role-permission map in chat.

@@ -1,6 +1,6 @@
 ---
 name: test-data-environment-isolation
-description: "Isolates test environments and databases (:memory:/test schemas) with deterministic factories, seeders, and mocks. Use when configuring tests. Do not use for prod schema design."
+description: "Mandatory lifecycle skill (SKILL-18). Enforces test environment and database isolation (:memory:/test DBs) with deterministic seeders and mocks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

@@ -6,28 +6,31 @@
 > *(or any variation such as "audit aplikasi kita dengan skill ini", "kerjakan sesuai skill", or "jalankan testing dan audit menyeluruh")*  
 > 
 > **THE "NO SHORTCUTS, NO 1-LINE JSON, NO IDE RELOAD STOPS, & NO FAKE BLOCKED" RULES**:  
-> 1. **Always Pull Latest Skill Repo First**: If `.agents/skills/ai-skills` or `reusable-ai-development-skills` already exists in the project, run `git -C <skills-dir> pull origin main` first so you always execute the latest scripts.  
-> 2. **Never Stop to Ask the User to Reload MCP or Restart the IDE Window**: Do NOT waste turns editing `mcp_config.json`, searching the plugin marketplace, or telling the user to reload MCP servers! `scripts/run-audit.py` automatically heals `PATH` (`~/.local/bin`, `~/development/flutter/bin`, `~/.gemini/antigravity/bin`), auto-starts a temporary local server if none is running, and runs `scripts/run-browser-audit.mjs` in real Headless Chromium directly via `run_command` in the current session!  
-> 3. **Never Collapse Unit Tests into 1-Line JSON**: In Laravel 12+, `php artisan test` outputs a 1-line JSON summary (`{"tool":"phpunit","result":"passed"...}`) when it detects an AI environment. You MUST run `./vendor/bin/phpunit --testdox --colors=never` (or `pytest -v` / `npm test`) so every single test case (`✔ ...`) is printed visibly in the chat!  
-> 4. **Never Skip Playwright with `BROWSER TESTING BLOCKED`**: Execute `node <skills-path>/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` (or let `run-audit.py` run it automatically) to run real Headless Chromium browser QA across Desktop (`1440x900`) and Mobile (`375x812`) viewports, including interactive login (`--login-url=/login --user=... --pass=...`)!  
-> 5. **Never Output a Partial 5-Row Final Table**: Phase 4 MUST output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering all 38 skills `SKILL-01` through `SKILL-38`)**.  
-> 6. **Never Deploy When Any Gate is `FAIL` or `BLOCKED`**: Production deployment is strictly prohibited unless all applicable gates are `PASS` and the user explicitly requested deployment.
+> 1. **MANDATORY ALL-38-SKILL FORCED EXECUTION (STRICTLY NO CHERRY-PICKING)**: You are STRICTLY FORBIDDEN from deciding to run only a subset of skills under the excuse of *"hanya menjalankan yang dibutuhkan"* or *"hanya unit test yang perlu"*. ALL 38 skills (`SKILL-01` to `SKILL-38`) are a mandatory quality suite. You MUST force-audit and verify every single skill sequentially, citing real terminal or code evidence for each one.  
+> 2. **Zero-Touch Project Bootstrap First**: If cloned or invoked in a target project, immediately run `python3 <skills-dir>/scripts/setup-project.py .` to auto-inject workspace rules into `<target>/AGENTS.md` and `<target>/.gemini/rules/AGENTS.md` and register all 38 skills in `<target>/.agents/skills.json`.  
+> 3. **Always Pull Latest Skill Repo First**: If `.agents/skills/ai-skills` or `reusable-ai-development-skills` already exists in the project, run `git -C <skills-dir> pull origin main` first so you always execute the latest scripts.  
+> 4. **Never Stop to Ask the User to Reload MCP or Restart the IDE Window**: Do NOT waste turns editing `mcp_config.json`, searching the plugin marketplace, or telling the user to reload MCP servers! `scripts/run-audit.py` automatically heals `PATH` (`~/.local/bin`, `~/development/flutter/bin`, `~/.gemini/antigravity/bin`), auto-starts a temporary local server if none is running, and runs `scripts/run-browser-audit.mjs` directly on screen via `run_command` in the current session!  
+> 5. **Never Collapse Unit Tests into 1-Line JSON**: In Laravel 12+, `php artisan test` outputs a 1-line JSON summary (`{"tool":"phpunit","result":"passed"...}`) when it detects an AI environment. You MUST run `./vendor/bin/phpunit --testdox --colors=never` (or `pytest -v` / `npm test`) so every single test case (`✔ ...`) is printed visibly in the chat!  
+> 6. **Never Skip Playwright with `BROWSER TESTING BLOCKED`**: Execute `node <skills-path>/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` (or let `run-audit.py` run it automatically) to run real Chromium browser QA on screen across Desktop (`1440x900`) and Mobile (`375x812`) viewports, including interactive login (`--login-url=/login --user=... --pass=...`)!  
+> 7. **Never Output a Partial 5-Row Final Table**: Phase 4 MUST output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering all 38 skills `SKILL-01` through `SKILL-38`)**.  
+> 8. **Never Deploy When Any Gate is `FAIL` or `BLOCKED`**: Production deployment is strictly prohibited unless all applicable gates are `PASS` and the user explicitly requested deployment.
 
 ---
 
-## Phase 0: Ground-Truth Pre-Flight & Full 38-Skill Auto-Audit (`SKILL-01` to `SKILL-38`)
+## Phase 0: Ground-Truth Pre-Flight & Forced 38-Skill Auto-Audit (`SKILL-01` to `SKILL-38`)
 
-Run the bundled master pre-flight and 38-skill execution script from the project root:
+Run the bundled master pre-flight and forced 38-skill execution script from the project root:
 
 ```bash
-python3 .agents/skills/ai-skills/scripts/run-audit.py .
-# (or python3 reusable-ai-development-skills/scripts/run-audit.py . if cloned in root)
+python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all
+# (or python3 reusable-ai-development-skills/scripts/run-audit.py . --force-all if cloned in root)
 ```
 
-**What `run-audit.py` Automatically Performs:**
+**What `run-audit.py --force-all` Automatically Performs:**
+- **Zero-Touch Rule Auto-Injection**: Injects `AGENTS.md` into `<target>/AGENTS.md`, `<target>/.gemini/rules/AGENTS.md`, and `<target>/.agents/rules/AGENTS.md` so Antigravity locks `<user_rules>` in that project permanently.
 - **Native Antigravity Skill Registration (`.agents/skills.json`)**: Automatically writes `.agents/skills.json` (`{"entries": [{"path": ".agents/skills/ai-skills/skills"}]}`) and syncs `.agents/skills/*`, `.agents/references/*`, and `.agents/scripts/*` so Antigravity discovers all 38 skills (`SKILL-01` to `SKILL-38`) without hitting `.agents/skills/` 1-level scan limits.
 - **Auto-PATH & Ephemeral Local Server Boot**: Links `node`, `npm`, `npx`, `composer`, `flutter`, `dart` into `PATH` and automatically starts a temporary local server (`php artisan serve`, `npx next dev`, `npx vite`, `manage.py runserver`, etc.) if none is running.
-- **Evidence-Driven 38-Skill & 15-Gate Matrix (`0` Hardcoded `PASS` Rows)**: Evaluates every single skill (`SKILL-01` through `SKILL-38`) against real static and runtime checks (`PASS`, `FAIL`, `WARN`, `N/A`, `REVIEW`).
+- **Forced 38-Skill Execution Matrix (38/38 Verified)**: Evaluates and prints active checks for every single skill from `SKILL-01` to `SKILL-38` with concrete code and terminal evidence. Zero skills are skipped.
 
 **Required Chat Output:**  
 Paste the complete output of `run-audit.py` showing:

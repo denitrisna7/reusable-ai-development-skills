@@ -113,6 +113,8 @@ REQUIRED_ROOT_FILES = [
     "scripts/contrast_check.py",
     "scripts/slopcheck.py",
     "scripts/slopcheck.sh",
+    "scripts/setup-project.py",
+    "scripts/setup.sh",
 ]
 
 

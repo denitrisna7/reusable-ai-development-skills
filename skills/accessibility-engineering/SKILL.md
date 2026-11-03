@@ -1,6 +1,6 @@
 ---
 name: accessibility-engineering
-description: "Engineers and audits WCAG 2.2 AA compliance including semantic HTML, keyboard focus, ARIA forms, and 4.5:1 contrast. Use for all UI work. Do not use for headless backend services."
+description: "Mandatory lifecycle skill (SKILL-21). Audits and engineers WCAG 2.2 AA compliance, semantic HTML, keyboard focus, ARIA forms, and >= 4.5:1 DOM contrast. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

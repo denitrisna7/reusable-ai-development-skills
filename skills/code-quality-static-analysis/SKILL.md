@@ -1,6 +1,6 @@
 ---
 name: code-quality-static-analysis
-description: "Runs stack-native linting, formatting, type checking, complexity bounds, and duplication checks on modified code. Use during code changes and reviews. Do not force non-native tools."
+description: "Mandatory lifecycle skill (SKILL-07). Runs stack-native linting, formatting, type checking, complexity bounds, and duplication checks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

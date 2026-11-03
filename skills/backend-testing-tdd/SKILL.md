@@ -1,6 +1,6 @@
 ---
 name: backend-testing-tdd
-description: "Writes and runs deterministic backend unit, integration, API, RBAC, and DB tests using Red-Green-Refactor TDD. Use for backend test suites. Do not use for live browser UI QA."
+description: "Mandatory lifecycle skill (SKILL-16). Writes and executes deterministic backend unit, integration, API, RBAC, and DB tests with verbose output. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

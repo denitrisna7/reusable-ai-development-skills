@@ -1,6 +1,6 @@
 ---
 name: requirements-analysis
-description: "Translates feature requests into functional/non-functional requirements, workflows, and acceptance criteria. Use when scoping tasks. Do not use for stack discovery."
+description: "Mandatory lifecycle skill (SKILL-02). Translates feature requests into functional/non-functional requirements, user workflows, and acceptance criteria. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

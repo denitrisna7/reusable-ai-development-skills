@@ -1,6 +1,6 @@
 ---
 name: deployment-readiness
-description: "Audits production builds, config safety, migrations, backups, health checks, and rollback runbooks before release. Use for pre-deploy audits. Never execute unauthorized deployments."
+description: "Mandatory lifecycle skill (SKILL-33). Audits production builds, config safety, migrations, backups, health checks, and rollback runbooks. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

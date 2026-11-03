@@ -1,6 +1,6 @@
 ---
 name: query-optimization-performance
-description: "Eliminates N+1 query loops, tunes EXPLAIN plans, adds composite indexes, and optimizes pagination and connection pools. Use for DB performance. Do not use for initial schema design."
+description: "Mandatory lifecycle skill (SKILL-25). Eliminates N+1 query loops, audits EXPLAIN plans, adds composite indexes, and optimizes pagination. Part of the 38-skill quality suite."
 license: "MIT"
 compatibility: "Antigravity (App, CLI, IDE) and Agent Skills 1.0 compatible agents"
 metadata:

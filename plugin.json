@@ -1,7 +1,7 @@
 {
   "name": "reusable-ai-development-skills",
   "displayName": "Reusable AI Development Skills Library",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Comprehensive, technology-agnostic 38-skill software engineering lifecycle library covering project discovery, requirements, architecture, anti-slop craftsmanship, OWASP security, Playwright MCP QA, shadcn/ui & WCAG 2.2 accessibility, database/API/AI integrations, performance, CI/CD, and release quality gates.",
   "author": {
     "name": "Reusable AI Development Skills Engineering"
