@@ -13,7 +13,8 @@
 > 5. **Never Collapse Unit Tests into 1-Line JSON**: In Laravel 12+, `php artisan test` outputs a 1-line JSON summary (`{"tool":"phpunit","result":"passed"...}`) when it detects an AI environment. You MUST run `./vendor/bin/phpunit --testdox --colors=never` (or `pytest -v` / `npm test`) so every single test case (`✔ ...`) is printed visibly in the chat!  
 > 6. **Never Skip Playwright with `BROWSER TESTING BLOCKED`**: Execute `node <skills-path>/scripts/run-browser-audit.mjs http://127.0.0.1:<port>` (or let `run-audit.py` run it automatically) to run real Chromium browser QA on screen across Desktop (`1440x900`) and Mobile (`375x812`) viewports, including interactive login (`--login-url=/login --user=... --pass=...`)!  
 > 7. **Never Output a Partial 5-Row Final Table**: Phase 4 MUST output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering all 38 skills `SKILL-01` through `SKILL-38`)**.  
-> 8. **Never Deploy When Any Gate is `FAIL` or `BLOCKED`**: Production deployment is strictly prohibited unless all applicable gates are `PASS` and the user explicitly requested deployment.
+> 8. **Never Deploy When Any Gate is `FAIL` or `BLOCKED`**: Production deployment is strictly prohibited unless all applicable gates are `PASS` and the user explicitly requested deployment.  
+> 9. **Single Full Audit Run & Fast Incremental Revision Principle**: The complete 38-skill audit is executed in the foreground ONCE on project onboarding or explicit user request. During subsequent minor code revisions, do NOT repeat the heavy 38-skill audit and Playwright browser test—run targeted file-level tests only to keep response times fast, and ALWAYS remind the user at the end how to rerun the full audit.
 
 ---
 
@@ -125,3 +126,14 @@ After Phases 0, 1, 2, and 3 are printed in chat, output the **complete 15-Domain
 - **Mandatory Code Verification for `REVIEW` Rows**: If any skill reports `REVIEW` (e.g., `SKILL-08` legacy refactoring safety or `SKILL-26` bulk import chunking), you MUST read the cited files, verify compliance against that skill's `SKILL.md` checklist, and cite exact `file:line` evidence in the Phase 4 table.
 - **`READY`**: Issued ONLY when all applicable gates across Gates 01–15 are `PASS` with real terminal and Chromium browser logs displayed above.
 - **`BLOCKED`**: Issued if any test failed, any contrast/overlap defect was found in Chromium, or any required gate was skipped.
+
+---
+
+## Phase 5: Mandatory User Reminder on Completion
+
+Whenever the full 38-skill audit completes, the agent MUST append this reminder to the end of the chat response:
+
+> 💡 **Informasi Pelaksanaan Audit:**  
+> Audit menyeluruh 38 skill (Live GUI Playwright, CRUD, CI/CD, dan UI/UX) telah selesai dijalankan di latar depan. Untuk mempercepat proses revisi kode berikutnya, audit penuh ini **hanya dijalankan sekali dan tidak akan diulang otomatis di setiap perubahan kecil**.  
+> Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, Anda cukup memanggil:  
+> `python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all` (atau `python3 .agents/skills/ai-skills/scripts/setup-project.py .`)

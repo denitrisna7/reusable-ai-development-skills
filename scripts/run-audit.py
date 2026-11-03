@@ -1024,6 +1024,22 @@ def audit_project(target_dir: Path) -> dict:
         gate("Gate 15", "CI/CD, SEO & Smoke Readiness", ["SKILL-31", "SKILL-33", "SKILL-36"]),
     ]
 
+    # Write audit cache for fast incremental checks on subsequent revisions
+    try:
+        cache_file = target_dir / ".agents" / ".audit-cache.json"
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
+        cache_data = {
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "target_dir": str(target_dir),
+            "stack": results["stack"],
+            "skills_count": len(results["skills_matrix"]),
+            "verdict": "BLOCKED" if any(m[2] == "FAIL" for m in results["skills_matrix"]) else "READY",
+            "rerun_command": "python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all",
+        }
+        cache_file.write_text(json.dumps(cache_data, indent=2) + "\n", encoding="utf-8")
+    except Exception:
+        pass
+
     return results
 
 
@@ -1113,6 +1129,15 @@ def print_report(res: dict, force_all: bool = False) -> None:
         print("  AUTOMATED VERDICT: READY (no FAIL, no REVIEW)")
     print("  Status legend: PASS=check ran & passed | FAIL=defect | WARN=non-blocking gap |")
     print("                 N/A=feature absent (0 matching files) | REVIEW=needs agent code inspection")
+    print("=" * 80)
+
+    print("\n" + "=" * 80)
+    print("  💡 INFORMASI PELAKSANAAN AUDIT (CARA MENJALANKAN ULANG):")
+    print("  Audit latar depan (Live GUI Playwright, CRUD, CI/CD, & UI/UX) telah selesai.")
+    print("  Untuk mempercepat proses revisi kode Anda, audit penuh ini HANYA dijalankan")
+    print("  sekali dan TIDAK akan diulang otomatis di setiap perubahan kecil.")
+    print("  Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, panggil:")
+    print("    python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all")
     print("=" * 80)
 
 

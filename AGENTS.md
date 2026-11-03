@@ -32,3 +32,21 @@ Whenever this library or plugin (`reusable-ai-development-skills`) is active in 
    - Output the complete **15-Domain Final Quality Gate Table (`Gate 01` through `Gate 15`, covering `SKILL-01` through `SKILL-38`)**. Never truncate the final table to 5 rows.
    - Fix every `FAIL` defect in code and re-run `run-audit.py` until all applicable checks pass before issuing a **`READY`** verdict.
    - Never deploy to production unless all applicable gates are `PASS` and the user explicitly requested deployment.
+
+## 3. Foreground Visibility & Single Full Audit Lifecycle ("DIJALANKAN DI LATAR DEPAN SEKALI SAJA, JANGAN DIULANG DI SETIAP REVISI")
+
+- **Foreground Live Visibility (Latar Depan & Nyata)**:
+  1. Seluruh pengujian browser (Playwright UI/UX, kontras, overflow, mobile reflow) wajib berjalan di **latar depan (*foreground*)**. Pada komputer dengan monitor desktop, Playwright otomatis membuka jendela Google Chrome langsung di layar dengan Floating HUD Banner, glowing highlights, dan slowMo sehingga pengguna dapat melihat pengujian berjalan secara visual.
+  2. Seluruh pengujian unit/CRUD backend (`phpunit --testdox`, `npm test`, `pytest -v`) dan audit CI/CD wajib dicetak secara terperinci baris demi baris di chat/terminal latar depan.
+- **Single-Run on Initialization / On-Demand (Hanya Dijalankan Sekali di Awal)**:
+  1. Audit menyeluruh 38 skill di latar depan (`run-audit.py . --force-all`) **HANYA dijalankan sekali saja** saat inisialisasi awal proyek (setelah `git clone`), saat *bootstrap* (`setup-project.py`), atau ketika pengguna secara eksplisit meminta audit aplikasi.
+  2. **DILARANG MENGULANG AUDIT 38-SKILL PENUH DI SETIAP REVISI KODE KECIL**:
+     Saat pengguna meminta perbaikan kecil, revisi teks, penambahan kolom, atau perbaikan bug sederhana pada kode:
+     - AI **DILARANG KERAS** menjalankan ulang seluruh 38 skill dan browser audit yang memakan waktu lama.
+     - AI **HANYA** menjalankan pengujian terarah (*targeted incremental test*) yang relevan dengan berkas yang sedang diubah (misalnya hanya menjalankan 1 file unit test terkait atau linter pada file tersebut).
+- **Kewajiban Pengingat di Akhir Tanggapan**:
+  Setiap kali audit penuh 38-skill selesai dijalankan, AI **WAJIB** menyertakan pesan pengingat berikut di akhir tanggapannya:
+  > 💡 **Informasi Pelaksanaan Audit:**  
+  > Audit menyeluruh 38 skill (Live GUI Playwright, CRUD, CI/CD, dan UI/UX) telah selesai dijalankan di latar depan. Untuk mempercepat proses revisi kode berikutnya, audit penuh ini **hanya dijalankan sekali dan tidak akan diulang otomatis di setiap perubahan kecil**.  
+  > Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, Anda cukup memanggil:  
+  > `python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all` (atau `python3 .agents/skills/ai-skills/scripts/setup-project.py .`)

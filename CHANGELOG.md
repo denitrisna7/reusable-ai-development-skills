@@ -4,6 +4,20 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.9.0`] — 2026-11-03
+### Added & Optimized (Foreground Single-Run Execution & Fast Revision Workflow)
+- **Foreground Live Visibility for All Tests**:
+  - Live GUI Playwright testing opens directly on screen (`isHeaded: true`) with Floating HUD Banner and glowing outlines so users visually see CRUD, login, UI/UX, and mobile reflow testing happen in real time.
+  - Unit/CRUD tests (`phpunit --testdox`, `npm test`, `pytest -v`) and CI/CD checks stream line-by-line verbose progress in chat/terminal foreground.
+- **Single Full Audit Run & Fast Incremental Revision Principle (`AGENTS.md`, `rules/AGENTS.md`, `BEFORE_ACTION.md`)**:
+  - Strictly prevents AI from re-running the entire 38-skill audit and Playwright browser test on every minor code revision.
+  - The complete 38-skill audit runs ONCE during project bootstrap or explicit audit requests.
+  - Subsequent code changes within the session use fast, targeted incremental checks (relevant unit test or linter only).
+- **Mandatory User Reminder Banner & Audit Caching (`scripts/run-audit.py` & `.agents/.audit-cache.json`)**:
+  - Automatically writes `.agents/.audit-cache.json` with execution timestamp, status, and rerun command.
+  - Prints and mandates a clear reminder at the end of the audit:
+    *"Audit menyeluruh 38 skill di latar depan telah selesai. Untuk mempercepat proses revisi kode Anda, audit penuh ini hanya dijalankan sekali dan tidak akan diulang otomatis di setiap perubahan kecil. Jika ingin menjalankan ulang audit ini kapan saja, panggil: python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all"*
+
 ## [`v1.8.0`] — 2026-11-03
 ### Added & Enforced (Mandatory All-38-Skill Forced Execution & Zero-Touch Project Bootstrap)
 - **Ironclad Anti-Cherry-Picking Rule (`AGENTS.md`, `rules/AGENTS.md`, & `BEFORE_ACTION.md`)**:

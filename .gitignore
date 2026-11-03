@@ -1,4 +1,5 @@
-# Operating System & IDE files
+# Agents test cache & runtime sync
+.agents/
 .DS_Store
 Thumbs.db
 *.swp
