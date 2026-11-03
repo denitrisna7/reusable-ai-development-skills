@@ -580,7 +580,7 @@ async function main() {
       );
       for (const h of hrefs) {
         const clean = h.split('?')[0].split('#')[0];
-        if (!routes.includes(clean) && routes.length < 5) routes.push(clean);
+        if (!routes.includes(clean) && routes.length < 25) routes.push(clean);
       }
     } catch (e) {
       console.error(`⛔ [FATAL] Cannot connect to ${baseUrl}: ${e.message}`);
@@ -595,11 +595,12 @@ async function main() {
     { label: 'Mobile Phone View', width: 375, height: 812 },
   ];
 
-  async function auditRoutesList(routeList, phaseLabel) {
-    for (const route of routeList) {
+  async function auditRoutesList(routeList, phaseLabel, maxLimit = 25) {
+    for (let rIdx = 0; rIdx < routeList.length; rIdx++) {
+      const route = routeList[rIdx];
       const targetUrl = baseUrl + route;
       console.log(`\n------------------------------------------------------------------------`);
-      console.log(`🌐 [${phaseLabel}] ${targetUrl}`);
+      console.log(`🌐 [${phaseLabel} ${rIdx + 1}/${routeList.length}] ${targetUrl}`);
       console.log(`------------------------------------------------------------------------`);
 
       for (const vp of viewports) {
@@ -608,15 +609,77 @@ async function main() {
         failedRequests.length = 0;
 
         await page.setViewportSize({ width: vp.width, height: vp.height });
-        await setHUD(`🌐 [${phaseLabel}] ${route} (${vp.label} ${vp.width}x${vp.height})`, 'action');
+        await setHUD(`🌐 [${phaseLabel} ${rIdx + 1}/${routeList.length}] ${route} (${vp.label} ${vp.width}x${vp.height})`, 'action');
         const t0 = Date.now();
-        const response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+        let response = null;
+        try {
+          response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+        } catch (gotoErr) {
+          consoleErrors.push(gotoErr.message);
+        }
         const loadMs = Date.now() - t0;
         await setHUD(`📐 Memeriksa Kontras WCAG AA, Overflow & Tata Letak (${vp.width}x${vp.height})...`, 'audit');
-        await page.waitForTimeout(160);
-        const status = response ? response.status() : 0;
 
+        if (isHeaded) {
+          await page.evaluate(() => window.scrollBy({ top: 350, behavior: 'smooth' })).catch(() => {});
+          await page.waitForTimeout(160);
+          await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'smooth' })).catch(() => {});
+          await page.waitForTimeout(120);
+
+          // Test clicking visible interactive elements (accordion, summary, tab) on desktop view
+          if (vp.width === 1440) {
+            try {
+              const interactiveTrigger = page.locator('details > summary, [data-bs-toggle="collapse"], .faq-item summary, .accordion-button').first();
+              if ((await interactiveTrigger.count()) > 0 && (await interactiveTrigger.isVisible())) {
+                await highlightElement(interactiveTrigger, '#3b82f6');
+                await interactiveTrigger.click();
+                await page.waitForTimeout(180);
+              }
+            } catch {
+              // Ignore if non-interactable
+            }
+          }
+        } else {
+          await page.waitForTimeout(160);
+        }
+
+        const status = response ? response.status() : (consoleErrors.length > 0 ? 500 : 0);
         const audit = await page.evaluate(domAuditEvaluator, vp.label);
+
+        // Discover and queue any nested internal links (crawling deeper up to maxLimit)
+        if (status === 200 && routeList.length < maxLimit) {
+          try {
+            const discoveredLinks = await page.evaluate(() => {
+              return Array.from(document.querySelectorAll('a[href]'))
+                .map((a) => {
+                  try {
+                    const u = new URL(a.href, window.location.origin);
+                    if (u.origin !== window.location.origin) return null;
+                    return u.pathname;
+                  } catch {
+                    return null;
+                  }
+                })
+                .filter(
+                  (p) =>
+                    p &&
+                    p.startsWith('/') &&
+                    !p.endsWith('.apk') &&
+                    !p.endsWith('.pdf') &&
+                    !p.startsWith('/unduh-apk/file') &&
+                    !p.includes('logout')
+                );
+            });
+            for (const dl of discoveredLinks) {
+              const clean = dl.split('?')[0].split('#')[0];
+              if (!routeList.includes(clean) && routeList.length < maxLimit) {
+                routeList.push(clean);
+              }
+            }
+          } catch {
+            // Ignore extraction errors
+          }
+        }
 
         console.log(`  📐 [${vp.label} (${vp.width}x${vp.height})]`);
         console.log(`     • HTTP Status & Load  : HTTP ${status} (${loadMs}ms) | Title: "${audit.title}"`);
@@ -628,9 +691,20 @@ async function main() {
         console.log(`     • Clipped Text        : ${audit.clippedElements.length === 0 ? '0 clipped text elements (PASS)' : `${audit.clippedElements.length} CLIPPED ELEMENTS (WARNING)`}`);
         console.log(`     • Console & Network   : ${consoleErrors.length + pageErrors.length} JS errors, ${failedRequests.length} failed HTTP requests`);
 
-        if (status >= 400) {
+        if (status === 404) {
+          totalDefects++;
+          console.log(`     ❌ ERROR 404 (HALAMAN TIDAK DITEMUKAN): Rute "${route}" menghasilkan status 404 Not Found!`);
+          if (isHeaded) {
+            await setHUD(`❌ Error 404: Rute ${route} Tidak Ditemukan!`, 'danger');
+            await page.waitForTimeout(600);
+          }
+        } else if (status >= 400) {
           totalDefects++;
           console.log(`     ❌ HTTP ERROR: Route returned status ${status}`);
+          if (isHeaded) {
+            await setHUD(`❌ HTTP Error ${status}: ${route}`, 'danger');
+            await page.waitForTimeout(500);
+          }
         }
         if (audit.horizontalOverflowPx > 4) {
           totalDefects++;
@@ -699,7 +773,26 @@ async function main() {
           await setHUD(`🚀 Login Berhasil! Memeriksa Dashboard: ${postPath}`, 'success');
           await page.waitForTimeout(500);
           if (postPath !== loginUrl) {
-            await auditRoutesList([postPath], 'AUTHENTICATED DASHBOARD AUDIT');
+            const adminLinks = await page.evaluate(() => {
+              return Array.from(document.querySelectorAll('nav a[href], aside a[href], .sidebar a[href], header a[href]'))
+                .map((a) => {
+                  try {
+                    const u = new URL(a.href, window.location.origin);
+                    if (u.origin !== window.location.origin) return null;
+                    return u.pathname;
+                  } catch { return null; }
+                })
+                .filter((p) => p && p.startsWith('/') && !p.includes('logout') && !p.includes('unduh'));
+            });
+            const adminRoutes = [postPath];
+            for (const al of adminLinks) {
+              const clean = al.split('?')[0].split('#')[0];
+              if (!adminRoutes.includes(clean) && adminRoutes.length < 20) {
+                adminRoutes.push(clean);
+              }
+            }
+            console.log(`\n📋 [ADMIN & CRUD NAVIGATION] Terdeteksi ${adminRoutes.length} rute/menu dashboard untuk diaudit di layar...`);
+            await auditRoutesList(adminRoutes, 'AUTHENTICATED DASHBOARD & CRUD MENU AUDIT');
           }
         }
       }

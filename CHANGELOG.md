@@ -4,6 +4,18 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.9.1`] — 2026-11-03
+### Added & Enhanced (Deep Dynamic Crawling, Interactive Widget QA, & Error 404 Visual Alerts)
+- **Deep Dynamic Route Crawling (Up to 25 Public & 20 Admin Routes)**:
+  - Upgraded `scripts/run-browser-audit.mjs` with dynamic queue crawling that inspects every internal link on visited pages recursively up to 25 routes.
+  - Automatically crawls authenticated admin menus (`nav a[href]`, `aside a[href]`, `.sidebar a[href]`) visiting every CRUD and management page live on screen.
+- **Visual Error 404 Detection & HUD Danger Alert**:
+  - Automatically flags HTTP 404 Not Found responses with prominent Red HUD Status Banner: `❌ Error 404: Rute /... Tidak Ditemukan!`.
+  - Logs exact broken routes in terminal (`❌ ERROR 404 (HALAMAN TIDAK DITEMUKAN)`) and increments total defect count.
+- **Interactive UI/UX Interactivity Testing & Smooth Visual Scroll**:
+  - Automatically executes smooth visual page scrolling in headed mode so users see pages being inspected in real-time.
+  - Tests visible interactive components (accordions, details/summary, FAQ toggles, tabs) with animated blue highlight and click verification.
+
 ## [`v1.9.0`] — 2026-11-03
 ### Added & Optimized (Foreground Single-Run Execution & Fast Revision Workflow)
 - **Foreground Live Visibility for All Tests**:
