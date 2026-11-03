@@ -14,9 +14,9 @@ This reference provides the complete tool inventory, parameter schemas, capabili
    - Playwright MCP represents the live DOM through Playwright's semantic accessibility tree, assigning deterministic `ref` identifiers (e.g., `[ref=e12]`) to interactive and structural nodes (`heading`, `button`, `textbox`, `combobox`, `checkbox`, `link`, `dialog`, `alert`, `table`).
    - Always inspect the accessibility snapshot before clicking, typing, or asserting UI state.
    - On large pages, use `browser_find` (with `text` or `regex`) or `browser_snapshot` with `target` / `depth` to locate specific subtrees without flooding context.
-2. **Avoid Routine Screenshot Spam (`browser_take_screenshot`)**:
-   - Do **not** take screenshots after every navigation, click, or form input.
-   - Use `browser_take_screenshot` only when visual rendering, CSS layout/overflow, color contrast, or visual regression proof is specifically required, or when documenting a visual defect.
+2. **Screenshot Feature Disabled (`browser_take_screenshot` IS STRICTLY FORBIDDEN)**:
+   - Taking screenshots (`browser_take_screenshot`) is **permanently disabled**. Do NOT take or dump screenshot files.
+   - All browser testing must run in the **foreground live on screen** with a real Chromium window so users observe the actual test running.
 3. **Page Load Never Equals `PASS`**:
    - Navigating to a URL and receiving a non-empty snapshot only proves the initial document rendered.
    - A feature is `PASS` only when the full interactive workflow (form fill, submission, state mutation, DOM update, expected network status code `2xx`/`4xx`, and zero unexpected console/page errors) is verified.
@@ -34,7 +34,7 @@ This reference provides the complete tool inventory, parameter schemas, capabili
 | `browser_console_messages` | Retrieve console messages and uncaught page exceptions (`error`, `warning`, `info`, `debug`). | `level` (optional minimum severity, default `"info"`), `all` (`true` for entire session, `false` since last navigation), `filename` (optional). Check after every page load and user interaction. |
 | `browser_network_requests` | List numbered HTTP/XHR/Fetch network requests since page load. | `static` (boolean, default `false` to exclude static assets like images/fonts/CSS), `filter` (regex string, e.g., `"/api/(orders|auth)/"`), `filename` (optional). Returns 1-based request indices, methods, URLs, and status codes. |
 | `browser_network_request` | Inspect detailed request/response headers and body for a specific network request. | `index` (required 1-based integer from `browser_network_requests`), `part` (optional filter for request/response headers or body). Use to verify exact API payloads and error codes. |
-| `browser_take_screenshot` | Capture a visual image of the viewport, full page, or specific element. | `target` / `element` (optional for element screenshot), `fullPage` (boolean), `type` (`"png"`, `"jpeg"`, `"webp"`), `scale` (`"css"` default or `"device"`), `filename` (optional). Cannot be used to obtain `ref` targets for actions. |
+| `browser_take_screenshot` | **[DISABLED / FORBIDDEN]** Screenshots are disabled in favor of live foreground on-screen browser execution. | Do not invoke. All visual verification is performed live on screen. |
 
 ### B. Navigation & Element Interaction Tools
 

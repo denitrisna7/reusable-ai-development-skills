@@ -4,6 +4,17 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.9.3`] — 2026-11-04
+### Fixed & Hardened (Strict Workflow Separation & Permanent Screenshot Feature Disabling)
+- **Strict Intent Separation: Feature Addition vs Full Audit (`AGENTS.md`, `rules/AGENTS.md`, `BEFORE_ACTION.md`)**:
+  - Solved the issue where the AI unnecessarily ran heavy test suites / 38-skill audits every time a user added a new feature, input, or made a small code edit.
+  - Placed **Mode Operasi (Penambahan Fitur vs Audit Penuh)** at the very top (Section 1) of all agent rules.
+  - In **Feature / Revision Mode (Default)**: AI is **strictly forbidden** from running 38-skill audits or browser tests. It must immediately implement the requested code or feature directly with targeted single-file checks only.
+  - In **Audit Mode**: Full 38-skill audit runs ONCE only on initial bootstrap or when the user explicitly requests an audit in chat.
+- **Screenshot Feature Permanently Disabled (`SKILL-17`, `SKILL-23`, `references/playwright-mcp-tools.md`)**:
+  - Completely disabled `browser_take_screenshot` and static image dumping.
+  - Enforced that all browser QA MUST run in the **foreground live on screen** (`headless: false` Google Chrome window on desktop display) with Floating HUD Status Banner, SlowMo, and glowing highlights, so users directly watch the automated interactions rather than being handed static background screenshots.
+
 ## [`v1.9.2`] — 2026-11-03
 ### Optimized (Conversational User Reminder & Simplified Human-Friendly Rerun Prompt)
 - **Conversational Rerun Prompt in Place of Terminal Commands (`AGENTS.md`, `rules/AGENTS.md`, `BEFORE_ACTION.md`, & `scripts/run-audit.py`)**:

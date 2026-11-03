@@ -76,7 +76,7 @@ When a live server and Playwright MCP are available:
 - [ ] At each viewport, run `browser_snapshot(boxes=true)` to inspect element bounding boxes `[box=x,y,width,height]`:
   - Verify no element's `x + width` exceeds the viewport width (unless inside an intentional horizontal scroll container).
   - On `320px` and `375px`, verify interactive controls have `width >= 44` and `height >= 44` (or an equivalent hit area) and do not overlap (`R-03`).
-  - Take targeted screenshots (`browser_take_screenshot`) only when visual evidence of layout reflow or a discovered defect is needed.
+  - Fitur screenshot dimatikan total. Verifikasi reflow dilakukan secara live di layar monitor pengguna atau melalui evaluasi bounding box DOM.
 
 ### Step 4: Verify Touch, Hover-Alternative, Keyboard, and Theme Behavior
 - [ ] **Mobile Navigation & Drawers**: At `375px`, open the mobile navigation menu or filter drawer (`browser_click`), verify all links are reachable, and verify closing works via both the close button and `Escape` (`browser_press_key`).

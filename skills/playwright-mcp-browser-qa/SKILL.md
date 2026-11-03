@@ -34,7 +34,7 @@ Do not use this skill as the primary workflow for the following tasks:
 ## 3. Scope and Objectives
 
 Every browser QA session conducted with this skill must uphold the following engineering standards and cover all applicable areas:
-- **Accessibility Snapshots Over Routine Screenshots**: Use `browser_snapshot` and `browser_find` as the primary mechanism to inspect DOM state, verify text/roles, and obtain element `ref` identifiers (`[ref=e12]`). Capture screenshots (`browser_take_screenshot`) **only** when visual layout, CSS overlap, contrast, or visual defect evidence is genuinely required.
+- **Fitur Screenshot DIMATIKAN TOTAL (Strictly Disabled)**: Pengambilan screenshot (`browser_take_screenshot`, `page.screenshot()`) DIMATIKAN TOTAL. DILARANG membuat atau memberikan gambar screenshot statis sebagai bukti pengujian. Pengujian browser WAJIB berjalan di latar depan (*foreground*) dengan jendela Google Chrome nyata di layar monitor pengguna (`headless: false`, SlowMo, Floating HUD Banner) sehingga seluruh interaksi terlihat langsung oleh pengguna.
 - **Page Load Never Equals `PASS`**: Never mark a test or feature `PASS` simply because `browser_navigate` succeeded or the initial page rendered. Exercise the actual interactive behavior and verify state changes.
 - **Semantic Locators & Element `ref` Targeting**: Target elements using exact `ref` identifiers from the latest `browser_snapshot` / `browser_find` output alongside descriptive `element` labels.
 - **Functional Browser Tests & Form Validation**: Test both positive submissions (`browser_fill_form`, `browser_type`, `browser_select_option`, `browser_click`) and negative validation states (required fields, invalid formats, boundary lengths, duplicate entries).
@@ -95,7 +95,7 @@ Before submitting valid data that navigates away from the form, test validation 
 2. **Responsive & Media Checks (When UI/Layout Changed)**:
    - Use `browser_resize` to verify Mobile (`375x812`) and Desktop (`1440x900`) viewports, using `browser_snapshot(boxes=true)` to check element bounding boxes and detect clipped or zero-width controls.
    - Use `browser_emulate_media(colorScheme="dark", reducedMotion="reduce")` when dark mode or animation behavior is in scope.
-   - Take a targeted `browser_take_screenshot` **only** if visual layout verification or visual bug documentation is needed.
+   - Fitur screenshot dimatikan total. Verifikasi visual dilakukan secara live di layar monitor pengguna atau melalui evaluasi bounding box dan computed DOM contrast.
 
 ### Step 5: Verify Authentication and Authorization Boundaries
 1. Test protected routes in an unauthenticated session (or after logout) to verify redirection to login and confirm `browser_navigate_back` does not expose cached private screens.
@@ -117,7 +117,7 @@ Before submitting valid data that navigates away from the form, test validation 
 
 - **Never Execute Destructive QA on Production**: Verify the target domain before clicking delete buttons, submitting orders, or triggering emails/payments.
 - **Avoid `browser_run_code_unsafe` by Default**: Do not use arbitrary JS execution tools (`browser_run_code_unsafe`) when standard declarative MCP tools (`browser_click`, `browser_fill_form`, `browser_snapshot`) suffice.
-- **Protect Credentials in Logs & Screenshots**: Never capture screenshots of plaintext password fields or live secret keys, and use disposable test accounts (`SKILL-18`).
+- **Protect Credentials in Logs**: Screenshots are permanently disabled; never log plaintext passwords or live secret keys in console or chat (`SKILL-18`).
 
 ## 8. Verification Criteria
 
@@ -126,7 +126,7 @@ A Playwright MCP browser QA task is complete only when all of the following are 
 - [ ] Both positive happy-path submissions and negative validation/authorization scenarios were verified.
 - [ ] `browser_network_requests` confirmed expected API status codes (`2xx` on success, `4xx` on validation/auth rejection, zero unexpected `500` errors).
 - [ ] `browser_console_messages` confirmed zero unhandled JavaScript errors or framework hydration failures.
-- [ ] Screenshots were used judiciously (only when visual evidence was necessary), and results are reported with strict `PASS` / `FAIL` / `BLOCKED` / `NOT TESTED` labels.
+- [ ] Foreground live execution on screen verified without any static screenshot dumping, and results are reported with strict `PASS` / `FAIL` / `BLOCKED` / `NOT TESTED` labels.
 
 ## 9. Failure Handling and Edge Cases
 
