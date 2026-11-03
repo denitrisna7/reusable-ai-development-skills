@@ -1034,6 +1034,7 @@ def audit_project(target_dir: Path) -> dict:
             "stack": results["stack"],
             "skills_count": len(results["skills_matrix"]),
             "verdict": "BLOCKED" if any(m[2] == "FAIL" for m in results["skills_matrix"]) else "READY",
+            "rerun_prompt": "Audit kode kita, bila perlu git clone ulang skill ini lalu kerjakan",
             "rerun_command": "python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all",
         }
         cache_file.write_text(json.dumps(cache_data, indent=2) + "\n", encoding="utf-8")
@@ -1136,8 +1137,9 @@ def print_report(res: dict, force_all: bool = False) -> None:
     print("  Audit latar depan (Live GUI Playwright, CRUD, CI/CD, & UI/UX) telah selesai.")
     print("  Untuk mempercepat proses revisi kode Anda, audit penuh ini HANYA dijalankan")
     print("  sekali dan TIDAK akan diulang otomatis di setiap perubahan kecil.")
-    print("  Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, panggil:")
-    print("    python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all")
+    print("  Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, Anda cukup")
+    print('  menyampaikan di chat:')
+    print('    "Audit kode kita, bila perlu git clone ulang skill ini lalu kerjakan"')
     print("=" * 80)
 
 

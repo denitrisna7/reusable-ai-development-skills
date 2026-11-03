@@ -45,8 +45,8 @@ Whenever this library or plugin (`reusable-ai-development-skills`) is active in 
      - AI **DILARANG KERAS** menjalankan ulang seluruh 38 skill dan browser audit yang memakan waktu lama.
      - AI **HANYA** menjalankan pengujian terarah (*targeted incremental test*) yang relevan dengan berkas yang sedang diubah (misalnya hanya menjalankan 1 file unit test terkait atau linter pada file tersebut).
 - **Kewajiban Pengingat di Akhir Tanggapan**:
-  Setiap kali audit penuh 38-skill selesai dijalankan, AI **WAJIB** menyertakan pesan pengingat berikut di akhir tanggapannya:
+  Setiap kali audit penuh 38-skill selesai dijalankan, AI **WAJIB** menyertakan pesan pengingat berikut di akhir tanggapannya (menggunakan bahasa percakapan yang ramah tanpa sintaks Python/terminal):
   > 💡 **Informasi Pelaksanaan Audit:**  
   > Audit menyeluruh 38 skill (Live GUI Playwright, CRUD, CI/CD, dan UI/UX) telah selesai dijalankan di latar depan. Untuk mempercepat proses revisi kode berikutnya, audit penuh ini **hanya dijalankan sekali dan tidak akan diulang otomatis di setiap perubahan kecil**.  
-  > Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, Anda cukup memanggil:  
-  > `python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all` (atau `python3 .agents/skills/ai-skills/scripts/setup-project.py .`)
+  > Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, Anda cukup menyampaikan di chat:  
+  > **"Audit kode kita, bila perlu git clone ulang skill ini lalu kerjakan"** (atau prompt sejenisnya).

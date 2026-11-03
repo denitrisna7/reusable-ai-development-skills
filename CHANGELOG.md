@@ -4,6 +4,13 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.9.2`] — 2026-11-03
+### Optimized (Conversational User Reminder & Simplified Human-Friendly Rerun Prompt)
+- **Conversational Rerun Prompt in Place of Terminal Commands (`AGENTS.md`, `rules/AGENTS.md`, `BEFORE_ACTION.md`, & `scripts/run-audit.py`)**:
+  - Replaced technical Python terminal commands (`python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all`) in post-audit reminder banners with natural conversational prompts:
+    *"Audit kode kita, bila perlu git clone ulang skill ini lalu kerjakan"* (atau prompt sejenisnya).
+  - Users no longer need to copy-paste CLI strings; simply instructing the AI in chat triggers the full 38-skill audit lifecycle naturally.
+
 ## [`v1.9.1`] — 2026-11-03
 ### Added & Enhanced (Deep Dynamic Crawling, Interactive Widget QA, & Error 404 Visual Alerts)
 - **Deep Dynamic Route Crawling (Up to 25 Public & 20 Admin Routes)**:

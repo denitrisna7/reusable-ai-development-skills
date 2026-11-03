@@ -135,5 +135,5 @@ Whenever the full 38-skill audit completes, the agent MUST append this reminder 
 
 > 💡 **Informasi Pelaksanaan Audit:**  
 > Audit menyeluruh 38 skill (Live GUI Playwright, CRUD, CI/CD, dan UI/UX) telah selesai dijalankan di latar depan. Untuk mempercepat proses revisi kode berikutnya, audit penuh ini **hanya dijalankan sekali dan tidak akan diulang otomatis di setiap perubahan kecil**.  
-> Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, Anda cukup memanggil:  
-> `python3 .agents/skills/ai-skills/scripts/run-audit.py . --force-all` (atau `python3 .agents/skills/ai-skills/scripts/setup-project.py .`)
+> Jika Anda ingin menjalankan ulang audit menyeluruh ini kapan saja, Anda cukup menyampaikan di chat:  
+> **"Audit kode kita, bila perlu git clone ulang skill ini lalu kerjakan"** (atau prompt sejenisnya).
