@@ -4,6 +4,14 @@ All notable updates, fixes, and protocol enhancements pushed to `denitrisna7/reu
 
 ---
 
+## [`v1.9.5`] — 2026-11-14
+### Added & Documented (Public Repository & Panduan Lengkap 38 Skill)
+- **Repositori Publik GitHub**:
+  - Repositori `https://github.com/denitrisna7/reusable-ai-development-skills` resmi dijadikan **Public**, memungkinkan siapa saja melakukan `git clone` secara bebas tanpa autentikasi atau token tambahan.
+- **Buku Panduan Lengkap 38 Skill (`PANDUAN_FUNGSI_SKILL.md`)**:
+  - Menyusun panduan komprehensif bahasa Indonesia yang menguraikan fungsi spesifik, kapan digunakan, dan hasil nyata (*deliverables*) dari seluruh 38 skill (`SKILL-01` s/d `SKILL-38`) yang terbagi ke dalam 8 kategori siklus hidup perangkat lunak.
+  - Menyediakan panduan langkah demi langkah cara meng-clone dan menerapkan skill ini ke berbagai proyek target secara cepat.
+
 ## [`v1.9.4`] — 2026-11-04
 ### Added & Enhanced (Deep Interactive Button Testing, CRUD Action Preview, & Auto-Credential Login)
 - **Deep Interactive Button & Modal Explorer (`scripts/run-browser-audit.mjs`)**:

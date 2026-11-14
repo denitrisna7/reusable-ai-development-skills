@@ -1,6 +1,8 @@
-# Reusable AI Development Skills Library for Antigravity (`v1.9.4`)
+# Reusable AI Development Skills Library for Antigravity (`v1.9.5`)
 
 A comprehensive, modular, technology-agnostic **38-skill software engineering lifecycle library** designed for **Google Antigravity** (App, CLI, and IDE) and compatible **Agent Skills (`agentskills.io`)** environments.
+
+> 📖 **Panduan Lengkap Bahasa Indonesia**: Baca penjelasan mendalam fungsi dan kegunaan seluruh 38 skill di [**`PANDUAN_FUNGSI_SKILL.md`**](./PANDUAN_FUNGSI_SKILL.md).
 
 ---
 
@@ -10,7 +12,8 @@ Seluruh rincian perubahan juga tercatat lengkap di [`CHANGELOG.md`](./CHANGELOG.
 
 | Versi | Commit SHA | Tanggal | Ringkasan Perubahan yang Di-Push ke GitHub |
 | :--- | :---: | :---: | :--- |
-| **`v1.9.4` (Terbaru)** | `HEAD` | 2026-11-04 | **Deep Interactive Button Testing, CRUD Action Preview, & Auto-Credential Login**: Menambahkan modul pengujian interaktivitas tombol/tab/akordeon/modal otomatis; pengujian form pencarian/filter di antarmuka pengguna; *highlight* aksi baris data tabel (*CRUD Action*); serta deteksi kredensial admin otomatis dari berkas `.env` sehingga seluruh halaman dashboard admin teruji secara mendalam. |
+| **`v1.9.5` (Terbaru)** | `HEAD` | 2026-11-14 | **Public Repository & Panduan Lengkap 38 Skill (`PANDUAN_FUNGSI_SKILL.md`)**: Repositori GitHub dijadikan publik untuk akses bebas; penambahan dokumen panduan lengkap bahasa Indonesia yang merinci fungsi, kegunaan, dan hasil nyata seluruh 38 skill engineering lifecycle. |
+| **`v1.9.4`** | `b490f23` | 2026-11-04 | **Deep Interactive Button Testing, CRUD Action Preview, & Auto-Credential Login**: Menambahkan modul pengujian interaktivitas tombol/tab/akordeon/modal otomatis; pengujian form pencarian/filter di antarmuka pengguna; *highlight* aksi baris data tabel (*CRUD Action*); serta deteksi kredensial admin otomatis dari berkas `.env` sehingga seluruh halaman dashboard admin teruji secara mendalam. |
 | **`v1.9.3`** | `899652f` | 2026-11-04 | **Strict Workflow Separation & Permanent Screenshot Feature Disabling**: Menegaskan pemisahan alur kerja secara ketat antara **Mode Penambahan Fitur/Revisi Kode (Default)** yang melarang keras eksekusi audit 38-skill/browser testing agar proses langsung ke pengerjaan kode, dan **Mode Audit Penuh** yang hanya berjalan saat bootstrap awal atau permintaan eksplisit di chat; serta **mematikan total fitur screenshot** (`browser_take_screenshot`) dan mewajibkan seluruh pengujian browser berjalan di latar depan (*foreground*) dengan jendela Google Chrome nyata di layar monitor pengguna. |
 | **`v1.9.2`** | `ac798aa` | 2026-11-03 | **Conversational User Reminder & Simplified Human-Friendly Rerun Prompt**: Mengganti teks pengingat pasca-audit berbasis perintah baris perintah teknis (*Python CLI*) menjadi percakapan alami yang jauh lebih ramah (*"Audit kode kita, bila perlu git clone ulang skill ini lalu kerjakan"* atau sejenisnya) sehingga pengguna cukup meminta di chat tanpa perlu mengetik perintah terminal. |
 | **`v1.9.1`** | `b7b1a5d` | 2026-11-03 | **Deep Dynamic Crawling, Interactive Widget QA, & Error 404 Visual Alerts**: Meningkatkan *crawler* rute Playwright hingga 25 rute publik dan 20 rute dashboard admin; menambahkan deteksi visual Error 404 (Halaman Tidak Ditemukan) dengan HUD Banner bahaya merah dan pencatatan defek; serta menambahkan pengujian interaktivitas elemen (akordeon, FAQ toggle, tab) dan *smooth scroll* visual pada mode *headed*. |
